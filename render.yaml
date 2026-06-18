@@ -3,7 +3,7 @@ services:
     name: derinator-api
     runtime: node
     rootDir: backend
-    buildCommand: npm install && npm run build
+    buildCommand: npm install --install-strategy=nested && npm run build
     startCommand: node dist/index.js
     healthCheckPath: /api/health
     envVars:
