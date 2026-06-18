@@ -1,0 +1,56 @@
+import { Answer, CharacterCategory, CharacterSubcategory } from '../../types'
+import { QuestionId, questions } from '../questions'
+import { loadLearnedCharacters } from '../learnedStorage'
+import animales from './animales.json'
+import personajes from './personajes.json'
+import famosos from './famosos.json'
+
+export interface Character {
+  id: number
+  name: string
+  description: string
+  category: CharacterCategory
+  subcategory?: CharacterSubcategory
+  answers: Record<QuestionId, Answer>
+}
+
+interface RawCharacter {
+  id: number
+  name: string
+  description: string
+  category: string
+  subcategory?: string
+  answers: Record<string, string>
+}
+
+const ALL_QUESTION_IDS = questions.map(q => q.id)
+
+function fillDefaults(raw: RawCharacter): Character {
+  const fullAnswers = {} as Record<QuestionId, Answer>
+  for (const qId of ALL_QUESTION_IDS) {
+    fullAnswers[qId] = 'no'
+  }
+  for (const [key, value] of Object.entries(raw.answers || {})) {
+    fullAnswers[Number(key) as QuestionId] = value as Answer
+  }
+
+  return {
+    id: raw.id,
+    name: raw.name,
+    description: raw.description,
+    category: raw.category as CharacterCategory,
+    subcategory: (raw.subcategory || undefined) as CharacterSubcategory | undefined,
+    answers: fullAnswers,
+  }
+}
+
+function loadFromJson(): Character[] {
+  const raw = [...animales, ...personajes, ...famosos] as unknown as RawCharacter[]
+  return raw.map(fillDefaults)
+}
+
+export function getAllCharacters(): Character[] {
+  const builtIn = loadFromJson()
+  const learned = loadLearnedCharacters()
+  return [...builtIn, ...learned]
+}

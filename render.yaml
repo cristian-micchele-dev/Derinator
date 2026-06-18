@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: derinator-api
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_PATH
+        value: /data/derinator.db
+      - key: CORS_ORIGIN
+        sync: false
+    disk:
+      name: derinator-data
+      mountPath: /data
+      sizeGB: 1

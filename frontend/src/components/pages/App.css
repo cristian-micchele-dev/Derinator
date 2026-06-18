@@ -1,0 +1,296 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* Warm library / bronze palette — matches the medieval study background */
+  --color-void: #1a0f05;
+  --color-bg: #2a1a0a;
+  --color-surface: rgba(40, 25, 10, 0.85);
+  --color-surface-elevated: rgba(55, 35, 15, 0.9);
+  --color-border: rgba(200, 160, 90, 0.25);
+  --color-border-strong: rgba(200, 160, 90, 0.45);
+  --color-primary: #c8a060;
+  --color-primary-glow: rgba(200, 160, 90, 0.4);
+  --color-accent: #d4a853;
+  --color-accent-glow: rgba(212, 168, 83, 0.35);
+  --color-success: #34d399;
+  --color-success-glow: rgba(52, 211, 153, 0.25);
+  --color-danger: #f43f5e;
+  --color-danger-glow: rgba(244, 63, 94, 0.25);
+  --color-text: #f5f3ff;
+  --color-text-secondary: #d4b896;
+  --color-text-muted: #9a8770;
+
+  /* Spacing scale */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+
+  /* Typography */
+  --font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+  --font-display: 'Cinzel Decorative', 'Cinzel', serif;
+
+  /* Radii */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-full: 9999px;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--color-void);
+  color: var(--color-text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background: url('/src/assets/fondo2.jfif') center center / cover no-repeat fixed;
+}
+
+.app::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(25, 12, 4, 0.6);
+  z-index: 0;
+}
+
+.header {
+  text-align: center;
+  padding: var(--space-10) var(--space-4) var(--space-6);
+  position: relative;
+  z-index: 1;
+}
+
+.header h1 {
+  font-family: var(--font-display);
+  font-size: 3.5rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  color: var(--color-primary);
+  margin-bottom: var(--space-2);
+  text-shadow: 0 2px 20px var(--color-primary-glow);
+}
+
+.header p {
+  color: var(--color-text-muted);
+  font-size: 1.05rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.stats-bar {
+  margin-top: var(--space-3);
+  display: inline-block;
+  background: rgba(200, 160, 90, 0.1);
+  border: 1px solid rgba(200, 160, 90, 0.25);
+  color: var(--color-text-secondary);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.main-content {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-8);
+  padding: 0 var(--space-8) var(--space-10);
+  max-width: 1100px;
+  margin: 0 auto;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+  align-items: center;
+}
+
+.image-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.akinator-image {
+  position: relative;
+  width: 400px;
+  height: 460px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ---- Speech / Thought Bubble (side positioned) ---- */
+.speech-bubble {
+  position: absolute;
+  top: 30%;
+  left: 75%;
+  transform: translateY(-50%);
+  background: rgba(40, 25, 10, 0.82);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(200, 160, 90, 0.45);
+  border-radius: 20px;
+  padding: var(--space-3) var(--space-5);
+  min-width: 120px;
+  max-width: 220px;
+  text-align: center;
+  z-index: 10;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.45),
+    0 0 20px rgba(180, 130, 70, 0.2);
+  animation: bubblePop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.speech-bubble::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -10px;
+  transform: translateY(-50%) rotate(0deg);
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-right: 12px solid rgba(200, 160, 90, 0.45);
+}
+
+.speech-bubble::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -7px;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-right: 10px solid rgba(40, 25, 10, 0.82);
+  z-index: 1;
+}
+
+/* Thought bubble — circles trailing to image */
+.speech-bubble.thinking::after {
+  border: none;
+  width: 8px;
+  height: 8px;
+  background: rgba(200, 160, 90, 0.6);
+  border-radius: 50%;
+  top: auto;
+  bottom: -20px;
+  left: 20%;
+  transform: none;
+  box-shadow: -16px 6px 0 -2px rgba(200, 160, 90, 0.4), -28px 14px 0 -3px rgba(200, 160, 90, 0.25);
+}
+
+.speech-bubble.thinking::before {
+  display: none;
+}
+
+.bubble-text {
+  color: var(--color-text);
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+@keyframes bubblePop {
+  from { opacity: 0; transform: translateX(-50%) scale(0.7); }
+  to { opacity: 1; transform: translateX(-50%) scale(1); }
+}
+
+.akinator-image img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 20px rgba(180, 130, 70, 0.2));
+  animation: floatInner 4s ease-in-out infinite;
+  margin-top: 40px;
+}
+
+@keyframes floatInner {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-4px) scale(1.02); }
+}
+
+.game-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.dramatic-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(30, 15, 5, 0.85);
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    grid-template-columns: 1fr;
+    padding: 0 var(--space-4) var(--space-8);
+    gap: var(--space-4);
+  }
+
+  .akinator-image {
+    width: 280px;
+    height: 320px;
+  }
+
+  .speech-bubble {
+    max-width: 160px;
+    padding: var(--space-2) var(--space-3);
+    font-size: 0.85rem;
+  }
+
+  .header h1 {
+    font-size: 2.4rem;
+  }
+
+  .header {
+    padding: var(--space-6) var(--space-4) var(--space-4);
+  }
+}
+
+/* Progress bar styles */
+.progress {
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  margin-bottom: var(--space-3);
+}
+
+.progress .candidates {
+  color: var(--color-text-secondary);
+}
+
+.progress .certainty {
+  color: var(--color-text-muted);
+}

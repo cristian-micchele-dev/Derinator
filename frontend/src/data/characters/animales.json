@@ -1,0 +1,965 @@
+[
+  {
+    "id": 101,
+    "name": "Perro",
+    "description": "Mejor amigo del hombre",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "5": "yes",
+      "8": "yes",
+      "27": "yes",
+      "33": "probably",
+      "35": "yes",
+      "69": "yes",
+      "70": "yes",
+      "208": "yes"
+    }
+  },
+  {
+    "id": 102,
+    "name": "Gato",
+    "description": "Felino doméstico",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "5": "yes",
+      "8": "yes",
+      "12": "yes",
+      "27": "yes",
+      "32": "yes",
+      "33": "probably",
+      "35": "yes",
+      "69": "probably",
+      "70": "yes"
+    }
+  },
+  {
+    "id": 103,
+    "name": "León",
+    "description": "El rey de la selva",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "8": "yes",
+      "10": "yes",
+      "11": "yes",
+      "27": "yes",
+      "28": "yes",
+      "29": "yes",
+      "33": "probably",
+      "35": "yes",
+      "36": "yes",
+      "38": "probably",
+      "41": "yes",
+      "69": "yes"
+    }
+  },
+  {
+    "id": 104,
+    "name": "Elefante",
+    "description": "El mamífero terrestre más grande",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "8": "yes",
+      "10": "yes",
+      "11": "yes",
+      "27": "yes",
+      "31": "yes",
+      "35": "yes",
+      "38": "probably",
+      "68": "yes",
+      "69": "yes"
+    }
+  },
+  {
+    "id": 105,
+    "name": "Delfín",
+    "description": "Mamífero acuático inteligente",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "7": "yes",
+      "27": "yes",
+      "30": "yes",
+      "33": "yes",
+      "35": "yes",
+      "69": "yes",
+      "212": "yes"
+    }
+  },
+  {
+    "id": 106,
+    "name": "Águila",
+    "description": "Ave rapaz majestuosa",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "6": "yes",
+      "9": "yes",
+      "25": "yes",
+      "26": "yes",
+      "28": "yes",
+      "33": "yes"
+    }
+  },
+  {
+    "id": 107,
+    "name": "Tiburón",
+    "description": "Depredador del océano",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "7": "yes",
+      "10": "yes",
+      "11": "yes",
+      "28": "yes",
+      "30": "yes",
+      "33": "yes",
+      "35": "yes",
+      "204": "yes",
+      "213": "yes"
+    }
+  },
+  {
+    "id": 108,
+    "name": "Pingüino",
+    "description": "Ave que no vuela",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "7": "yes",
+      "9": "yes",
+      "12": "yes",
+      "25": "yes",
+      "26": "yes",
+      "30": "yes",
+      "34": "yes",
+      "69": "yes"
+    }
+  },
+  {
+    "id": 109,
+    "name": "Tigre",
+    "description": "El felino más grande",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "8": "yes",
+      "10": "yes",
+      "11": "yes",
+      "27": "yes",
+      "28": "yes",
+      "29": "yes",
+      "32": "yes",
+      "33": "yes",
+      "35": "yes",
+      "37": "yes",
+      "38": "probably",
+      "41": "yes"
+    }
+  },
+  {
+    "id": 110,
+    "name": "Leopardo",
+    "description": "Felino de manchas elegantes",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "8": "yes",
+      "10": "yes",
+      "11": "probably",
+      "27": "yes",
+      "28": "yes",
+      "29": "yes",
+      "32": "yes",
+      "33": "yes",
+      "35": "yes",
+      "36": "yes",
+      "41": "probably",
+      "42": "probably"
+    }
+  },
+  {
+    "id": 111,
+    "name": "Pantera",
+    "description": "La pantera negra misteriosa",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "8": "yes",
+      "10": "yes",
+      "11": "probably",
+      "27": "yes",
+      "28": "yes",
+      "29": "yes",
+      "32": "yes",
+      "33": "yes",
+      "35": "yes",
+      "40": "yes"
+    }
+  },
+  {
+    "id": 112,
+    "name": "Jaguar",
+    "description": "El felino de América",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "8": "yes",
+      "10": "yes",
+      "11": "yes",
+      "27": "yes",
+      "28": "yes",
+      "29": "yes",
+      "32": "yes",
+      "33": "yes",
+      "35": "yes",
+      "36": "yes",
+      "41": "probably",
+      "42": "probably"
+    }
+  },
+  {
+    "id": 113,
+    "name": "Guepardo",
+    "description": "El animal más rápido del mundo",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "8": "yes",
+      "10": "probably",
+      "27": "yes",
+      "28": "yes",
+      "33": "yes",
+      "35": "yes",
+      "36": "yes",
+      "42": "probably"
+    }
+  },
+  {
+    "id": 114,
+    "name": "Capibara",
+    "description": "El roedor más grande y amigable",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "7": "probably",
+      "8": "yes",
+      "27": "yes",
+      "29": "yes",
+      "31": "yes",
+      "32": "probably",
+      "33": "probably",
+      "38": "probably",
+      "69": "yes",
+      "70": "probably",
+      "206": "yes"
+    }
+  },
+  {
+    "id": 115,
+    "name": "Vaca",
+    "description": "El animal de granja por excelencia",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "5": "probably",
+      "8": "yes",
+      "11": "probably",
+      "27": "yes",
+      "31": "yes",
+      "34": "probably",
+      "35": "yes",
+      "68": "yes",
+      "69": "yes",
+      "70": "yes"
+    }
+  },
+  {
+    "id": 116,
+    "name": "Caballo",
+    "description": "Fiel compañero de carga y carrera",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "5": "yes",
+      "8": "yes",
+      "10": "probably",
+      "11": "probably",
+      "27": "yes",
+      "31": "yes",
+      "32": "probably",
+      "33": "yes",
+      "35": "yes",
+      "69": "yes",
+      "70": "yes",
+      "209": "yes"
+    }
+  },
+  {
+    "id": 117,
+    "name": "Oso",
+    "description": "El gigante del bosque",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "8": "yes",
+      "10": "yes",
+      "11": "yes",
+      "27": "yes",
+      "28": "yes",
+      "29": "yes",
+      "32": "probably",
+      "33": "probably",
+      "38": "probably"
+    }
+  },
+  {
+    "id": 118,
+    "name": "Lobo",
+    "description": "El aullador de la luna",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "8": "yes",
+      "10": "yes",
+      "11": "probably",
+      "27": "yes",
+      "28": "yes",
+      "32": "yes",
+      "33": "yes",
+      "35": "yes",
+      "38": "probably",
+      "69": "yes",
+      "208": "yes"
+    }
+  },
+  {
+    "id": 119,
+    "name": "Zorro",
+    "description": "El astuto de cola peluda",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "8": "yes",
+      "10": "probably",
+      "12": "probably",
+      "27": "yes",
+      "28": "yes",
+      "32": "yes",
+      "33": "probably",
+      "35": "yes",
+      "38": "probably",
+      "41": "probably",
+      "208": "yes"
+    }
+  },
+  {
+    "id": 120,
+    "name": "Mono",
+    "description": "El travieso de la selva",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "8": "yes",
+      "10": "probably",
+      "27": "yes",
+      "29": "yes",
+      "31": "yes",
+      "33": "probably",
+      "35": "yes",
+      "69": "yes",
+      "205": "yes"
+    }
+  },
+  {
+    "id": 121,
+    "name": "Gorila",
+    "description": "El primate más imponente",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "8": "yes",
+      "10": "yes",
+      "11": "yes",
+      "27": "yes",
+      "29": "yes",
+      "31": "yes",
+      "69": "yes",
+      "205": "yes"
+    }
+  },
+  {
+    "id": 122,
+    "name": "Conejo",
+    "description": "El orejón saltarín",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "8": "yes",
+      "12": "yes",
+      "27": "yes",
+      "31": "yes",
+      "32": "probably",
+      "33": "probably"
+    }
+  },
+  {
+    "id": 123,
+    "name": "Jirafa",
+    "description": "El animal más alto del mundo",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "8": "yes",
+      "10": "probably",
+      "11": "yes",
+      "27": "yes",
+      "29": "yes",
+      "31": "yes",
+      "33": "probably",
+      "35": "yes",
+      "36": "yes",
+      "42": "probably",
+      "69": "yes",
+      "211": "yes"
+    }
+  },
+  {
+    "id": 124,
+    "name": "Cebra",
+    "description": "El équido de rayas",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "8": "yes",
+      "10": "probably",
+      "11": "probably",
+      "27": "yes",
+      "29": "yes",
+      "31": "yes",
+      "33": "yes",
+      "35": "yes",
+      "37": "yes",
+      "69": "yes",
+      "209": "yes"
+    }
+  },
+  {
+    "id": 125,
+    "name": "Rinoceronte",
+    "description": "El tanque de la sabana",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "8": "yes",
+      "10": "yes",
+      "11": "yes",
+      "27": "yes",
+      "29": "yes",
+      "31": "yes",
+      "35": "yes",
+      "38": "probably",
+      "68": "yes"
+    }
+  },
+  {
+    "id": 126,
+    "name": "Hipopótamo",
+    "description": "El gigante del río",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "7": "probably",
+      "8": "yes",
+      "10": "yes",
+      "11": "yes",
+      "27": "yes",
+      "29": "yes",
+      "31": "yes",
+      "35": "yes",
+      "38": "probably",
+      "69": "yes"
+    }
+  },
+  {
+    "id": 127,
+    "name": "Camello",
+    "description": "La nave del desierto",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "5": "probably",
+      "8": "yes",
+      "10": "probably",
+      "11": "yes",
+      "27": "yes",
+      "31": "yes",
+      "32": "probably",
+      "33": "probably",
+      "35": "yes",
+      "38": "probably",
+      "42": "probably",
+      "69": "yes"
+    }
+  },
+  {
+    "id": 128,
+    "name": "Perezoso",
+    "description": "El maestro de la calma",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "8": "yes",
+      "27": "yes",
+      "29": "yes",
+      "31": "yes",
+      "32": "probably",
+      "34": "yes",
+      "38": "probably"
+    }
+  },
+  {
+    "id": 129,
+    "name": "Ardilla",
+    "description": "La recolectora de nueces",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "8": "yes",
+      "12": "yes",
+      "27": "yes",
+      "29": "yes",
+      "31": "yes",
+      "33": "probably",
+      "35": "yes",
+      "38": "probably",
+      "206": "yes"
+    }
+  },
+  {
+    "id": 130,
+    "name": "Erizo",
+    "description": "La bolita con púas",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "8": "yes",
+      "12": "yes",
+      "27": "yes",
+      "32": "yes",
+      "38": "probably"
+    }
+  },
+  {
+    "id": 131,
+    "name": "Mapache",
+    "description": "El enmascarado nocturno",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "8": "yes",
+      "27": "yes",
+      "29": "yes",
+      "32": "yes",
+      "33": "probably",
+      "35": "yes",
+      "38": "probably",
+      "40": "probably"
+    }
+  },
+  {
+    "id": 132,
+    "name": "Rata",
+    "description": "El roedor urbano",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "8": "yes",
+      "12": "yes",
+      "27": "yes",
+      "32": "yes",
+      "33": "probably",
+      "35": "yes",
+      "38": "probably",
+      "206": "yes"
+    }
+  },
+  {
+    "id": 133,
+    "name": "Serpiente",
+    "description": "El reptil sin patas",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "10": "yes",
+      "14": "yes",
+      "28": "yes",
+      "29": "yes",
+      "32": "probably",
+      "33": "probably",
+      "67": "probably",
+      "204": "yes",
+      "213": "yes"
+    }
+  },
+  {
+    "id": 134,
+    "name": "Cocodrilo",
+    "description": "El depredador de las aguas",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "7": "probably",
+      "10": "yes",
+      "11": "yes",
+      "14": "yes",
+      "28": "yes",
+      "29": "yes",
+      "32": "yes",
+      "33": "probably",
+      "35": "yes",
+      "69": "yes",
+      "204": "yes",
+      "213": "yes"
+    }
+  },
+  {
+    "id": 135,
+    "name": "Tortuga",
+    "description": "La de caparazón duro",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "7": "probably",
+      "14": "yes",
+      "29": "yes",
+      "31": "yes",
+      "34": "yes",
+      "35": "yes",
+      "38": "yes",
+      "204": "yes",
+      "210": "yes",
+      "213": "yes"
+    }
+  },
+  {
+    "id": 136,
+    "name": "Rana",
+    "description": "La saltarina croante",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "7": "probably",
+      "29": "yes",
+      "32": "yes",
+      "213": "yes",
+      "214": "yes"
+    }
+  },
+  {
+    "id": 137,
+    "name": "Ballena",
+    "description": "El gigante del mar",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "7": "yes",
+      "10": "probably",
+      "11": "yes",
+      "27": "yes",
+      "28": "yes",
+      "30": "yes",
+      "35": "yes",
+      "69": "yes",
+      "212": "yes"
+    }
+  },
+  {
+    "id": 138,
+    "name": "Orca",
+    "description": "La ballena asesina",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "7": "yes",
+      "10": "yes",
+      "11": "yes",
+      "27": "yes",
+      "28": "yes",
+      "30": "yes",
+      "33": "yes",
+      "35": "yes",
+      "39": "yes",
+      "40": "yes",
+      "69": "yes",
+      "212": "yes"
+    }
+  },
+  {
+    "id": 139,
+    "name": "Pulpo",
+    "description": "El de ocho brazos",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "7": "yes",
+      "10": "probably",
+      "28": "yes",
+      "30": "yes",
+      "213": "yes",
+      "215": "yes"
+    }
+  },
+  {
+    "id": 140,
+    "name": "Búho",
+    "description": "El sabio de la noche",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "6": "yes",
+      "8": "yes",
+      "9": "yes",
+      "10": "probably",
+      "25": "yes",
+      "26": "yes",
+      "28": "yes",
+      "32": "yes",
+      "33": "yes",
+      "35": "yes",
+      "38": "probably"
+    }
+  },
+  {
+    "id": 141,
+    "name": "Loro",
+    "description": "El hablador de colores",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "5": "probably",
+      "6": "yes",
+      "8": "yes",
+      "9": "yes",
+      "25": "yes",
+      "26": "yes",
+      "29": "yes",
+      "31": "yes",
+      "33": "probably",
+      "35": "yes",
+      "69": "yes"
+    }
+  },
+  {
+    "id": 142,
+    "name": "Flamenco",
+    "description": "El ave de rosa elegante",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "6": "yes",
+      "8": "yes",
+      "9": "yes",
+      "25": "yes",
+      "26": "yes",
+      "33": "probably",
+      "39": "probably",
+      "69": "yes"
+    }
+  },
+  {
+    "id": 143,
+    "name": "Murciélago",
+    "description": "El mamífero volador",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "6": "yes",
+      "8": "yes",
+      "12": "yes",
+      "25": "yes",
+      "27": "yes",
+      "32": "yes",
+      "33": "probably"
+    }
+  },
+  {
+    "id": 144,
+    "name": "Canguro",
+    "description": "El saltarín de Australia",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "8": "yes",
+      "10": "probably",
+      "11": "probably",
+      "27": "yes",
+      "31": "yes",
+      "32": "yes",
+      "33": "yes",
+      "35": "yes",
+      "207": "yes",
+      "218": "yes"
+    }
+  },
+  {
+    "id": 145,
+    "name": "Koala",
+    "description": "El marsupial dormilón",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "8": "yes",
+      "27": "yes",
+      "31": "yes",
+      "32": "yes",
+      "34": "yes",
+      "38": "probably",
+      "207": "yes",
+      "218": "yes"
+    }
+  },
+  {
+    "id": 146,
+    "name": "Mariposa",
+    "description": "El insecto de alas coloridas",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "6": "yes",
+      "13": "yes",
+      "25": "yes",
+      "29": "yes",
+      "42": "probably",
+      "213": "yes",
+      "215": "yes"
+    }
+  },
+  {
+    "id": 147,
+    "name": "Abeja",
+    "description": "La productora de miel",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "6": "yes",
+      "10": "yes",
+      "12": "yes",
+      "13": "yes",
+      "25": "yes",
+      "29": "yes",
+      "42": "probably",
+      "67": "yes",
+      "69": "yes",
+      "213": "yes",
+      "215": "yes"
+    }
+  },
+  {
+    "id": 148,
+    "name": "Araña",
+    "description": "La tejedora de ocho patas",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "10": "probably",
+      "12": "yes",
+      "28": "yes",
+      "32": "yes",
+      "67": "yes",
+      "213": "yes",
+      "215": "yes",
+      "216": "yes"
+    }
+  },
+  {
+    "id": 149,
+    "name": "Puma",
+    "description": "El león de montaña americano",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "8": "yes",
+      "10": "yes",
+      "11": "probably",
+      "27": "yes",
+      "28": "yes",
+      "29": "probably",
+      "32": "probably",
+      "33": "yes",
+      "35": "yes",
+      "41": "probably"
+    }
+  },
+  {
+    "id": 150,
+    "name": "Cerdo",
+    "description": "El animal de granja rosado",
+    "category": "animal",
+    "answers": {
+      "1": "yes",
+      "2": "yes",
+      "5": "yes",
+      "8": "yes",
+      "11": "probably",
+      "27": "yes",
+      "35": "yes",
+      "38": "probably",
+      "39": "probably",
+      "69": "yes",
+      "70": "yes"
+    }
+  }
+]

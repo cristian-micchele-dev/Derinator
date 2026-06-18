@@ -1,0 +1,232 @@
+.daily-page {
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.daily-background {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, #1a1208 0%, #2a1a0a 50%, #3d2b15 100%);
+  z-index: 0;
+}
+
+.daily-content {
+  position: relative;
+  z-index: 1;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-6);
+}
+
+.daily-header {
+  text-align: center;
+  margin-bottom: var(--space-10);
+}
+
+.daily-back {
+  position: fixed;
+  top: var(--space-4);
+  left: var(--space-4);
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(2px);
+  color: var(--color-text);
+  border: 1px solid rgba(200, 160, 90, 0.2);
+  padding: var(--space-3) var(--space-5);
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: var(--font-family);
+  z-index: 100;
+}
+
+.daily-back:hover {
+  background: rgba(200, 160, 90, 0.15);
+  border-color: var(--color-primary);
+}
+
+.daily-title {
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: var(--space-2);
+  letter-spacing: 0.03em;
+}
+
+.daily-subtitle {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* ---- Card ---- */
+.daily-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(200, 160, 90, 0.12);
+  border-radius: var(--radius-xl);
+  padding: var(--space-8) var(--space-6);
+  text-align: center;
+  animation: fadeSlideIn 0.5s ease-out;
+  margin-bottom: var(--space-6);
+}
+
+.daily-result {
+  margin-bottom: var(--space-6);
+}
+
+.daily-result-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: var(--space-3);
+  letter-spacing: 0.02em;
+}
+
+.daily-won .daily-result-title {
+  color: var(--color-primary);
+}
+
+.daily-result-text {
+  color: var(--color-text-secondary);
+  font-size: 0.95rem;
+  margin-bottom: var(--space-2);
+  line-height: 1.5;
+}
+
+.daily-result-text strong {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+.daily-result-hint {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  font-style: italic;
+  margin-bottom: var(--space-2);
+}
+
+.daily-result-stats {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.daily-timer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-6);
+  padding: var(--space-4);
+  background: rgba(40, 25, 10, 0.4);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(200, 160, 90, 0.08);
+}
+
+.daily-timer-label {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 500;
+}
+
+.daily-timer-value {
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--color-accent);
+  font-family: var(--font-family);
+  letter-spacing: 0.04em;
+}
+
+/* ---- Actions ---- */
+.daily-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+/* ---- Instructions ---- */
+.daily-instructions {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(200, 160, 90, 0.08);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+}
+
+.daily-instructions-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: var(--space-4);
+  letter-spacing: 0.02em;
+}
+
+.daily-instructions-list {
+  list-style: none;
+  counter-reset: daily-step;
+}
+
+.daily-instructions-list li {
+  position: relative;
+  padding-left: var(--space-8);
+  margin-bottom: var(--space-3);
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.daily-instructions-list li:last-child {
+  margin-bottom: 0;
+}
+
+.daily-instructions-list li::before {
+  counter-increment: daily-step;
+  content: counter(daily-step);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 22px;
+  height: 22px;
+  background: rgba(200, 160, 90, 0.1);
+  border: 1px solid rgba(200, 160, 90, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 768px) {
+  .daily-content {
+    padding: var(--space-6) var(--space-4);
+  }
+
+  .daily-title {
+    font-size: 1.6rem;
+  }
+
+  .daily-card {
+    padding: var(--space-6) var(--space-4);
+  }
+
+  .daily-timer-value {
+    font-size: 1.5rem;
+  }
+
+  .daily-back {
+    position: relative;
+    top: auto;
+    left: auto;
+    margin-bottom: var(--space-4);
+    align-self: flex-start;
+  }
+}

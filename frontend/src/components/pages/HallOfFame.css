@@ -1,0 +1,254 @@
+.hall-page {
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.hall-background {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, #1a1208 0%, #2a1a0a 50%, #3d2b15 100%);
+  z-index: 0;
+}
+
+.hall-content {
+  position: relative;
+  z-index: 1;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-6);
+}
+
+.hall-header {
+  text-align: center;
+  margin-bottom: var(--space-10);
+}
+
+.hall-back {
+  position: fixed;
+  top: var(--space-4);
+  left: var(--space-4);
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(2px);
+  color: var(--color-text);
+  border: 1px solid rgba(200, 160, 90, 0.2);
+  padding: var(--space-3) var(--space-5);
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: var(--font-family);
+  z-index: 100;
+}
+
+.hall-back:hover {
+  background: rgba(200, 160, 90, 0.15);
+  border-color: var(--color-primary);
+}
+
+.hall-title {
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: var(--space-2);
+  letter-spacing: 0.03em;
+}
+
+.hall-subtitle {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+/* ---- Sections ---- */
+.hall-section {
+  margin-bottom: var(--space-10);
+}
+
+.hall-section-title {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: var(--space-1);
+  letter-spacing: 0.02em;
+}
+
+.hall-section-subtitle {
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  margin-bottom: var(--space-5);
+}
+
+/* ---- Grid ---- */
+.hall-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.hall-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(200, 160, 90, 0.1);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-5);
+  animation: fadeSlideIn 0.4s ease-out both;
+  transition: all 0.2s ease;
+}
+
+.hall-card:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(200, 160, 90, 0.2);
+}
+
+/* Rank badge */
+.hall-rank {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(200, 160, 90, 0.08);
+  border: 1px solid rgba(200, 160, 90, 0.15);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.hall-card:nth-child(1) .hall-rank {
+  background: rgba(245, 158, 11, 0.15);
+  border-color: rgba(245, 158, 11, 0.35);
+  color: var(--color-primary);
+}
+
+.hall-card:nth-child(2) .hall-rank {
+  background: rgba(200, 160, 90, 0.12);
+  border-color: rgba(200, 160, 90, 0.3);
+  color: var(--color-accent);
+}
+
+.hall-card:nth-child(3) .hall-rank {
+  background: rgba(244, 63, 94, 0.12);
+  border-color: rgba(244, 63, 94, 0.3);
+  color: #f43e5e;
+}
+
+.hall-card:nth-child(1) {
+  border-color: rgba(245, 158, 11, 0.25);
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.06), rgba(255, 255, 255, 0.02));
+}
+
+.hall-card:nth-child(2) {
+  border-color: rgba(200, 160, 90, 0.2);
+}
+
+.hall-card:nth-child(3) {
+  border-color: rgba(244, 63, 94, 0.2);
+}
+
+/* ---- Card Info ---- */
+.hall-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.hall-name {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: var(--space-1);
+}
+
+.hall-desc {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-2);
+  line-height: 1.4;
+}
+
+.hall-meta {
+  display: flex;
+  gap: var(--space-3);
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+}
+
+.hall-questions {
+  background: rgba(200, 160, 90, 0.08);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-full);
+  font-weight: 500;
+}
+
+.hall-date {
+  opacity: 0.6;
+}
+
+/* ---- Top Guessed ---- */
+.hall-card--top {
+  border-color: rgba(200, 160, 90, 0.08);
+}
+
+.hall-card--top:hover {
+  border-color: rgba(200, 160, 90, 0.2);
+  background: rgba(200, 160, 90, 0.05);
+}
+
+/* ---- Empty State ---- */
+.hall-empty {
+  text-align: center;
+  padding: var(--space-12) var(--space-6);
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: var(--radius-xl);
+  border: 1px solid rgba(200, 160, 90, 0.1);
+  animation: fadeSlideIn 0.6s ease-out;
+}
+
+.hall-empty-text {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--color-text);
+  margin-bottom: var(--space-2);
+}
+
+.hall-empty-hint {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  margin-bottom: var(--space-6);
+}
+
+/* Divider */
+.hall-divider {
+  border: none;
+  border-top: 1px solid rgba(200, 160, 90, 0.1);
+  margin: 0 0 var(--space-10) 0;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 768px) {
+  .hall-content {
+    padding: var(--space-6) var(--space-4);
+  }
+
+  .hall-title {
+    font-size: 1.6rem;
+  }
+
+  .hall-card {
+    padding: var(--space-3) var(--space-4);
+  }
+
+  .hall-back {
+    position: relative;
+    top: auto;
+    left: auto;
+    margin-bottom: var(--space-4);
+    align-self: flex-start;
+  }
+}

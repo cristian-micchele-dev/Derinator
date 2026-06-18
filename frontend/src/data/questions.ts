@@ -1,0 +1,290 @@
+export const questions = [
+  // Category: Living being
+  { id: 1, text: '¿Es un ser vivo?' },
+  { id: 2, text: '¿Es un animal?' },
+  { id: 3, text: '¿Es un ser humano?' },
+  { id: 4, text: '¿Es de ficción?' },
+
+  // Animal characteristics
+  { id: 5, text: '¿Es doméstico?' },
+  { id: 6, text: '¿Vuela?' },
+  { id: 7, text: '¿Es acuático?' },
+  { id: 8, text: '¿Tiene pelos?' },
+  { id: 9, text: '¿Tiene plumas?' },
+  { id: 10, text: '¿Es peligroso?' },
+  { id: 11, text: '¿Es muy grande?' },
+  { id: 12, text: '¿Es pequeño?' },
+  { id: 13, text: '¿Es un insecto?' },
+  { id: 14, text: '¿Es reptil?' },
+
+  // More animal characteristics (25-42)
+  { id: 25, text: '¿Tiene alas?' },
+  { id: 26, text: '¿Es un ave?' },
+  { id: 27, text: '¿Es un mamífero?' },
+  { id: 28, text: '¿Es un depredador?' },
+  { id: 29, text: '¿Vive en la selva?' },
+  { id: 30, text: '¿Vive en el océano?' },
+  { id: 31, text: '¿Es herbívoro?' },
+  { id: 32, text: '¿Es nocturno?' },
+  { id: 33, text: '¿Es rápido?' },
+  { id: 34, text: '¿Es lento?' },
+  { id: 35, text: '¿Tiene cola?' },
+  { id: 36, text: '¿Tiene manchas?' },
+  { id: 37, text: '¿Es rayado?' },
+  { id: 38, text: '¿Es gris?' },
+  { id: 39, text: '¿Es blanco?' },
+  { id: 40, text: '¿Es negro?' },
+  { id: 41, text: '¿Es naranja?' },
+  { id: 42, text: '¿Es amarillo?' },
+
+  // Human characteristics
+  { id: 15, text: '¿Es famoso?' },
+  { id: 16, text: '¿Es de Argentina?' },
+  { id: 17, text: '¿Es atleta?' },
+  { id: 18, text: '¿Es músico?' },
+  { id: 19, text: '¿Es actor/actriz?' },
+  { id: 20, text: '¿Es figura histórica?' },
+  { id: 43, text: '¿Está vivo/a actualmente?' },
+  { id: 44, text: '¿Es de Estados Unidos?' },
+  { id: 45, text: '¿Es europeo?' },
+  { id: 46, text: '¿Es japonés?' },
+  { id: 47, text: '¿Es brasileño?' },
+  { id: 48, text: '¿Tiene bigote?' },
+  { id: 49, text: '¿Usa lentes?' },
+  { id: 50, text: '¿Es calvo/a?' },
+  { id: 51, text: '¿Tiene el pelo largo?' },
+  { id: 52, text: '¿Es mujer?' },
+  { id: 53, text: '¿Es hombre?' },
+
+  // Fictional character specifics (54-64)
+  { id: 54, text: '¿Usa capa?' },
+  { id: 55, text: '¿Usa máscara?' },
+  { id: 56, text: '¿Es un superhéroe?' },
+  { id: 57, text: '¿Es de Disney?' },
+  { id: 58, text: '¿Es de Nintendo?' },
+  { id: 59, text: '¿Es de anime?' },
+  { id: 60, text: '¿Es un personaje de videojuegos?' },
+  { id: 61, text: '¿Tiene poderes mágicos?' },
+  { id: 62, text: '¿Usa arma?' },
+  { id: 63, text: '¿Es pelirrojo/a?' },
+  { id: 64, text: '¿Usa sombrero?' },
+
+  // Object/Other
+  { id: 21, text: '¿Es un objeto?' },
+  { id: 22, text: '¿Es tecnológico?' },
+  { id: 23, text: '¿Es de uso diario?' },
+  { id: 24, text: '¿Es un lugar?' },
+
+  // New animal-specific questions (67-70)
+  { id: 67, text: '¿Es venenoso?' },
+  { id: 68, text: '¿Tiene cuernos?' },
+  { id: 69, text: '¿Vive en grupos?' },
+  { id: 70, text: '¿Es un animal de granja?' },
+
+  // New personaje-specific questions (71-75)
+  { id: 71, text: '¿Es de Marvel?' },
+  { id: 72, text: '¿Es un villano?' },
+  { id: 73, text: '¿Es de Star Wars?' },
+  { id: 74, text: '¿Tiene superpoderes?' },
+  { id: 75, text: '¿Es de Harry Potter?' },
+
+  // Human profession / role questions
+  { id: 76, text: '¿Es futbolista?' },
+  { id: 77, text: '¿Es youtuber/streamer?' },
+  { id: 78, text: '¿Es científico/a?' },
+  { id: 79, text: '¿Es artista/pintor/a?' },
+  { id: 80, text: '¿Es líder político/a?' },
+
+  // Fiction universe
+  { id: 81, text: '¿Es de DC Comics?' },
+
+  // NEW — Highly discriminative questions for fictional characters
+  { id: 82, text: '¿Tiene forma humana?' },
+  { id: 83, text: '¿Puede hablar como un humano?' },
+  { id: 84, text: '¿Es de Dragon Ball?' },
+  { id: 85, text: '¿Es un Pokémon?' },
+  { id: 86, text: '¿Puede volar sin alas?' },
+  { id: 87, text: '¿Tiene más de una transformación?' },
+  { id: 88, text: '¿Usa ropa/capa/uniforme característico?' },
+  { id: 89, text: '¿Es un robot o cyborg?' },
+  { id: 90, text: '¿Es conocido por alguna frase o grito característico?' },
+  { id: 91, text: '¿Es de un juego de pelea?' },
+  { id: 92, text: '¿Tiene pelo de color inusual o llamativo?' },
+  { id: 93, text: '¿Es de Naruto?' },
+  { id: 94, text: '¿Es de One Piece?' },
+  { id: 95, text: '¿Es pequeño como un niño?' },
+  { id: 96, text: '¿Tiene orejas puntiagudas?' },
+
+  // MORE universe questions for broader character coverage
+  { id: 97, text: '¿Es de Minecraft?' },
+  { id: 98, text: '¿Es de Fortnite?' },
+  { id: 99, text: '¿Es de League of Legends?' },
+  { id: 100, text: '¿Es de The Legend of Zelda?' },
+  { id: 101, text: '¿Es de Final Fantasy?' },
+  { id: 102, text: '¿Es de Street Fighter?' },
+  { id: 103, text: '¿Es de God of War?' },
+  { id: 104, text: '¿Es de Halo?' },
+  { id: 105, text: '¿Es de Assassin\'s Creed?' },
+  { id: 106, text: '¿Es de Mortal Kombat?' },
+  { id: 107, text: '¿Es de Kingdom Hearts?' },
+  { id: 108, text: '¿Es de Among Us?' },
+  { id: 109, text: '¿Es de The Witcher?' },
+  { id: 110, text: '¿Es de Metal Gear?' },
+
+  // Anime universe questions for new characters
+  { id: 111, text: '¿Es de Attack on Titan?' },
+  { id: 112, text: '¿Es de Death Note?' },
+  { id: 113, text: '¿Es de Evangelion?' },
+  { id: 114, text: '¿Es de Fullmetal Alchemist?' },
+  { id: 115, text: '¿Es de Bleach?' },
+  { id: 116, text: '¿Es de Hunter x Hunter?' },
+  { id: 117, text: '¿Es de One Punch Man?' },
+
+  // Character trait questions for anime / fictional characters
+  { id: 118, text: '¿Es un samurái?' },
+  { id: 119, text: '¿Es un detective o investigador?' },
+  { id: 120, text: '¿Es un demonio o ser sobrenatural?' },
+
+  // NEW — Highly discriminative role/personality questions
+  { id: 121, text: '¿Es el protagonista principal?' },
+  { id: 122, text: '¿Es de una película?' },
+  { id: 123, text: '¿Es un líder o autoridad?' },
+  { id: 124, text: '¿Es muy inteligente o estratega?' },
+  { id: 125, text: '¿Es alto o de gran tamaño?' },
+  { id: 126, text: '¿Tiene barba?' },
+  { id: 127, text: '¿Usa tecnología o gadgets avanzados?' },
+  { id: 128, text: '¿Es un anti-héroe?' },
+  { id: 129, text: '¿Tiene compañero, mascota o sidekick?' },
+  { id: 130, text: '¿Es de una serie live-action?' },
+
+  // MORE popular universe questions
+  { id: 131, text: '¿Es de My Hero Academia?' },
+  { id: 132, text: '¿Es de Demon Slayer?' },
+  { id: 133, text: '¿Es de Jujutsu Kaisen?' },
+  { id: 134, text: '¿Es de Game of Thrones?' },
+  { id: 135, text: '¿Es de Breaking Bad?' },
+  { id: 136, text: '¿Es de Stranger Things?' },
+  { id: 137, text: '¿Es de Los Simpsons?' },
+  { id: 138, text: '¿Es de Rick and Morty?' },
+
+  // NEW DISCRIMINATIVE QUESTIONS
+  { id: 139, text: '¿Es zurdo/a?' },
+  { id: 140, text: '¿Ganó un Mundial / Copa del Mundo?' },
+  { id: 141, text: '¿Tiene más de 30 años?' },
+  { id: 142, text: '¿Ganó un premio importante (Oscar, Grammy, Balón de Oro, etc.)?' },
+  { id: 143, text: '¿Es delantero / atacante?' },
+  { id: 144, text: '¿Es conocido/a por su velocidad?' },
+  { id: 145, text: '¿Es conocido/a por su técnica o habilidad?' },
+  { id: 146, text: '¿Es defensor?' },
+  { id: 147, text: '¿Es arquero / portero?' },
+  { id: 148, text: '¿Es considerado/a una leyenda de su deporte?' },
+  { id: 149, text: '¿Jugó en más de un país (clubes de diferentes países)?' },
+  { id: 150, text: '¿Ganó un Oscar?' },
+  { id: 151, text: '¿Es conocido/a por películas de acción?' },
+  { id: 152, text: '¿Es conocido/a por comedias?' },
+  { id: 153, text: '¿Es conocido/a por dramas?' },
+  { id: 154, text: '¿Es de pop?' },
+  { id: 155, text: '¿Es de rock?' },
+  { id: 156, text: '¿Es de rap / hip-hop?' },
+  { id: 157, text: '¿Es de reggaeton?' },
+  { id: 158, text: '¿Toca guitarra?' },
+  { id: 159, text: '¿Toca piano?' },
+  { id: 160, text: '¿Es conocido/a por bailar?' },
+
+  // POKÉMON SPECIFIC QUESTIONS (161-180)
+  { id: 161, text: '¿Es un Pokémon inicial (starter)?' },
+  { id: 162, text: '¿Es de tipo fuego?' },
+  { id: 163, text: '¿Es de tipo agua?' },
+  { id: 164, text: '¿Es de tipo planta?' },
+  { id: 165, text: '¿Es de tipo eléctrico?' },
+  { id: 166, text: '¿Tiene una evolución conocida?' },
+  { id: 167, text: '¿Es un Pokémon legendario?' },
+  { id: 168, text: '¿Es de primera generación (Kanto)?' },
+  { id: 169, text: '¿Es de tipo dragón?' },
+  { id: 170, text: '¿Es de tipo psíquico?' },
+  { id: 171, text: '¿Es de tipo fantasma?' },
+  { id: 172, text: '¿Es de tipo hielo?' },
+  { id: 173, text: '¿Es de tipo lucha?' },
+  { id: 174, text: '¿Es de tipo volador?' },
+  { id: 175, text: '¿Es famoso por ser el compañero de Ash?' },
+  { id: 176, text: '¿Es un Pokémon que habla o dice su nombre?' },
+  { id: 177, text: '¿Es un Pokémon que evoluciona con piedra?' },
+  { id: 178, text: '¿Es un Pokémon de tipo normal?' },
+  { id: 179, text: '¿Es un Pokémon con apariencia de roedor?' },
+  { id: 180, text: '¿Es un Pokémon con apariencia de reptil?' },
+
+  // NATIONALITY QUESTIONS (181-186)
+  { id: 181, text: '¿Es de México?' },
+  { id: 182, text: '¿Es de Colombia?' },
+  { id: 183, text: '¿Es de España?' },
+  { id: 184, text: '¿Es del Reino Unido / Inglaterra?' },
+  { id: 185, text: '¿Es de Italia?' },
+  { id: 186, text: '¿Es de Francia?' },
+
+  // SPORT / ROLE QUESTIONS (187-200)
+  { id: 187, text: '¿Juega al baloncesto / básquet?' },
+  { id: 188, text: '¿Juega al tenis?' },
+  { id: 189, text: '¿Juega al golf?' },
+  { id: 190, text: '¿Es boxeador/a o luchador/a?' },
+  { id: 191, text: '¿Es comediante?' },
+  { id: 192, text: '¿Es modelo?' },
+  { id: 193, text: '¿Es directivo/a o empresario/a?' },
+  { id: 194, text: '¿Es de la realeza?' },
+  { id: 195, text: '¿Ha ganado un premio Nobel?' },
+  { id: 196, text: '¿Tiene el pelo rubio?' },
+  { id: 197, text: '¿Tiene tatuajes visibles?' },
+  { id: 198, text: '¿Es considerado/a de los mejores de la historia en su campo?' },
+  { id: 199, text: '¿Es influyente en redes sociales?' },
+  { id: 200, text: '¿Es religioso/a o líder espiritual?' },
+
+  // NEW DISCRIMINATIVE QUESTIONS FOR FOOTBALLERS (201-203)
+  { id: 201, text: '¿Ganó la Champions League / Copa de Europa?' },
+  { id: 202, text: '¿Jugó en el fútbol italiano (Serie A)?' },
+  { id: 203, text: '¿Ganó el Balón de Oro?' },
+
+  // ANIMAL CATEGORY QUESTIONS (204-216, 218)
+  { id: 204, text: '¿Tiene escamas?' },
+  { id: 205, text: '¿Es un primate?' },
+  { id: 206, text: '¿Es un roedor?' },
+  { id: 207, text: '¿Es un marsupial?' },
+  { id: 208, text: '¿Es un cánido (perro, lobo, zorro)?' },
+  { id: 209, text: '¿Es un équido (caballo, cebra)?' },
+  { id: 210, text: '¿Tiene caparazón o concha?' },
+  { id: 211, text: '¿Tiene cuello muy largo?' },
+  { id: 212, text: '¿Es un mamífero marino?' },
+  { id: 213, text: '¿Es de sangre fría?' },
+  { id: 214, text: '¿Es un anfibio?' },
+  { id: 215, text: '¿Es un invertebrado?' },
+  { id: 216, text: '¿Es una araña?' },
+  { id: 218, text: '¿Vive en Australia?' },
+
+  // Anime universe: Rurouni Kenshin
+  { id: 219, text: '¿Es de Rurouni Kenshin / Samurai X?' },
+
+  // Hair color appearance
+  { id: 220, text: '¿Tiene el pelo azul?' },
+  { id: 221, text: '¿Tiene el pelo verde?' },
+  { id: 222, text: '¿Tiene el pelo blanco o plateado?' },
+  { id: 223, text: '¿Tiene el pelo negro?' },
+
+  // Weapons and roles
+  { id: 224, text: '¿Usa espada?' },
+  { id: 225, text: '¿Es un pirata?' },
+  { id: 226, text: '¿Es un ninja?' },
+
+  // Appearance mark
+  { id: 227, text: '¿Tiene una cicatriz o marca distintiva?' },
+
+  // Dragon Ball specific questions
+  { id: 228, text: '¿Es Saiyajin?' },
+  { id: 229, text: '¿Es Namekiano?' },
+  { id: 230, text: '¿Es un androide o cyborg?' },
+  { id: 231, text: '¿Es un villano principal de su universo?' },
+  { id: 232, text: '¿Tiene múltiples formas o transformaciones?' },
+  { id: 233, text: '¿Es humano puro sin poderes especiales?' },
+  { id: 234, text: '¿Es pequeño/a?' },
+  { id: 235, text: '¿Es de la realeza o príncipe?' },
+  { id: 236, text: '¿Es casado/a o tiene pareja?' },
+] as const
+
+export type QuestionId = typeof questions[number]['id']
