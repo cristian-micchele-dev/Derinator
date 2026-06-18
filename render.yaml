@@ -2,14 +2,14 @@ services:
   - type: web
     name: derinator-api
     runtime: node
-    rootDir: .
-    buildCommand: npm install && npm run build:backend
-    startCommand: mkdir -p backend/data && npm run start --workspace=backend
+    rootDir: backend
+    buildCommand: npm install && npm run build
+    startCommand: node dist/index.js
     healthCheckPath: /api/health
     envVars:
       - key: NODE_ENV
         value: production
       - key: DATABASE_PATH
-        value: data/derinator.db
+        value: ./derinator.db
       - key: CORS_ORIGIN
         sync: false
