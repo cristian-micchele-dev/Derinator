@@ -3,7 +3,7 @@ services:
     name: derinator-api
     runtime: node
     rootDir: .
-    buildCommand: npm install && npm rebuild sqlite3 && npm run build:backend
+    buildCommand: npm_config_build_from_source=true npm install && npm run build:backend
     startCommand: npm run start --workspace=backend
     healthCheckPath: /api/health
     envVars:
