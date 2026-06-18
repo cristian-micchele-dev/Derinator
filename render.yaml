@@ -2,9 +2,9 @@ services:
   - type: web
     name: derinator-api
     runtime: node
-    rootDir: backend
-    buildCommand: npm install && npm run build
-    startCommand: npm start
+    rootDir: .
+    buildCommand: npm install && npm run build:backend
+    startCommand: npm run start --workspace=backend
     healthCheckPath: /api/health
     envVars:
       - key: NODE_ENV
