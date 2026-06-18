@@ -3,12 +3,10 @@ services:
     name: derinator-api
     runtime: node
     rootDir: .
-    buildCommand: npm_config_build_from_source=true npm install && npm run build:backend
+    buildCommand: npm install && npm run build:backend
     startCommand: npm run start --workspace=backend
     healthCheckPath: /api/health
     envVars:
-      - key: npm_config_build_from_source
-        value: "true"
       - key: NODE_ENV
         value: production
       - key: DATABASE_PATH
