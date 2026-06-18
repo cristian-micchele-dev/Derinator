@@ -4,16 +4,12 @@ services:
     runtime: node
     rootDir: .
     buildCommand: npm install && npm run build:backend
-    startCommand: mkdir -p /data && npm run start --workspace=backend
+    startCommand: mkdir -p data && npm run start --workspace=backend
     healthCheckPath: /api/health
     envVars:
       - key: NODE_ENV
         value: production
       - key: DATABASE_PATH
-        value: /data/derinator.db
+        value: data/derinator.db
       - key: CORS_ORIGIN
         sync: false
-    disk:
-      name: derinator-data
-      mountPath: /data
-      sizeGB: 1
