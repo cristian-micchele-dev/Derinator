@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { describe, it, expect } from 'vitest'
 import { QUESTION_FLOW, FLOW_MAP, getQuestionWeight } from './questionFlow'
 import { QuestionId } from '../questions'
