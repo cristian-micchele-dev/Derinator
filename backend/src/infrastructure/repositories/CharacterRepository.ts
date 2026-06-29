@@ -1,8 +1,5 @@
-import { Database } from 'sqlite'
-import sqlite3 from 'sqlite3'
+import { Pool } from 'pg'
 import { LearnedCharacter, LearnCharacterInput, CharacterRepository } from '../../domain'
-
-type DB = Database<sqlite3.Database, sqlite3.Statement>
 
 interface LearnedCharacterRow {
   id: string
@@ -12,48 +9,48 @@ interface LearnedCharacterRow {
   subcategory: string
   answers: string
   fingerprint: string | null
-  created_at: string
+  created_at: Date
 }
 
 export class SqliteCharacterRepository implements CharacterRepository {
-  constructor(private db: DB) {}
+  constructor(private db: Pool) {}
 
   async findAll(limit = 1000): Promise<LearnedCharacter[]> {
-    const rows = await this.db.all<LearnedCharacterRow[]>(
-      'SELECT * FROM learned_characters ORDER BY created_at DESC LIMIT ?',
+    const result = await this.db.query<LearnedCharacterRow>(
+      'SELECT * FROM learned_characters ORDER BY created_at DESC LIMIT $1',
       [limit]
     )
-    return rows.map(this.toDomain)
+    return result.rows.map(this.toDomain)
   }
 
   async findByFingerprint(fingerprint: string): Promise<LearnedCharacter[]> {
-    const rows = await this.db.all<LearnedCharacterRow[]>(
-      'SELECT * FROM learned_characters WHERE fingerprint = ? ORDER BY created_at DESC',
+    const result = await this.db.query<LearnedCharacterRow>(
+      'SELECT * FROM learned_characters WHERE fingerprint = $1 ORDER BY created_at DESC',
       [fingerprint]
     )
-    return rows.map(this.toDomain)
+    return result.rows.map(this.toDomain)
   }
 
   async findDuplicate(name: string, fingerprint?: string): Promise<boolean> {
-    let existing
+    let result
     if (fingerprint) {
-      existing = await this.db.get(
-        'SELECT name FROM learned_characters WHERE lower(name) = lower(?) AND fingerprint = ?',
+      result = await this.db.query(
+        'SELECT name FROM learned_characters WHERE lower(name) = lower($1) AND fingerprint = $2',
         [name, fingerprint]
       )
     } else {
-      existing = await this.db.get(
-        'SELECT name FROM learned_characters WHERE lower(name) = lower(?) AND fingerprint IS NULL',
+      result = await this.db.query(
+        'SELECT name FROM learned_characters WHERE lower(name) = lower($1) AND fingerprint IS NULL',
         [name]
       )
     }
-    return !!existing
+    return result.rows.length > 0
   }
 
   async create(input: LearnCharacterInput): Promise<void> {
-    await this.db.run(
+    await this.db.query(
       `INSERT INTO learned_characters (name, description, category, subcategory, answers, fingerprint)
-       VALUES (?, ?, ?, ?, ?, ?)`,
+       VALUES ($1, $2, $3, $4, $5, $6)`,
       [input.name, input.description || input.name, input.category, input.subcategory, JSON.stringify(input.answers), input.fingerprint || null]
     )
   }
@@ -67,7 +64,7 @@ export class SqliteCharacterRepository implements CharacterRepository {
       subcategory: row.subcategory,
       answers: row.answers,
       fingerprint: row.fingerprint,
-      createdAt: row.created_at,
+      createdAt: row.created_at instanceof Date ? row.created_at.toISOString() : row.created_at,
     }
   }
 }

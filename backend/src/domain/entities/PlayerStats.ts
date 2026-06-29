@@ -1,6 +1,7 @@
 export interface PlayerStats {
   id: string
   fingerprint: string
+  playerToken: string | null
   derinatorWins: number
   userWins: number
   currentStreak: number

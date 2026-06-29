@@ -2,7 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import helmet from 'helmet'
 import dotenv from 'dotenv'
-import { getDb } from './db'
+import { getDb, initDb } from './db'
 import { SqlitePlayerStatsRepository } from './infrastructure/repositories/PlayerStatsRepository'
 import { SqliteCharacterRepository } from './infrastructure/repositories/CharacterRepository'
 import { SqliteGameHistoryRepository } from './infrastructure/repositories/GameHistoryRepository'
@@ -22,8 +22,9 @@ async function main() {
   app.use(cors(corsOrigin ? { origin: corsOrigin } : {}))
   app.use(express.json())
 
-  // Initialize DB
-  const db = await getDb()
+  // Initialize DB and run migrations
+  await initDb()
+  const db = getDb()
 
   // Create repositories (infrastructure implementations of domain ports)
   const statsRepo = new SqlitePlayerStatsRepository(db)

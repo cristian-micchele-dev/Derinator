@@ -77,7 +77,8 @@ export function calculateScore(
   let score = 0
   let maxScore = 0
 
-  for (const qId of Object.keys(userAnswers) as unknown as QuestionId[]) {
+  for (const key of Object.keys(userAnswers)) {
+    const qId = Number(key) as QuestionId
     const weight = getQuestionWeight(qId)
     const userAnswer = safeAnswer(userAnswers[qId])
     const charAnswer = safeAnswer(characterAnswers[qId])

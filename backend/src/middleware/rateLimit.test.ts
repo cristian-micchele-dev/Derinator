@@ -11,6 +11,7 @@ function createRes(): Response {
   const res = {
     status: vi.fn().mockReturnThis(),
     json: vi.fn().mockReturnThis(),
+    setHeader: vi.fn().mockReturnThis(),
   } as unknown as Response
   return res
 }

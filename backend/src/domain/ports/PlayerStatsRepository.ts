@@ -8,5 +8,6 @@ import { PlayerStats, SyncStatsInput } from '../entities/PlayerStats'
  */
 export interface PlayerStatsRepository {
   findByFingerprint(fingerprint: string): Promise<PlayerStats | null>
+  findByToken(token: string): Promise<PlayerStats | null>
   upsert(stats: SyncStatsInput): Promise<PlayerStats>
 }

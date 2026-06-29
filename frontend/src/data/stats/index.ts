@@ -44,6 +44,9 @@ export { addToHallOfFame, getHallOfFame } from './hallOfFame'
 // Persistence
 export {
   getFingerprint,
+  getPlayerToken,
+  savePlayerToken,
+  ensureRegistered,
   saveGameState,
   loadGameState,
   clearGameState,

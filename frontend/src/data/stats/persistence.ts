@@ -8,6 +8,7 @@ import { getHallOfFame } from './hallOfFame'
 import { loadDailyCharacter, saveDailyCharacter } from './daily'
 
 const FINGERPRINT_KEY = 'derinator_fingerprint'
+const PLAYER_TOKEN_KEY = 'derinator_player_token'
 
 export function getFingerprint(): string {
   let fp = localStorage.getItem(FINGERPRINT_KEY)
@@ -16,6 +17,14 @@ export function getFingerprint(): string {
     localStorage.setItem(FINGERPRINT_KEY, fp)
   }
   return fp
+}
+
+export function getPlayerToken(): string | null {
+  return localStorage.getItem(PLAYER_TOKEN_KEY)
+}
+
+export function savePlayerToken(token: string): void {
+  localStorage.setItem(PLAYER_TOKEN_KEY, token)
 }
 
 // ============== GAME PERSISTENCE ==============
@@ -63,14 +72,13 @@ export function markOnboardingSeen(): void {
 /** Attempt to sync current local stats to the server (fire-and-forget) */
 export async function syncToServer(): Promise<void> {
   try {
-    // Dynamic import to avoid circular dependency issues
     const { syncStats } = await import('../api/api')
     const stats = loadStats()
     const achievements = loadAchievements()
     const hall = getHallOfFame()
     const daily = loadDailyCharacter()
 
-    await syncStats({
+    const response = await syncStats({
       fingerprint: getFingerprint(),
       derinatorWins: stats.derinatorWins,
       userWins: stats.userWins,
@@ -81,15 +89,33 @@ export async function syncToServer(): Promise<void> {
       hallOfFame: hall as unknown[],
       dailyGuessed: daily?.guessed ?? false,
       dailyGuesses: daily?.guesses ?? 0,
-    })
+    }, getPlayerToken() ?? undefined)
+
+    // Server returns player_token on first registration
+    const data = response as { player_token?: string }
+    if (data.player_token) {
+      savePlayerToken(data.player_token)
+    }
   } catch {
     // Silently fail — localStorage is the source of truth when offline
   }
 }
 
+/**
+ * Ensure the player is registered on the server and has a local token.
+ * Called on app startup so the token is always ready before the first game ends.
+ */
+export async function ensureRegistered(): Promise<void> {
+  if (getPlayerToken()) return
+  await syncToServer()
+}
+
 /** Attempt to load stats from the server and merge with local */
 export async function loadFromServer(): Promise<boolean> {
   try {
+    // Register the player if this is a new device (acquires player_token)
+    await ensureRegistered()
+
     const { fetchStats } = await import('../api/api')
     const response = await fetchStats(getFingerprint()) as { success: boolean; data: {
       derinator_wins: number; user_wins: number; current_streak: number;

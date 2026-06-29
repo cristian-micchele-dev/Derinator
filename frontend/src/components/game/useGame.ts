@@ -10,7 +10,7 @@ import {
   addToHallOfFame,
   recordPerfectGuess, recordCategoryWin, checkAchievements, recordDailyWin,
   loadDailyCharacter, saveDailyCharacter, getDailyCharacterIndex,
-  saveGameState, syncToServer, getFingerprint,
+  saveGameState, syncToServer, getFingerprint, getPlayerToken,
 } from '../../data/stats'
 import { recordGame } from '../../data/api/api'
 import type { GameState } from '../../types'
@@ -121,12 +121,13 @@ export function useGame({
       }
       checkAchievements()
       syncToServer()
-      recordGame(getFingerprint(), {
+      const winToken = getPlayerToken()
+      if (winToken) recordGame(getFingerprint(), {
         characterName: guessedCharacterRef.current?.name || '',
         result: 'derinator_win',
         questionsCount: historyRef.current.length,
         category: selectedCategoryRef.current,
-      })
+      }, winToken)
     }
   }, [gameState])
 
@@ -145,12 +146,13 @@ export function useGame({
       recordCategoryWin(selectedCategoryRef.current)
       checkAchievements()
       syncToServer()
-      recordGame(getFingerprint(), {
+      const loseToken = getPlayerToken()
+      if (loseToken) recordGame(getFingerprint(), {
         characterName: guessedCharacterRef.current?.name || '',
         result: 'user_win',
         questionsCount: historyRef.current.length,
         category: selectedCategoryRef.current,
-      })
+      }, loseToken)
     }
   }, [gameState])
 

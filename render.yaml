@@ -9,7 +9,7 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
-      - key: DATABASE_PATH
-        value: ./derinator.db
+      - key: DATABASE_URL
+        sync: false
       - key: CORS_ORIGIN
         sync: false

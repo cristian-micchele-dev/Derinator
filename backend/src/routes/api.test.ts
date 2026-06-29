@@ -11,6 +11,7 @@ import { createCharactersRouter } from './characters'
 const TEST_FINGERPRINT = 'test-fingerprint-123'
 
 let app: express.Express
+let playerToken: string
 
 beforeAll(async () => {
   const db = await getDb()
@@ -54,6 +55,8 @@ describe('Stats API', () => {
     expect(res.body.success).toBe(true)
     expect(res.body.data.derinator_wins).toBe(5)
     expect(res.body.data.user_wins).toBe(3)
+    expect(res.body.player_token).toBeDefined()
+    playerToken = res.body.player_token
   })
 
   it('POST /api/stats/sync updates existing player with max merge', async () => {
@@ -70,7 +73,10 @@ describe('Stats API', () => {
       dailyGuesses: 0,
     }
 
-    const res = await request(app).post('/api/stats/sync').send(stats)
+    const res = await request(app)
+      .post('/api/stats/sync')
+      .set('Authorization', `Bearer ${playerToken}`)
+      .send(stats)
     expect(res.status).toBe(200)
     expect(res.body.data.derinator_wins).toBe(10)
     expect(res.body.data.user_wins).toBe(5)
@@ -95,13 +101,16 @@ describe('Stats API', () => {
   })
 
   it('POST /api/stats/game records game history', async () => {
-    const res = await request(app).post('/api/stats/game').send({
-      fingerprint: TEST_FINGERPRINT,
-      characterName: 'Mario',
-      result: 'win',
-      questionsCount: 12,
-      category: 'personajes',
-    })
+    const res = await request(app)
+      .post('/api/stats/game')
+      .set('Authorization', `Bearer ${playerToken}`)
+      .send({
+        fingerprint: TEST_FINGERPRINT,
+        characterName: 'Mario',
+        result: 'derinator_win',
+        questionsCount: 12,
+        category: 'personajes',
+      })
     expect(res.status).toBe(200)
     expect(res.body.success).toBe(true)
   })
@@ -112,6 +121,50 @@ describe('Stats API', () => {
     })
     expect(res.status).toBe(400)
     expect(res.body.error).toBe('Missing required fields')
+  })
+
+  it('POST /api/stats/game rejects invalid result', async () => {
+    const res = await request(app)
+      .post('/api/stats/game')
+      .set('Authorization', `Bearer ${playerToken}`)
+      .send({
+        fingerprint: TEST_FINGERPRINT,
+        characterName: 'Mario',
+        result: 'cheated_win',
+        questionsCount: 5,
+        category: 'personajes',
+      })
+    expect(res.status).toBe(400)
+    expect(res.body.error).toMatch(/Invalid result/)
+  })
+
+  it('POST /api/stats/game rejects invalid category', async () => {
+    const res = await request(app)
+      .post('/api/stats/game')
+      .set('Authorization', `Bearer ${playerToken}`)
+      .send({
+        fingerprint: TEST_FINGERPRINT,
+        characterName: 'Mario',
+        result: 'derinator_win',
+        questionsCount: 5,
+        category: 'invalid_category',
+      })
+    expect(res.status).toBe(400)
+    expect(res.body.error).toBe('Invalid category')
+  })
+
+  it('POST /api/stats/game sanitizes characterName HTML', async () => {
+    const res = await request(app)
+      .post('/api/stats/game')
+      .set('Authorization', `Bearer ${playerToken}`)
+      .send({
+        fingerprint: TEST_FINGERPRINT,
+        characterName: '<script>alert(1)</script>Mario',
+        result: 'derinator_win',
+        questionsCount: 5,
+        category: 'personajes',
+      })
+    expect(res.status).toBe(200)
   })
 
   it('GET /api/stats/:fingerprint returns updated stats', async () => {
