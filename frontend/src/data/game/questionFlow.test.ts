@@ -81,7 +81,7 @@ describe('FLOW_MAP', () => {
       if (node.next) {
         for (const [, targetId] of Object.entries(node.next)) {
           if (targetId !== null) {
-            expect(validIds.has(targetId as number)).toBe(true)
+            expect(validIds.has(targetId as never)).toBe(true)
           }
         }
       }
@@ -93,7 +93,7 @@ describe('FLOW_MAP', () => {
     for (const node of QUESTION_FLOW) {
       if (node.prerequisites) {
         for (const prereq of node.prerequisites) {
-          expect(validIds.has(prereq.questionId as number)).toBe(true)
+          expect(validIds.has(prereq.questionId as never)).toBe(true)
         }
       }
     }
