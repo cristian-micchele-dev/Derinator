@@ -119,11 +119,6 @@ export function getBestQuestion(
     hasHistory
       ? prerequisitesStrictMet(qId, prereqMap) && !isExcluded(qId, prereqMap)
       : true
-  const isEligibleLenient = (qId: QuestionId) =>
-    hasHistory
-      ? !isExcluded(qId, prereqMap)
-      : true
-
   // PHASE 2: When 5-10 candidates remain, prefer category/role/profession/nationality/discriminative questions
   const PROFESSION_QUESTIONS: QuestionId[] = [15, 17, 18, 19, 20, 76, 77, 78, 79, 80]
   if (candidateCount > 4) {
@@ -153,7 +148,7 @@ export function getBestQuestion(
   let bestScore = -1
 
   for (const qId of remainingQuestions) {
-    if (!isEligibleLenient(qId)) continue
+    if (!isEligibleStrict(qId)) continue
 
     let positive = 0
     let negative = 0

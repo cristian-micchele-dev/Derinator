@@ -190,21 +190,24 @@ describe('getBestQuestion — Phase 1.5 (sub-universe)', () => {
     const candidates = Array.from({ length: 10 }, (_, i) =>
       char(i, `Char${i}`, { 84: i < 5 ? 'yes' : 'no', 16: i < 3 ? 'yes' : 'no' })
     )
+    // No history → no strict prereq filtering → Phase 3 picks best discriminator
     const result = getBestQuestion(qIds([84, 16]), candidates)
-    // No history → Phase 1.5 skipped → Phase 3 entropy picks best discriminator
     expect(result).not.toBeNull()
     expect([84, 16]).toContain(result)
   })
 
   it('with "no" history, falls through to later phases', () => {
+    // q84 needs q4=yes + q59=yes; provide both so Phase 3 strict prereqs pass
     const candidates = Array.from({ length: 10 }, (_, i) =>
       char(i, `Char${i}`, { 84: i < 5 ? 'yes' : 'no', 16: i < 5 ? 'yes' : 'no' })
     )
-    const history = [{ questionId: q(59), answer: 'no' as Answer }]
+    const history = [
+      { questionId: q(4), answer: 'yes' as Answer },
+      { questionId: q(59), answer: 'yes' as Answer },
+    ]
     const result = getBestQuestion(qIds([84, 16]), candidates, history)
-    // Broad universe was "no" → Phase 1.5 skipped → Phase 3 picks best discriminator
-    expect(result).not.toBeNull()
-    expect([84, 16]).toContain(result)
+    // q84 prereqs met → Phase 3 picks it; q16 prereqs NOT met → blocked
+    expect(result).toBe(84)
   })
 
   it('with ≤2 candidates, getBestQuestion returns null', () => {
