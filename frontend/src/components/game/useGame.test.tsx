@@ -37,6 +37,7 @@ vi.mock('../../data/stats/persistence', () => ({
   saveGameState: vi.fn(),
   syncToServer: vi.fn(),
   getFingerprint: vi.fn(() => 'test-fingerprint-123'),
+  getPlayerToken: vi.fn(() => 'test-token-abc'),
 }))
 
 vi.mock('../../data/api/api', () => ({

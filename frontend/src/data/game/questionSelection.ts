@@ -1,5 +1,6 @@
 import { Answer } from '../../types'
 import { QuestionId } from '../questions'
+import { FLOW_MAP, QUESTION_FLOW } from './questionFlow'
 import {
   safeAnswer,
   BROAD_UNIVERSE_QUESTIONS,
@@ -18,6 +19,7 @@ import {
  * Select the best next question to ask, using a phased strategy:
  * - Phase 0: Fiction vs real split when mixed
  * - Phase 0.5: Confirm Pokémon before type questions
+ * - Phase F: Flow-guided — follow the decision tree branches
  * - Phase 1: Universe questions when many candidates
  * - Phase 1.5: Sub-universe drill-down
  * - Phase 1.6: Pokémon type questions
@@ -61,6 +63,14 @@ export function getBestQuestion(
     if (pokemonCount >= 2) {
       return 85
     }
+  }
+
+  // PHASE F: Flow-guided — follow the decision tree before falling back to entropy.
+  // 1) Direct follow-up: if the last answered question has a `next` in the flow, follow it.
+  // 2) Eligible flow nodes: find all nodes whose prerequisites are satisfied, pick the best.
+  if (history && history.length > 0) {
+    const flowGuided = getFlowGuidedQuestion(remainingQuestions, candidates, history)
+    if (flowGuided !== null) return flowGuided
   }
 
   // PHASE 1: When many candidates remain, ask BROAD universe questions first
@@ -159,6 +169,98 @@ export function getBestQuestion(
   return bestQuestion
 }
 
+// ===== Flow-Guided Selection =====
+
+function getFlowGuidedQuestion(
+  remainingQuestions: QuestionId[],
+  candidates: { answers: Record<QuestionId, Answer> }[],
+  history: { questionId: QuestionId; answer: Answer }[]
+): QuestionId | null {
+  const answeredSet = new Set(history.map(h => h.questionId))
+  const answerMap = new Map(history.map(h => [h.questionId, h.answer]))
+
+  // Step 1: Direct follow-up from the last answered question's `next` mapping
+  for (let i = history.length - 1; i >= 0; i--) {
+    const last = history[i]
+    const node = FLOW_MAP.get(last.questionId)
+    if (!node?.next) continue
+
+    const nextId = node.next[last.answer] ?? node.next['default']
+    if (nextId != null && remainingQuestions.includes(nextId) && !answeredSet.has(nextId)) {
+      if (wouldDiscriminate(nextId, candidates)) {
+        return nextId
+      }
+    }
+    break
+  }
+
+  // Step 2: Find all flow nodes whose prerequisites are met but haven't been asked.
+  // Pick the one with the highest weight that also discriminates among candidates.
+  const eligible: { id: QuestionId; weight: number }[] = []
+
+  for (const node of QUESTION_FLOW) {
+    if (answeredSet.has(node.id)) continue
+    if (!remainingQuestions.includes(node.id)) continue
+    if (!prerequisitesMet(node.id, answerMap)) continue
+    if (isExcluded(node.id, answerMap)) continue
+
+    eligible.push({ id: node.id, weight: node.weight ?? 1.0 })
+  }
+
+  if (eligible.length === 0) return null
+
+  // Sort by weight descending — higher weight = more important to ask first
+  eligible.sort((a, b) => b.weight - a.weight)
+
+  // Among the top-weighted eligible questions, pick the one that best discriminates
+  for (const { id } of eligible) {
+    if (wouldDiscriminate(id, candidates)) {
+      return id
+    }
+  }
+
+  return null
+}
+
+function prerequisitesMet(
+  questionId: QuestionId,
+  answerMap: Map<QuestionId, Answer>
+): boolean {
+  const node = FLOW_MAP.get(questionId)
+  if (!node?.prerequisites) return true
+
+  return node.prerequisites.every(prereq => {
+    const given = answerMap.get(prereq.questionId)
+    return given !== undefined && prereq.answers.includes(given)
+  })
+}
+
+function isExcluded(
+  questionId: QuestionId,
+  answerMap: Map<QuestionId, Answer>
+): boolean {
+  const node = FLOW_MAP.get(questionId)
+  if (!node?.exclusions) return false
+
+  return node.exclusions.some(excl => {
+    const given = answerMap.get(excl.questionId)
+    return given !== undefined && excl.answers.includes(given)
+  })
+}
+
+function wouldDiscriminate(
+  qId: QuestionId,
+  candidates: { answers: Record<QuestionId, Answer> }[]
+): boolean {
+  const { positive, negative, neutral } = countAnswers(candidates, qId)
+  const total = positive + negative + neutral
+  if (total === 0) return false
+
+  // A question discriminates if it doesn't have 99%+ the same answer
+  const maxGroup = Math.max(positive, negative, neutral)
+  return maxGroup / total < 0.95
+}
+
 // ===== Internal Helpers =====
 
 function countAnswers(
@@ -199,7 +301,6 @@ function findBestByGroup(
     const maxGroup = Math.max(positive, negative, neutral)
     if (maxGroup / total >= 0.999) continue
 
-    // Use entropy-based score so questions with unbalanced data still get considered
     const score = getDiscriminationScore(positive, negative, neutral, total)
     if (score === 0) continue
 
