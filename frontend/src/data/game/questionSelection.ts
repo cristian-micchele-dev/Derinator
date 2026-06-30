@@ -34,6 +34,15 @@ export function getBestQuestion(
   if (remainingQuestions.length === 0) return null
   if (candidates.length <= 1) return null
 
+  // Pre-filter: exclude questions whose flow prerequisites aren't met
+  const answerMap = history ? new Map(history.map(h => [h.questionId, h.answer])) : new Map<QuestionId, Answer>()
+  const filtered = history
+    ? remainingQuestions.filter(qId => prerequisitesMet(qId, answerMap) && !isExcluded(qId, answerMap))
+    : remainingQuestions
+
+  if (filtered.length === 0) return null
+  remainingQuestions = filtered
+
   const candidateCount = candidates.length
 
   // PHASE 0: When there's a mix of fictional and real characters, ask "¿Es de ficción?" FIRST
@@ -231,7 +240,10 @@ function prerequisitesMet(
 
   return node.prerequisites.every(prereq => {
     const given = answerMap.get(prereq.questionId)
-    return given !== undefined && prereq.answers.includes(given)
+    // Not answered yet — don't filter out, might still be valid
+    if (given === undefined) return true
+    // Answered — must match the required answers
+    return prereq.answers.includes(given)
   })
 }
 
