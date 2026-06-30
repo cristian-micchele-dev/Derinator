@@ -34,15 +34,6 @@ export function getBestQuestion(
   if (remainingQuestions.length === 0) return null
   if (candidates.length <= 1) return null
 
-  // Pre-filter: exclude questions whose flow prerequisites aren't met
-  const answerMap = history ? new Map(history.map(h => [h.questionId, h.answer])) : new Map<QuestionId, Answer>()
-  const filtered = history
-    ? remainingQuestions.filter(qId => prerequisitesMet(qId, answerMap) && !isExcluded(qId, answerMap))
-    : remainingQuestions
-
-  if (filtered.length === 0) return null
-  remainingQuestions = filtered
-
   const candidateCount = candidates.length
 
   // PHASE 0: When there's a mix of fictional and real characters, ask "¿Es de ficción?" FIRST
@@ -119,15 +110,31 @@ export function getBestQuestion(
     if (best !== null) return best
   }
 
+  // Build prerequisite context for Phase 2 & 3 filtering
+  const prereqMap = history && history.length > 0
+    ? new Map(history.map(h => [h.questionId, h.answer]))
+    : new Map<QuestionId, Answer>()
+  const hasHistory = prereqMap.size > 0
+  const isEligibleStrict = (qId: QuestionId) =>
+    hasHistory
+      ? prerequisitesStrictMet(qId, prereqMap) && !isExcluded(qId, prereqMap)
+      : true
+  const isEligibleLenient = (qId: QuestionId) =>
+    hasHistory
+      ? !isExcluded(qId, prereqMap)
+      : true
+
   // PHASE 2: When 5-10 candidates remain, prefer category/role/profession/nationality/discriminative questions
   const PROFESSION_QUESTIONS: QuestionId[] = [15, 17, 18, 19, 20, 76, 77, 78, 79, 80]
   if (candidateCount > 4) {
     const typeFilter = (qId: QuestionId) =>
-      CATEGORY_QUESTIONS.includes(qId) ||
-      ROLE_QUESTIONS.includes(qId) ||
-      PROFESSION_QUESTIONS.includes(qId) ||
-      NATIONALITY_QUESTIONS.includes(qId) ||
-      DISCRIMINATIVE_QUESTIONS.includes(qId)
+      isEligibleStrict(qId) && (
+        CATEGORY_QUESTIONS.includes(qId) ||
+        ROLE_QUESTIONS.includes(qId) ||
+        PROFESSION_QUESTIONS.includes(qId) ||
+        NATIONALITY_QUESTIONS.includes(qId) ||
+        DISCRIMINATIVE_QUESTIONS.includes(qId)
+      )
 
     const best = findBestWeighted(remainingQuestions, candidates, typeFilter, qId => {
       if (CATEGORY_QUESTIONS.includes(qId)) return 3.0
@@ -146,6 +153,8 @@ export function getBestQuestion(
   let bestScore = -1
 
   for (const qId of remainingQuestions) {
+    if (!isEligibleLenient(qId)) continue
+
     let positive = 0
     let negative = 0
     let neutral = 0
@@ -210,7 +219,7 @@ function getFlowGuidedQuestion(
   for (const node of QUESTION_FLOW) {
     if (answeredSet.has(node.id)) continue
     if (!remainingQuestions.includes(node.id)) continue
-    if (!prerequisitesMet(node.id, answerMap)) continue
+    if (!prerequisitesStrictMet(node.id, answerMap)) continue
     if (isExcluded(node.id, answerMap)) continue
 
     eligible.push({ id: node.id, weight: node.weight ?? 1.0 })
@@ -243,6 +252,21 @@ function prerequisitesMet(
     // Not answered yet — don't filter out, might still be valid
     if (given === undefined) return true
     // Answered — must match the required answers
+    return prereq.answers.includes(given)
+  })
+}
+
+function prerequisitesStrictMet(
+  questionId: QuestionId,
+  answerMap: Map<QuestionId, Answer>
+): boolean {
+  const node = FLOW_MAP.get(questionId)
+  if (!node?.prerequisites) return true
+
+  return node.prerequisites.every(prereq => {
+    const given = answerMap.get(prereq.questionId)
+    // Strict: unanswered prerequisite = NOT met
+    if (given === undefined) return false
     return prereq.answers.includes(given)
   })
 }
