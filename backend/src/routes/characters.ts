@@ -11,6 +11,13 @@ export function createCharactersRouter(characterRepo: CharacterRepository): Rout
     try {
       const { fingerprint } = req.query
 
+      if (fingerprint !== undefined) {
+        if (typeof fingerprint !== 'string' || !/^[a-zA-Z0-9_-]{8,64}$/.test(fingerprint)) {
+          res.status(400).json({ error: 'Invalid fingerprint format' })
+          return
+        }
+      }
+
       const characters = fingerprint
         ? await characterRepo.findByFingerprint(fingerprint as string)
         : await characterRepo.findAll()

@@ -19,7 +19,10 @@ async function main() {
   const corsOrigin = process.env.CORS_ORIGIN
   app.set('trust proxy', 1)
   app.use(helmet())
-  app.use(cors(corsOrigin ? { origin: corsOrigin } : {}))
+  app.use(cors(corsOrigin
+    ? { origin: corsOrigin.split(',').map(o => o.trim()) }
+    : { origin: false }
+  ))
   app.use(express.json())
 
   // Initialize DB and run migrations

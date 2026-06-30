@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express'
 import { PlayerStatsRepository, GameHistoryRepository, SyncStatsInput, PlayerStats } from '../domain'
 import { sanitizeInput } from '../validation/characterValidation'
+import { rateLimitStats } from '../middleware/rateLimit'
 
 const VALID_RESULTS = ['derinator_win', 'user_win'] as const
 const VALID_GAME_CATEGORIES = ['all', 'personajes', 'animales', 'famosos', ''] as const
@@ -43,7 +44,7 @@ export function createStatsRouter(
   const router = Router()
 
   // POST /api/stats/sync — Save or update player stats
-  router.post('/sync', async (req: Request, res: Response) => {
+  router.post('/sync', rateLimitStats, async (req: Request, res: Response) => {
     try {
       const body = req.body as SyncStatsInput
       const { fingerprint } = body
@@ -116,7 +117,7 @@ export function createStatsRouter(
   })
 
   // POST /api/stats/game — Record a single game result
-  router.post('/game', async (req: Request, res: Response) => {
+  router.post('/game', rateLimitStats, async (req: Request, res: Response) => {
     try {
       const { fingerprint, result, questionsCount, category } = req.body
       const rawName = req.body.characterName

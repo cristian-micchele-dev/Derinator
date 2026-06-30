@@ -59,10 +59,19 @@ export function recordUserWin(): void {
 
 export function recordDefeatedBy(characterName: string): void {
   const stats = loadStats()
-  if (!stats.mostDefeatedCharacter || stats.mostDefeatedCount === 0) {
-    stats.mostDefeatedCharacter = characterName
-    stats.mostDefeatedCount = 1
+  const key = `_defeated:${characterName}`
+  stats.characterGuessCounts[key] = (stats.characterGuessCounts[key] || 0) + 1
+  // Recalculate most defeated from defeat-prefixed entries
+  let topName = ''
+  let topCount = 0
+  for (const [k, v] of Object.entries(stats.characterGuessCounts)) {
+    if (k.startsWith('_defeated:') && v > topCount) {
+      topName = k.slice('_defeated:'.length)
+      topCount = v
+    }
   }
+  stats.mostDefeatedCharacter = topName
+  stats.mostDefeatedCount = topCount
   saveStats(stats)
 }
 

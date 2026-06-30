@@ -12,7 +12,8 @@ const PLAYER_TOKEN_KEY = 'derinator_player_token'
 export function getFingerprint(): string {
   let fp = localStorage.getItem(FINGERPRINT_KEY)
   if (!fp) {
-    fp = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+    const bytes = crypto.getRandomValues(new Uint8Array(16))
+    fp = Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('')
     localStorage.setItem(FINGERPRINT_KEY, fp)
   }
   return fp

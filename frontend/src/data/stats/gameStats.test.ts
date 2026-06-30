@@ -126,11 +126,13 @@ describe('recordDefeatedBy', () => {
     expect(stats.mostDefeatedCount).toBe(1)
   })
 
-  it('does not overwrite when character already set', () => {
+  it('tracks most defeated across multiple characters', () => {
     recordDefeatedBy('Goku')
     recordDefeatedBy('Naruto')
+    recordDefeatedBy('Naruto')
     const stats = loadStats()
-    expect(stats.mostDefeatedCharacter).toBe('Goku')
+    expect(stats.mostDefeatedCharacter).toBe('Naruto')
+    expect(stats.mostDefeatedCount).toBe(2)
   })
 })
 

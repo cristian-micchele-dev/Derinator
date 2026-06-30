@@ -47,7 +47,7 @@ npx vitest run --testNamePattern "Stats API"  # single test filter
 
 ### Frontend — `frontend/src/`
 
-**Routing** (`App.tsx`): four lazy-loaded routes — `/` (Home), `/jugar` (GamePage), `/fama` (HallOfFame), `/del-dia` (DailyCharacter).
+**Routing** (`App.tsx`): three lazy-loaded routes — `/` (Home), `/jugar` (GamePage), `/del-dia` (DailyCharacter).
 
 **Game engine** lives entirely in `src/data/game/`:
 - `questionFlow.ts` — hub: imports `flows/animals.ts`, `flows/real-people.ts`, `flows/fictional.ts`. Defines a hierarchical `FlowNode` decision tree.
@@ -73,14 +73,13 @@ npx vitest run --testNamePattern "Stats API"  # single test filter
 
 **Hexagonal architecture**:
 - `domain/` — entities + ports (interfaces). No framework dependencies. Domain never imports from infrastructure.
-- `infrastructure/repositories/` — SQLite implementations of domain ports.
+- `infrastructure/repositories/` — PostgreSQL implementations of domain ports.
 - `routes/` — Express routers (`stats.ts`, `characters.ts`).
 - `middleware/rateLimit.ts` — in-memory IP rate limiter (10 req/min), only on `POST /api/characters/learn`.
 - `validation/characterValidation.ts` — strips HTML, caps lengths. Valid categories: `animal | personaje`.
 
-**DB** (`src/db.ts`): SQLite via `sqlite`/`sqlite3`. Schema embedded in `db.ts` (no separate schema.sql). WAL mode + foreign keys enabled at runtime.
-- Production DB: `./derinator.db` (or `DATABASE_PATH` env var)
-- Test DB: `derinator-test.db` — set automatically by `src/test-setup.ts`. Production DB is **never** touched by tests.
+**DB** (`src/db.ts`): PostgreSQL via `pg` (Pool). Schema in `src/schema.sql`, loaded at startup. Requires `DATABASE_URL` env var.
+- Tests use `pg-mem` (in-memory PostgreSQL mock) — set up in `src/test-setup.ts`. Production DB is **never** touched by tests.
 
 **API routes**:
 | Method | Path | Notes |
@@ -96,19 +95,18 @@ npx vitest run --testNamePattern "Stats API"  # single test filter
 
 **Frontend unit tests**: Vitest + jsdom + Testing Library. Tests live alongside source files (`*.test.tsx`).
 
-**Backend integration tests**: `src/routes/api.test.ts` — supertest against a real Express app + isolated SQLite DB. No unit tests yet.
+**Backend integration tests**: `src/routes/api.test.ts` — supertest against a real Express app + pg-mem. No unit tests yet.
 
 **E2E**: Playwright in `frontend/e2e/`. Requires dev server on port 3001. Config in `frontend/playwright.config.ts`.
 
 ## Key gotchas
 
-- `daily_guessed` is `INTEGER` (0/1) in SQLite — not boolean. Sync endpoint converts with `? 1 : 0`; GET returns `0`/`1`.
-- `achievements` and `hall_of_fame` are stored as JSON strings (`TEXT`) in SQLite — manual `JSON.stringify()`/`JSON.parse()`.
+- `daily_guessed` is `BOOLEAN` in PostgreSQL. Sync endpoint converts with `? true : false`.
+- `achievements` and `hall_of_fame` are stored as JSON strings (`TEXT`) — manual `JSON.stringify()`/`JSON.parse()`.
 - No `.eslintrc` in `backend/` — lint runs with defaults only.
 - Rate limiter is in-memory — resets on server restart, doesn't scale across processes.
-- `calculateScore` iterates `Object.keys(userAnswers)` which returns string keys — `getQuestionWeight` must compare with `String()` or parse to number first (existing bug: weight always falls back to 1.0).
 
 ## Deploy
 
 - **Frontend**: Vercel (auto-deploy from main)
-- **Backend**: Render (config in `render.yaml`; uses ephemeral storage — `derinator.db` resets on redeploy)
+- **Backend**: Render (config in `render.yaml`; requires PostgreSQL database via `DATABASE_URL`)

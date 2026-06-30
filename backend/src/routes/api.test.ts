@@ -227,7 +227,7 @@ describe('Characters API', () => {
   })
 
   it('GET /api/characters/learned filters by fingerprint', async () => {
-    const res = await request(app).get(`/api/characters/learned?fingerprint=test-fp`)
+    const res = await request(app).get(`/api/characters/learned?fingerprint=test-fp-123`)
     expect(res.status).toBe(200)
     expect(Array.isArray(res.body.characters)).toBe(true)
   })

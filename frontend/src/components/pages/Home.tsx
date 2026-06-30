@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import fondo2 from '../../assets/fondo2.jfif'
+import fondo from '../../assets/derifondo1.png'
 import deriPensando from '../../assets/DeriPensando2.png'
 import './Home.css'
 
@@ -8,7 +8,7 @@ export default function Home() {
 
   return (
     <div className="home">
-      <div className="home-background" style={{ backgroundImage: `url(${fondo2})` }} />
+      <div className="home-background" style={{ backgroundImage: `url(${fondo})` }} />
 
       <main className="home-content">
         <div className="home-hero">

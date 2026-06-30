@@ -39,44 +39,31 @@ export class SqlitePlayerStatsRepository implements PlayerStatsRepository {
   }
 
   async upsert(stats: SyncStatsInput): Promise<PlayerStats> {
-    const existing = await this.findByFingerprint(stats.fingerprint)
-
-    if (existing) {
-      await this.db.query(
-        `UPDATE player_stats SET
-          derinator_wins = GREATEST(derinator_wins, $1),
-          user_wins = GREATEST(user_wins, $2),
-          current_streak = $3,
-          best_streak = GREATEST(best_streak, $4),
-          total_games = GREATEST(total_games, $5),
-          achievements = $6,
-          hall_of_fame = $7,
-          daily_guessed = $8,
-          daily_guesses = $9,
-          updated_at = NOW()
-        WHERE fingerprint = $10`,
-        [
-          stats.derinatorWins, stats.userWins, stats.currentStreak, stats.bestStreak, stats.totalGames,
-          JSON.stringify(stats.achievements), JSON.stringify(stats.hallOfFame),
-          stats.dailyGuessed ? 1 : 0, stats.dailyGuesses,
-          stats.fingerprint,
-        ]
-      )
-    } else {
-      const token = randomUUID()
-      await this.db.query(
-        `INSERT INTO player_stats (
-          fingerprint, player_token, derinator_wins, user_wins, current_streak,
-          best_streak, total_games, achievements, hall_of_fame,
-          daily_guessed, daily_guesses
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
-        [
-          stats.fingerprint, token, stats.derinatorWins, stats.userWins, stats.currentStreak, stats.bestStreak, stats.totalGames,
-          JSON.stringify(stats.achievements), JSON.stringify(stats.hallOfFame),
-          stats.dailyGuessed ? 1 : 0, stats.dailyGuesses,
-        ]
-      )
-    }
+    const token = randomUUID()
+    await this.db.query(
+      `INSERT INTO player_stats (
+        fingerprint, player_token, derinator_wins, user_wins, current_streak,
+        best_streak, total_games, achievements, hall_of_fame,
+        daily_guessed, daily_guesses
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+      ON CONFLICT (fingerprint) DO UPDATE SET
+        derinator_wins = GREATEST(player_stats.derinator_wins, EXCLUDED.derinator_wins),
+        user_wins = GREATEST(player_stats.user_wins, EXCLUDED.user_wins),
+        current_streak = EXCLUDED.current_streak,
+        best_streak = GREATEST(player_stats.best_streak, EXCLUDED.best_streak),
+        total_games = GREATEST(player_stats.total_games, EXCLUDED.total_games),
+        achievements = EXCLUDED.achievements,
+        hall_of_fame = EXCLUDED.hall_of_fame,
+        daily_guessed = EXCLUDED.daily_guessed,
+        daily_guesses = EXCLUDED.daily_guesses,
+        updated_at = NOW()`,
+      [
+        stats.fingerprint, token, stats.derinatorWins, stats.userWins, stats.currentStreak,
+        stats.bestStreak, stats.totalGames,
+        JSON.stringify(stats.achievements), JSON.stringify(stats.hallOfFame),
+        stats.dailyGuessed ? 1 : 0, stats.dailyGuesses,
+      ]
+    )
 
     return (await this.findByFingerprint(stats.fingerprint))!
   }
