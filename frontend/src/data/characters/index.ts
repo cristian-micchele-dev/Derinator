@@ -49,8 +49,19 @@ function loadFromJson(): Character[] {
   return raw.map(fillDefaults)
 }
 
+function fillLearnedDefaults(char: Character): Character {
+  const fullAnswers = {} as Record<QuestionId, Answer>
+  for (const qId of ALL_QUESTION_IDS) {
+    fullAnswers[qId] = 'dont_know'
+  }
+  for (const [key, value] of Object.entries(char.answers || {})) {
+    fullAnswers[Number(key) as QuestionId] = value as Answer
+  }
+  return { ...char, answers: fullAnswers }
+}
+
 export function getAllCharacters(): Character[] {
   const builtIn = loadFromJson()
-  const learned = loadLearnedCharacters()
+  const learned = loadLearnedCharacters().map(fillLearnedDefaults)
   return [...builtIn, ...learned]
 }
