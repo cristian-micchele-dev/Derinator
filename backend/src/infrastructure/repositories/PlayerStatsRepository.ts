@@ -19,7 +19,7 @@ interface PlayerStatsRow {
   updated_at: Date
 }
 
-export class SqlitePlayerStatsRepository implements PlayerStatsRepository {
+export class PgPlayerStatsRepository implements PlayerStatsRepository {
   constructor(private db: Pool) {}
 
   async findByFingerprint(fingerprint: string): Promise<PlayerStats | null> {

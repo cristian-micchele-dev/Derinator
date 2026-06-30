@@ -3,9 +3,9 @@ import cors from 'cors'
 import helmet from 'helmet'
 import dotenv from 'dotenv'
 import { getDb, initDb } from './db'
-import { SqlitePlayerStatsRepository } from './infrastructure/repositories/PlayerStatsRepository'
-import { SqliteCharacterRepository } from './infrastructure/repositories/CharacterRepository'
-import { SqliteGameHistoryRepository } from './infrastructure/repositories/GameHistoryRepository'
+import { PgPlayerStatsRepository } from './infrastructure/repositories/PlayerStatsRepository'
+import { PgCharacterRepository } from './infrastructure/repositories/CharacterRepository'
+import { PgGameHistoryRepository } from './infrastructure/repositories/GameHistoryRepository'
 import { createStatsRouter } from './routes/stats'
 import { createCharactersRouter } from './routes/characters'
 import { errorHandler, notFoundHandler } from './middleware/errorHandler'
@@ -18,7 +18,13 @@ async function main() {
 
   const corsOrigin = process.env.CORS_ORIGIN
   app.set('trust proxy', 1)
-  app.use(helmet())
+  // Pure JSON API — no HTML served, so full CSP is unnecessary.
+  // Explicit frameguard + noSniff (both are helmet defaults, made explicit for clarity).
+  app.use(helmet({
+    frameguard: { action: 'deny' },
+    noSniff: true,
+    contentSecurityPolicy: false,
+  }))
   app.use(cors(corsOrigin
     ? { origin: corsOrigin.split(',').map(o => o.trim()) }
     : { origin: false }
@@ -30,9 +36,9 @@ async function main() {
   const db = getDb()
 
   // Create repositories (infrastructure implementations of domain ports)
-  const statsRepo = new SqlitePlayerStatsRepository(db)
-  const characterRepo = new SqliteCharacterRepository(db)
-  const historyRepo = new SqliteGameHistoryRepository(db)
+  const statsRepo = new PgPlayerStatsRepository(db)
+  const characterRepo = new PgCharacterRepository(db)
+  const historyRepo = new PgGameHistoryRepository(db)
 
   app.get('/api/health', (_req, res) => {
     res.json({ status: 'ok', timestamp: new Date().toISOString() })

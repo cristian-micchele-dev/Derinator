@@ -12,7 +12,7 @@ interface LearnedCharacterRow {
   created_at: Date
 }
 
-export class SqliteCharacterRepository implements CharacterRepository {
+export class PgCharacterRepository implements CharacterRepository {
   constructor(private db: Pool) {}
 
   async findAll(limit = 1000): Promise<LearnedCharacter[]> {

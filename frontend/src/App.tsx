@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { ErrorBoundary } from './components/ui/ErrorBoundary'
+import { LoadingSpinner } from './components/ui/LoadingSpinner'
 import NetworkIndicator from './components/layout/NetworkIndicator'
 import Footer from './components/layout/Footer'
 import './components/pages/App.css'
@@ -15,19 +16,11 @@ function Page({ children }: { children: React.ReactNode }) {
   return <div className="page-transition">{children}</div>
 }
 
-function LoadingFallback() {
-  return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '50vh' }}>
-      <p>Cargando...</p>
-    </div>
-  )
-}
-
 export default function App() {
   return (
     <BrowserRouter>
       <ErrorBoundary>
-        <Suspense fallback={<LoadingFallback />}>
+        <Suspense fallback={<LoadingSpinner />}>
           <Routes>
             <Route path="/" element={<Page><Home /></Page>} />
             <Route path="/jugar" element={<Page><GamePage /></Page>} />

@@ -2,9 +2,9 @@ import { describe, it, expect, beforeAll } from 'vitest'
 import request from 'supertest'
 import express from 'express'
 import { getDb } from '../db'
-import { SqlitePlayerStatsRepository } from '../infrastructure/repositories/PlayerStatsRepository'
-import { SqliteCharacterRepository } from '../infrastructure/repositories/CharacterRepository'
-import { SqliteGameHistoryRepository } from '../infrastructure/repositories/GameHistoryRepository'
+import { PgPlayerStatsRepository } from '../infrastructure/repositories/PlayerStatsRepository'
+import { PgCharacterRepository } from '../infrastructure/repositories/CharacterRepository'
+import { PgGameHistoryRepository } from '../infrastructure/repositories/GameHistoryRepository'
 import { createStatsRouter } from './stats'
 import { createCharactersRouter } from './characters'
 
@@ -16,9 +16,9 @@ let playerToken: string
 beforeAll(async () => {
   const db = await getDb()
 
-  const statsRepo = new SqlitePlayerStatsRepository(db)
-  const characterRepo = new SqliteCharacterRepository(db)
-  const historyRepo = new SqliteGameHistoryRepository(db)
+  const statsRepo = new PgPlayerStatsRepository(db)
+  const characterRepo = new PgCharacterRepository(db)
+  const historyRepo = new PgGameHistoryRepository(db)
 
   app = express()
   app.use(express.json())

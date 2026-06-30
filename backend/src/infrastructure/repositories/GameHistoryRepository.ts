@@ -11,7 +11,7 @@ interface GameHistoryRow {
   created_at: Date
 }
 
-export class SqliteGameHistoryRepository implements GameHistoryRepository {
+export class PgGameHistoryRepository implements GameHistoryRepository {
   constructor(private db: Pool) {}
 
   async findByFingerprint(fingerprint: string): Promise<GameHistory[]> {
