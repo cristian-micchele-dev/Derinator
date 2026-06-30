@@ -17,7 +17,7 @@ function hashName(name: string): number {
     hash = hash & hash // Convert to 32bit integer
   }
   // Ensure positive ID in the 10000+ range to avoid collision with built-in characters
-  return 10000 + (Math.abs(hash) % 90000)
+  return 10000 + (Math.abs(hash) % 9000000)
 }
 
 export interface LearnedCharacterFromServer {

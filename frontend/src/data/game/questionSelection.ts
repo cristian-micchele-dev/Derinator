@@ -235,21 +235,6 @@ function getFlowGuidedQuestion(
   return null
 }
 
-function prerequisitesMet(
-  questionId: QuestionId,
-  answerMap: Map<QuestionId, Answer>
-): boolean {
-  const node = FLOW_MAP.get(questionId)
-  if (!node?.prerequisites) return true
-
-  return node.prerequisites.every(prereq => {
-    const given = answerMap.get(prereq.questionId)
-    // Not answered yet — don't filter out, might still be valid
-    if (given === undefined) return true
-    // Answered — must match the required answers
-    return prereq.answers.includes(given)
-  })
-}
 
 function prerequisitesStrictMet(
   questionId: QuestionId,
