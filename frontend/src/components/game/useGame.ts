@@ -3,7 +3,7 @@ import confetti from 'canvas-confetti'
 import { Answer } from '../../types'
 import { questions, QuestionId } from '../../data/questions'
 import { getAllCharacters } from '../../data/characters'
-import { filterCandidates, applyImplications, getContradictedQuestions, getConfidenceMetrics, getBestQuestion } from '../../data/game'
+import { filterCandidates, applyImplications, getContradictedQuestions, getConfidenceMetrics, getBestQuestion, detectFictionHeavy } from '../../data/game'
 import { loadLearnedCharacters } from '../../data/learnedStorage'
 import {
   recordDerinatorWin, recordUserWin, recordDefeatedBy,
@@ -240,15 +240,7 @@ export function useGame({
     const topCandidateScore = Math.round((newCandidates[0]?.score || 0) * 100)
     const nextQuestion = getBestQuestion(newRemaining, newCandidates, newHistory)
 
-    // Detect fiction-heavy candidate pools that need more questions to differentiate
-    const fictionCount = newCandidates.filter(c => {
-      const a = c.answers
-      return a[4] === 'yes' || a[59] === 'yes' || a[84] === 'yes' || a[85] === 'yes'
-        || a[93] === 'yes' || a[94] === 'yes' || a[111] === 'yes' || a[112] === 'yes'
-        || a[113] === 'yes' || a[114] === 'yes' || a[115] === 'yes' || a[116] === 'yes'
-        || a[117] === 'yes' || a[131] === 'yes' || a[132] === 'yes' || a[133] === 'yes'
-    }).length
-    const isFictionHeavy = newCandidates.length > 0 && fictionCount / newCandidates.length > 0.5
+    const isFictionHeavy = detectFictionHeavy(newCandidates)
     const minQuestionsForSingleGuess = isFictionHeavy ? 8 : 5
 
     if (newCandidates.length === 1 && topCandidateScore >= 95 && newHistory.length >= minQuestionsForSingleGuess) {

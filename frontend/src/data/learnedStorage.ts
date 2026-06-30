@@ -146,10 +146,10 @@ export async function saveLearnedCharacter(input: LearnInput): Promise<SaveResul
       if (data.details) {
         return { success: false, errors: data.details, isDuplicate: false }
       }
-      throw new Error('Server error')
+      return { success: false, errors: [{ field: 'general', message: 'Error del servidor. Intentá de nuevo más tarde.' }], isDuplicate: false }
     }
-  } catch (err) {
-    console.warn('Failed to sync with server, saving locally only:', err)
+  } catch {
+    // Network error — save locally (offline-first)
   }
   
   // Save locally regardless

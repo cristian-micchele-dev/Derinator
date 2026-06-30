@@ -169,7 +169,7 @@ describe('learnedStorage', () => {
       expect(result.errors[0].field).toBe('server')
     })
 
-    it('saves locally when server returns 500 without details', async () => {
+    it('returns error when server returns 500 without details', async () => {
       mockFetch.mockResolvedValueOnce({
         status: 500,
         ok: false,
@@ -177,8 +177,8 @@ describe('learnedStorage', () => {
       })
 
       const result = await saveLearnedCharacter(validInput)
-      // Server error without details → throws, caught, saves locally
-      expect(result.success).toBe(true)
+      expect(result.success).toBe(false)
+      expect(result.errors[0].field).toBe('general')
     })
 
     it('saves character to localStorage with correct structure', async () => {

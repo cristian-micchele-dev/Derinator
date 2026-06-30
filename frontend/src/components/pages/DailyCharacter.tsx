@@ -117,7 +117,7 @@ export default function DailyCharacter() {
             <button className="btn-primary" onClick={handlePlay}>
               {dailyState?.guessed ? 'Jugar otra vez' : 'Jugar'}
             </button>
-            {dailyState?.guessed && (
+            {dailyState?.guessed && import.meta.env.DEV && (
               <button className="btn-secondary" onClick={handleReset}>
                 Reiniciar (debug)
               </button>

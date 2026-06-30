@@ -150,7 +150,7 @@ export function filterCandidates(
  * Detect if candidate pool is fiction-heavy (many anime/game/fiction characters
  * that share similar base answers, making differentiation harder).
  */
-function detectFictionHeavy(candidates: { answers: Record<QuestionId, Answer> }[]): boolean {
+export function detectFictionHeavy(candidates: { answers: Record<QuestionId, Answer> }[]): boolean {
   const fictionQuestions: QuestionId[] = [
     4, 59, 84, 85, 93, 94, 111, 112, 113, 114, 115, 116, 117, 131, 132, 133,
   ]

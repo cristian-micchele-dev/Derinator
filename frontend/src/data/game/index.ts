@@ -20,7 +20,7 @@ export {
 } from './scoring'
 
 // Logic
-export { filterCandidates, applyImplications, getContradictedQuestions, getConfidenceMetrics } from './logics'
+export { filterCandidates, applyImplications, getContradictedQuestions, getConfidenceMetrics, detectFictionHeavy } from './logics'
 
 // Question selection
 export { getBestQuestion } from './questionSelection'
