@@ -1,7 +1,7 @@
 import { lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { ErrorBoundary } from './components/ui/ErrorBoundary'
-import { LoadingSpinner } from './components/ui/LoadingSpinner'
+import PageSkeleton from './components/ui/PageSkeleton'
 import NetworkIndicator from './components/layout/NetworkIndicator'
 import Footer from './components/layout/Footer'
 import './components/pages/App.css'
@@ -20,7 +20,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <ErrorBoundary>
-        <Suspense fallback={<LoadingSpinner />}>
+        <Suspense fallback={<PageSkeleton />}>
           <Routes>
             <Route path="/" element={<Page><Home /></Page>} />
             <Route path="/jugar" element={<Page><GamePage /></Page>} />

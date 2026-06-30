@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { CharacterRepository } from '../domain'
-import { rateLimit } from '../middleware/rateLimit'
+import { rateLimitLearn } from '../middleware/rateLimit'
 import { validateCharacterInput } from '../validation/characterValidation'
 
 export function createCharactersRouter(characterRepo: CharacterRepository): Router {
@@ -30,7 +30,7 @@ export function createCharactersRouter(characterRepo: CharacterRepository): Rout
   })
 
   // POST /api/characters/learn
-  router.post('/learn', rateLimit, async (req, res) => {
+  router.post('/learn', rateLimitLearn, async (req, res) => {
     try {
       const validation = validateCharacterInput(req.body)
 
