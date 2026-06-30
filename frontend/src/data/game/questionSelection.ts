@@ -120,7 +120,7 @@ export function getBestQuestion(
       ? prerequisitesStrictMet(qId, prereqMap) && !isExcluded(qId, prereqMap)
       : true
   // PHASE 2: When 5-10 candidates remain, prefer category/role/profession/nationality/discriminative questions
-  const PROFESSION_QUESTIONS: QuestionId[] = [15, 17, 18, 19, 20, 76, 77, 78, 79, 80]
+  const PROFESSION_QUESTIONS: QuestionId[] = [15, 17, 18, 19, 20, 76, 77, 78, 79, 80, 187, 188, 189, 190]
   if (candidateCount > 4) {
     const typeFilter = (qId: QuestionId) =>
       isEligibleStrict(qId) && (

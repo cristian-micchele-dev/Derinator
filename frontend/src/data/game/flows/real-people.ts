@@ -80,8 +80,78 @@ export const REAL_PEOPLE_FLOWS: FlowNode[] = [
       { questionId: 4, answers: ['no', 'probably_not'] },
       { questionId: 17, answers: ['yes'] },
     ],
+    exclusions: [
+      { questionId: 187, answers: ['yes'] },
+      { questionId: 188, answers: ['yes'] },
+      { questionId: 189, answers: ['yes'] },
+      { questionId: 190, answers: ['yes'] },
+    ],
     next: { default: 139 },
     weight: 3.0,
+  },
+  {
+    id: 187, // ¿Juega al baloncesto / básquet?
+    prerequisites: [
+      { questionId: 3, answers: ['yes'] },
+      { questionId: 4, answers: ['no', 'probably_not'] },
+      { questionId: 17, answers: ['yes'] },
+    ],
+    exclusions: [
+      { questionId: 76, answers: ['yes'] },
+      { questionId: 188, answers: ['yes'] },
+      { questionId: 189, answers: ['yes'] },
+      { questionId: 190, answers: ['yes'] },
+    ],
+    next: { default: null },
+    weight: 2.5,
+  },
+  {
+    id: 188, // ¿Juega al tenis?
+    prerequisites: [
+      { questionId: 3, answers: ['yes'] },
+      { questionId: 4, answers: ['no', 'probably_not'] },
+      { questionId: 17, answers: ['yes'] },
+    ],
+    exclusions: [
+      { questionId: 76, answers: ['yes'] },
+      { questionId: 187, answers: ['yes'] },
+      { questionId: 189, answers: ['yes'] },
+      { questionId: 190, answers: ['yes'] },
+    ],
+    next: { default: null },
+    weight: 2.5,
+  },
+  {
+    id: 189, // ¿Juega al golf?
+    prerequisites: [
+      { questionId: 3, answers: ['yes'] },
+      { questionId: 4, answers: ['no', 'probably_not'] },
+      { questionId: 17, answers: ['yes'] },
+    ],
+    exclusions: [
+      { questionId: 76, answers: ['yes'] },
+      { questionId: 187, answers: ['yes'] },
+      { questionId: 188, answers: ['yes'] },
+      { questionId: 190, answers: ['yes'] },
+    ],
+    next: { default: null },
+    weight: 2.5,
+  },
+  {
+    id: 190, // ¿Es boxeador/a o luchador/a?
+    prerequisites: [
+      { questionId: 3, answers: ['yes'] },
+      { questionId: 4, answers: ['no', 'probably_not'] },
+      { questionId: 17, answers: ['yes'] },
+    ],
+    exclusions: [
+      { questionId: 76, answers: ['yes'] },
+      { questionId: 187, answers: ['yes'] },
+      { questionId: 188, answers: ['yes'] },
+      { questionId: 189, answers: ['yes'] },
+    ],
+    next: { default: null },
+    weight: 2.5,
   },
   {
     id: 139, // ¿Es zurdo/a?
