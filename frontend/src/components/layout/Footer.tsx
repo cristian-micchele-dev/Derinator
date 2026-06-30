@@ -4,7 +4,6 @@ import './Footer.css'
 const NAV_ITEMS = [
   { path: '/', label: 'Inicio' },
   { path: '/jugar', label: 'Jugar' },
-  { path: '/fama', label: 'Fama' },
   { path: '/del-dia', label: 'Del Día' },
 ] as const
 

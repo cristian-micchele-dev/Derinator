@@ -7,7 +7,6 @@ import { filterCandidates, applyImplications, getContradictedQuestions, getConfi
 import { loadLearnedCharacters } from '../../data/learnedStorage'
 import {
   recordDerinatorWin, recordUserWin, recordDefeatedBy,
-  addToHallOfFame,
   recordPerfectGuess, recordCategoryWin, checkAchievements, recordDailyWin,
   loadDailyCharacter, saveDailyCharacter, getDailyCharacterIndex,
   saveGameState, syncToServer, getFingerprint, getPlayerToken,
@@ -138,11 +137,6 @@ export function useGame({
       if (guessedCharacterRef.current) {
         recordDefeatedBy(guessedCharacterRef.current.name)
       }
-      addToHallOfFame({
-        name: guessedCharacterRef.current?.name || 'Desconocido',
-        description: guessedCharacterRef.current?.description || '',
-        questionsCount: historyRef.current.length,
-      })
       recordCategoryWin(selectedCategoryRef.current)
       checkAchievements()
       syncToServer()

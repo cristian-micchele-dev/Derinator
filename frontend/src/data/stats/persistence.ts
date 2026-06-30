@@ -1,10 +1,9 @@
 import {
-  SavedGameState, GameStats, Achievement, HallOfFameEntry,
-  GAME_STATE_KEY, ONBOARDING_KEY,
+  SavedGameState, GameStats, Achievement,
+  GAME_STATE_KEY, ONBOARDING_KEY, HALL_OF_FAME_KEY,
 } from './types'
 import { loadStats, saveStats } from './gameStats'
 import { loadAchievements, saveAchievements } from './achievements'
-import { getHallOfFame } from './hallOfFame'
 import { loadDailyCharacter, saveDailyCharacter } from './daily'
 
 const FINGERPRINT_KEY = 'derinator_fingerprint'
@@ -75,7 +74,8 @@ export async function syncToServer(): Promise<void> {
     const { syncStats } = await import('../api/api')
     const stats = loadStats()
     const achievements = loadAchievements()
-    const hall = getHallOfFame()
+    const hallRaw = localStorage.getItem(HALL_OF_FAME_KEY)
+    const hall = hallRaw ? JSON.parse(hallRaw) : []
     const daily = loadDailyCharacter()
 
     const response = await syncStats({
@@ -120,7 +120,7 @@ export async function loadFromServer(): Promise<boolean> {
     const response = await fetchStats(getFingerprint()) as { success: boolean; data: {
       derinator_wins: number; user_wins: number; current_streak: number;
       best_streak: number; total_games: number;
-      achievements: Achievement[]; hall_of_fame: HallOfFameEntry[];
+      achievements: Achievement[]; hall_of_fame: unknown[];
       daily_guessed: boolean; daily_guesses: number;
     }}
 

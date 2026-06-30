@@ -16,10 +16,6 @@ vi.mock('../../data/stats/gameStats', () => ({
   recordDefeatedBy: vi.fn(),
 }))
 
-vi.mock('../../data/stats/hallOfFame', () => ({
-  addToHallOfFame: vi.fn(),
-}))
-
 vi.mock('../../data/stats/achievements', () => ({
   recordPerfectGuess: vi.fn(),
   recordCategoryWin: vi.fn(),
@@ -47,7 +43,6 @@ vi.mock('../../data/api/api', () => ({
 // Get references to the mocked functions
 import { loadDailyCharacter, getDailyCharacterIndex } from '../../data/stats/daily'
 import { recordDerinatorWin, recordUserWin } from '../../data/stats/gameStats'
-import { addToHallOfFame } from '../../data/stats/hallOfFame'
 import { recordCategoryWin, checkAchievements } from '../../data/stats/achievements'
 import { syncToServer } from '../../data/stats/persistence'
 
@@ -542,7 +537,6 @@ describe('useGame', () => {
     )
 
     expect(recordUserWin).toHaveBeenCalled()
-    expect(addToHallOfFame).toHaveBeenCalled()
     expect(recordCategoryWin).toHaveBeenCalled()
     expect(checkAchievements).toHaveBeenCalled()
     expect(syncToServer).toHaveBeenCalled()

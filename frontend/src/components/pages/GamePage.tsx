@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback, useMemo } from 'react'
 import Game from '../game/Game'
 import DerinatorAvatar, { DerinatorEmotion } from '../ui/DerinatorAvatar'
 import { getStatsDisplay, loadGameState, clearGameState, loadFromServer } from '../../data/stats'
-import './App.css'
 import '../ui/DerinatorAvatar.css'
 
 import type { GameState } from '../../types'

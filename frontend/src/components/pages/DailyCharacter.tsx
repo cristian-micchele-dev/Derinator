@@ -3,6 +3,7 @@ import { useState, useEffect, useMemo } from 'react'
 import { getAllCharacters } from '../../data/characters'
 import { getDailyCharacterIndex, loadDailyCharacter, saveDailyCharacter, resetDailyCharacter } from '../../data/stats'
 import type { DailyCharacter } from '../../data/stats'
+import dailyBg from '../../assets/derifondo2.png'
 import './DailyCharacter.css'
 
 export default function DailyCharacter() {
@@ -68,7 +69,7 @@ export default function DailyCharacter() {
 
   return (
     <div className="daily-page">
-      <div className="daily-background" />
+      <div className="daily-background" style={{ backgroundImage: `url(${dailyBg})` }} />
 
       <div className="daily-content">
         <header className="daily-header">
