@@ -96,14 +96,6 @@ export function buildContradictions(): Contradiction[] {
     add(n, 'yes', ...others)
   }
 
-  // --- NEW NATIONALITY: specific country → not American-ish regions ---
-  add(181, 'yes', 44) // Mexican → not American
-  add(182, 'yes', 44) // Colombian → not American
-  add(183, 'yes', 44) // Spanish → not American
-  add(184, 'yes', 44) // British → not American
-  add(185, 'yes', 44) // Italian → not American
-  add(186, 'yes', 44) // French → not American
-
   // --- SPORT MUTUAL EXCLUSION (only one primary sport) ---
   const SPORTS: QuestionId[] = [76, 187, 188, 189, 190]
   for (const s of SPORTS) {
@@ -152,7 +144,14 @@ export function buildContradictions(): Contradiction[] {
   add(230, 'yes', 228, 229, 233)  // Androide → not Saiyajin, not Namekiano, not humano puro
   add(233, 'yes', 228, 229, 230)  // Humano puro → not Saiyajin, not Namekiano, not androide
 
-  return contradictions
+  // Deduplicate
+  const seen = new Set<string>()
+  return contradictions.filter(rule => {
+    const key = rule.join(',')
+    if (seen.has(key)) return false
+    seen.add(key)
+    return true
+  })
 }
 
 export const CONTRADICTIONS: Contradiction[] = buildContradictions()

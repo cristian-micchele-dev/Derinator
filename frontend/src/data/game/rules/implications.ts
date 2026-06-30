@@ -153,7 +153,6 @@ export const IMPLICATIONS: Implication[] = [
   [13, 'yes', 14, 'no'],
   [13, 'yes', 9, 'no'],
   [13, 'yes', 8, 'no'],
-  [9, 'yes', 26, 'yes'],
   [9, 'yes', 25, 'yes'],
   [9, 'yes', 8, 'no'],
   [9, 'yes', 6, 'yes'],
