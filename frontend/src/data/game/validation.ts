@@ -23,6 +23,7 @@ const VALID_ANSWERS: Answer[] = ['yes', 'no', 'probably', 'probably_not', 'dont_
 const MAX_NAME_LENGTH = 100
 const MAX_DESCRIPTION_LENGTH = 200
 const MAX_ANSWERS = 250
+const MIN_ANSWERS = 5
 
 /**
  * Sanitize user input: strip HTML tags, trim, limit length
@@ -125,6 +126,11 @@ export function validateCharacterInput(raw: {
         continue
       }
       answers[qId as QuestionId] = value as Answer
+    }
+
+    const meaningfulAnswers = Object.values(answers).filter(a => a !== 'dont_know').length
+    if (meaningfulAnswers < MIN_ANSWERS) {
+      errors.push({ field: 'answers', message: `Se necesitan al menos ${MIN_ANSWERS} respuestas (sin contar "No lo sé")` })
     }
   }
 

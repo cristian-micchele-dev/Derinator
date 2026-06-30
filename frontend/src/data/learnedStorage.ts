@@ -3,6 +3,7 @@ import { QuestionId } from './questions'
 import { Answer, CharacterCategory, CharacterSubcategory } from '../types'
 import { validateCharacterInput, ValidationError } from './game/validation'
 import { API_ROOT } from './api/api'
+import { getFingerprint } from './stats/persistence'
 
 const STORAGE_KEY = 'derinator_learned_characters'
 
@@ -128,6 +129,7 @@ export async function saveLearnedCharacter(input: LearnInput): Promise<SaveResul
         category: validation.category,
         subcategory: validation.subcategory,
         answers: validation.answers,
+        fingerprint: getFingerprint(),
       }),
     })
     

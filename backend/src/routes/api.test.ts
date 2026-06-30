@@ -181,7 +181,7 @@ describe('Characters API', () => {
     description: 'A test character',
     category: 'personaje',
     subcategory: 'videojuego',
-    answers: { 1: 'yes', 3: 'yes', 4: 'yes', 60: 'yes' },
+    answers: { 1: 'yes', 3: 'yes', 4: 'yes', 60: 'yes', 7: 'no' },
   }
 
   it('POST /api/characters/learn creates a new character', async () => {
