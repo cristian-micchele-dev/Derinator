@@ -238,14 +238,15 @@ describe('getBestQuestion — Phase 1.6 (Pokémon type)', () => {
   })
 
   it('without Pokémon confirmation, skips to later phases', () => {
+    // q161 requires q85=yes; with q85=no its prerequisites are unmet
+    // q1 (¿Es un ser vivo?) has no flow node → always eligible
     const candidates = Array.from({ length: 6 }, (_, i) =>
-      char(i, `Char${i}`, { 161: i < 3 ? 'yes' : 'no', 16: i < 3 ? 'yes' : 'no' })
+      char(i, `Char${i}`, { 161: i < 3 ? 'yes' : 'no', 1: i < 3 ? 'yes' : 'no' })
     )
     const history = [{ questionId: q(85), answer: 'no' as Answer }]
-    const result = getBestQuestion(qIds([161, 16]), candidates, history)
-    // q85 was "no" → Phase 1.6 skipped → Phase 3 picks best entropy question
-    expect(result).not.toBeNull()
-    expect([161, 16]).toContain(result)
+    const result = getBestQuestion(qIds([161, 1]), candidates, history)
+    // q161 filtered out by strict prerequisites → only q1 remains
+    expect(result).toBe(1)
   })
 })
 

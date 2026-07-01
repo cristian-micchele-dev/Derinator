@@ -526,4 +526,32 @@ export const REAL_PEOPLE_FLOWS: FlowNode[] = [
     next: { default: null },
     weight: 0.8,
   },
+
+  // ---- Real-people appearance/trait questions ----
+  { id: 196, prerequisites: [{ questionId: 3, answers: ['yes'] }, { questionId: 4, answers: ['no', 'probably_not'] }], next: { default: null }, weight: 0.5 }, // pelo rubio
+  { id: 197, prerequisites: [{ questionId: 3, answers: ['yes'] }, { questionId: 4, answers: ['no', 'probably_not'] }], next: { default: null }, weight: 0.5 }, // tatuajes
+  { id: 198, prerequisites: [{ questionId: 3, answers: ['yes'] }, { questionId: 4, answers: ['no', 'probably_not'] }], next: { default: null }, weight: 1.5 }, // mejor de la historia
+  { id: 199, prerequisites: [{ questionId: 3, answers: ['yes'] }, { questionId: 4, answers: ['no', 'probably_not'] }], next: { default: null }, weight: 1.0 }, // influyente redes
+  { id: 236, prerequisites: [{ questionId: 3, answers: ['yes'] }, { questionId: 4, answers: ['no', 'probably_not'] }], next: { default: null }, weight: 0.5 }, // casado/pareja
+
+  // ---- Additional nationalities (real people) ----
+  { id: 181, prerequisites: [{ questionId: 3, answers: ['yes'] }, { questionId: 4, answers: ['no', 'probably_not'] }], next: { default: null }, weight: 2.5 }, // México
+  { id: 182, prerequisites: [{ questionId: 3, answers: ['yes'] }, { questionId: 4, answers: ['no', 'probably_not'] }], next: { default: null }, weight: 2.5 }, // Colombia
+  { id: 183, prerequisites: [{ questionId: 3, answers: ['yes'] }, { questionId: 4, answers: ['no', 'probably_not'] }], next: { default: null }, weight: 2.5 }, // España
+  { id: 184, prerequisites: [{ questionId: 3, answers: ['yes'] }, { questionId: 4, answers: ['no', 'probably_not'] }], next: { default: null }, weight: 2.5 }, // Reino Unido
+  { id: 185, prerequisites: [{ questionId: 3, answers: ['yes'] }, { questionId: 4, answers: ['no', 'probably_not'] }], next: { default: null }, weight: 2.5 }, // Italia
+  { id: 186, prerequisites: [{ questionId: 3, answers: ['yes'] }, { questionId: 4, answers: ['no', 'probably_not'] }], next: { default: null }, weight: 2.5 }, // Francia
+
+  // ---- Real-people professions/roles (not covered by main profession tree) ----
+  { id: 191, prerequisites: [{ questionId: 3, answers: ['yes'] }, { questionId: 4, answers: ['no', 'probably_not'] }], next: { default: null }, weight: 2.0 }, // comediante
+  { id: 192, prerequisites: [{ questionId: 3, answers: ['yes'] }, { questionId: 4, answers: ['no', 'probably_not'] }], next: { default: null }, weight: 2.0 }, // modelo
+  { id: 193, prerequisites: [{ questionId: 3, answers: ['yes'] }, { questionId: 4, answers: ['no', 'probably_not'] }], next: { default: null }, weight: 2.0 }, // empresario
+  { id: 194, prerequisites: [{ questionId: 3, answers: ['yes'] }, { questionId: 4, answers: ['no', 'probably_not'] }], next: { default: null }, weight: 2.0 }, // realeza
+  { id: 195, prerequisites: [{ questionId: 3, answers: ['yes'] }, { questionId: 4, answers: ['no', 'probably_not'] }], next: { default: null }, weight: 2.0 }, // Nobel
+  { id: 200, prerequisites: [{ questionId: 3, answers: ['yes'] }, { questionId: 4, answers: ['no', 'probably_not'] }], next: { default: null }, weight: 1.5 }, // líder espiritual
+
+  // ---- Football-specific (require futbolista confirmed) ----
+  { id: 201, prerequisites: [{ questionId: 3, answers: ['yes'] }, { questionId: 4, answers: ['no', 'probably_not'] }, { questionId: 76, answers: ['yes'] }], next: { default: null }, weight: 2.5 }, // Champions League
+  { id: 202, prerequisites: [{ questionId: 3, answers: ['yes'] }, { questionId: 4, answers: ['no', 'probably_not'] }, { questionId: 76, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // Serie A italiana
+  { id: 203, prerequisites: [{ questionId: 3, answers: ['yes'] }, { questionId: 4, answers: ['no', 'probably_not'] }, { questionId: 76, answers: ['yes'] }], next: { default: null }, weight: 3.0 }, // Balón de Oro
 ]
