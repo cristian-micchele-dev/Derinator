@@ -13,6 +13,8 @@ export type CharacterSubcategory =
   | 'youtuber-streamer'
   | 'historico-real'
   | 'deportista'
+  | 'musico'
+  | 'actor'
   | 'otro'
 
 export type GameState = 'start' | 'playing' | 'guess' | 'win' | 'lose' | 'learn_name' | 'learn_questions'

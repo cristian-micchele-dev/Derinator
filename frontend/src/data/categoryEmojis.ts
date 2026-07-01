@@ -16,6 +16,8 @@ const SUBCATEGORY_EMOJIS: Record<CharacterSubcategory, string> = {
   'youtuber-streamer': '📹',
   'historico-real': '📜',
   deportista: '⚽',
+  musico: '🎵',
+  actor: '🎬',
   otro: '❓',
 }
 
@@ -48,6 +50,8 @@ export function getCategoryLabel(
     'youtuber-streamer': 'YouTuber/Streamer',
     'historico-real': 'Histórico/Real',
     deportista: 'Deportista',
+    musico: 'Músico',
+    actor: 'Actor/Actriz',
     otro: 'Otro',
   }
 

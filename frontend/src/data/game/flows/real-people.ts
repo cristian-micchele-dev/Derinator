@@ -2,13 +2,28 @@ import { FlowNode } from '../questionFlow'
 
 export const REAL_PEOPLE_FLOWS: FlowNode[] = [
   {
+    id: 52, // ¿Es mujer? — FIRST question for real people (biggest split)
+    prerequisites: [{ questionId: 3, answers: ['yes'] }, { questionId: 4, answers: ['no', 'probably_not'] }],
+    next: {
+      yes: null,
+      no: 53,
+    },
+    weight: 3.5,
+  },
+  {
+    id: 53, // ¿Es hombre?
+    prerequisites: [{ questionId: 3, answers: ['yes'] }, { questionId: 4, answers: ['no', 'probably_not'] }],
+    next: { default: 141 },
+    weight: 3.5,
+  },
+  {
     id: 16, // ¿Es de Argentina?
     prerequisites: [{ questionId: 3, answers: ['yes'] }, { questionId: 4, answers: ['no', 'probably_not'] }],
     next: {
       yes: null,
       no: 44,
     },
-    weight: 2.5,
+    weight: 2.0,
   },
   {
     id: 44, // ¿Es de Estados Unidos?
@@ -17,7 +32,7 @@ export const REAL_PEOPLE_FLOWS: FlowNode[] = [
       yes: null,
       no: 45,
     },
-    weight: 2.5,
+    weight: 2.0,
   },
   {
     id: 45, // ¿Es europeo?
@@ -26,7 +41,7 @@ export const REAL_PEOPLE_FLOWS: FlowNode[] = [
       yes: null,
       no: 46,
     },
-    weight: 2.5,
+    weight: 2.0,
   },
   {
     id: 46, // ¿Es japonés?
@@ -35,27 +50,12 @@ export const REAL_PEOPLE_FLOWS: FlowNode[] = [
       yes: null,
       no: 47,
     },
-    weight: 2.5,
+    weight: 2.0,
   },
   {
     id: 47, // ¿Es de otro país de América / África / Asia?
     prerequisites: [{ questionId: 3, answers: ['yes'] }, { questionId: 4, answers: ['no', 'probably_not'] }],
-    next: { default: 52 },
-    weight: 2.0,
-  },
-  {
-    id: 52, // ¿Es mujer?
-    prerequisites: [{ questionId: 3, answers: ['yes'] }, { questionId: 4, answers: ['no', 'probably_not'] }],
-    next: {
-      yes: null,
-      no: 53,
-    },
-    weight: 2.0,
-  },
-  {
-    id: 53, // ¿Es hombre?
-    prerequisites: [{ questionId: 3, answers: ['yes'] }, { questionId: 4, answers: ['no', 'probably_not'] }],
-    next: { default: 141 },
+    next: { default: 16 },
     weight: 2.0,
   },
   {
@@ -360,6 +360,21 @@ export const REAL_PEOPLE_FLOWS: FlowNode[] = [
     next: { default: null },
     weight: 1.5,
   },
+  // ---- Rock/metal sub-genre questions (require rock confirmed) ----
+  { id: 237, prerequisites: [{ questionId: 18, answers: ['yes'] }, { questionId: 155, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // heavy metal
+  { id: 238, prerequisites: [{ questionId: 18, answers: ['yes'] }, { questionId: 155, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // power metal
+  { id: 239, prerequisites: [{ questionId: 18, answers: ['yes'] }, { questionId: 155, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // folk metal
+  { id: 240, prerequisites: [{ questionId: 18, answers: ['yes'] }, { questionId: 155, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // death/black metal
+  { id: 241, prerequisites: [{ questionId: 18, answers: ['yes'] }, { questionId: 155, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // hard rock
+  { id: 242, prerequisites: [{ questionId: 18, answers: ['yes'] }, { questionId: 155, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // punk rock
+  { id: 243, prerequisites: [{ questionId: 18, answers: ['yes'] }, { questionId: 155, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // rock alternativo
+  { id: 244, prerequisites: [{ questionId: 18, answers: ['yes'] }, { questionId: 155, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // metal progresivo
+
+  // ---- General musician detail questions (require musician confirmed) ----
+  { id: 245, prerequisites: [{ questionId: 18, answers: ['yes'] }], next: { default: null }, weight: 1.5 }, // solista
+  { id: 246, prerequisites: [{ questionId: 18, answers: ['yes'] }], next: { default: null }, weight: 1.5 }, // vocalista principal
+  { id: 247, prerequisites: [{ questionId: 18, answers: ['yes'] }], next: { default: null }, weight: 1.5 }, // canta en español
+
   {
     id: 19, // ¿Es actor/actriz?
     prerequisites: [{ questionId: 3, answers: ['yes'] }, { questionId: 4, answers: ['no', 'probably_not'] }],
@@ -535,12 +550,12 @@ export const REAL_PEOPLE_FLOWS: FlowNode[] = [
   { id: 236, prerequisites: [{ questionId: 3, answers: ['yes'] }, { questionId: 4, answers: ['no', 'probably_not'] }], next: { default: null }, weight: 0.5 }, // casado/pareja
 
   // ---- Additional nationalities (real people) ----
-  { id: 181, prerequisites: [{ questionId: 3, answers: ['yes'] }, { questionId: 4, answers: ['no', 'probably_not'] }], next: { default: null }, weight: 2.5 }, // México
-  { id: 182, prerequisites: [{ questionId: 3, answers: ['yes'] }, { questionId: 4, answers: ['no', 'probably_not'] }], next: { default: null }, weight: 2.5 }, // Colombia
-  { id: 183, prerequisites: [{ questionId: 3, answers: ['yes'] }, { questionId: 4, answers: ['no', 'probably_not'] }], next: { default: null }, weight: 2.5 }, // España
-  { id: 184, prerequisites: [{ questionId: 3, answers: ['yes'] }, { questionId: 4, answers: ['no', 'probably_not'] }], next: { default: null }, weight: 2.5 }, // Reino Unido
-  { id: 185, prerequisites: [{ questionId: 3, answers: ['yes'] }, { questionId: 4, answers: ['no', 'probably_not'] }], next: { default: null }, weight: 2.5 }, // Italia
-  { id: 186, prerequisites: [{ questionId: 3, answers: ['yes'] }, { questionId: 4, answers: ['no', 'probably_not'] }], next: { default: null }, weight: 2.5 }, // Francia
+  { id: 181, prerequisites: [{ questionId: 3, answers: ['yes'] }, { questionId: 4, answers: ['no', 'probably_not'] }], next: { default: null }, weight: 2.0 }, // México
+  { id: 182, prerequisites: [{ questionId: 3, answers: ['yes'] }, { questionId: 4, answers: ['no', 'probably_not'] }], next: { default: null }, weight: 2.0 }, // Colombia
+  { id: 183, prerequisites: [{ questionId: 3, answers: ['yes'] }, { questionId: 4, answers: ['no', 'probably_not'] }], next: { default: null }, weight: 2.0 }, // España
+  { id: 184, prerequisites: [{ questionId: 3, answers: ['yes'] }, { questionId: 4, answers: ['no', 'probably_not'] }], next: { default: null }, weight: 2.0 }, // Reino Unido
+  { id: 185, prerequisites: [{ questionId: 3, answers: ['yes'] }, { questionId: 4, answers: ['no', 'probably_not'] }], next: { default: null }, weight: 2.0 }, // Italia
+  { id: 186, prerequisites: [{ questionId: 3, answers: ['yes'] }, { questionId: 4, answers: ['no', 'probably_not'] }], next: { default: null }, weight: 2.0 }, // Francia
 
   // ---- Real-people professions/roles (not covered by main profession tree) ----
   { id: 191, prerequisites: [{ questionId: 3, answers: ['yes'] }, { questionId: 4, answers: ['no', 'probably_not'] }], next: { default: null }, weight: 2.0 }, // comediante

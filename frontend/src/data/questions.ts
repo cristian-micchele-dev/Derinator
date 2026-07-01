@@ -285,6 +285,19 @@ export const questions = [
   { id: 234, text: '¿Es pequeño/a?' },
   { id: 235, text: '¿Es de la realeza o príncipe?' },
   { id: 236, text: '¿Es casado/a o tiene pareja?' },
+
+  // Rock/metal sub-genres (require Q155=yes, rock)
+  { id: 237, text: '¿Es de heavy metal?' },
+  { id: 238, text: '¿Es de power metal?' },
+  { id: 239, text: '¿Es de folk metal?' },
+  { id: 240, text: '¿Es de death metal / black metal?' },
+  { id: 241, text: '¿Es de hard rock?' },
+  { id: 242, text: '¿Es de punk rock?' },
+  { id: 243, text: '¿Es de rock alternativo / indie?' },
+  { id: 244, text: '¿Es de metal progresivo?' },
+  { id: 245, text: '¿Es solista (no banda)?' },
+  { id: 246, text: '¿Es vocalista principal?' },
+  { id: 247, text: '¿Canta en español?' },
 ] as const
 
 export type QuestionId = typeof questions[number]['id']

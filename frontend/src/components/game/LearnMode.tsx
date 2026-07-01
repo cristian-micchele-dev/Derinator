@@ -96,6 +96,8 @@ export default function LearnMode(props: LearnModeProps) {
                   <option value="nintendo">Nintendo</option>
                   <option value="historico-real">Histórico / Real</option>
                   <option value="deportista">Deportista</option>
+                  <option value="musico">Músico</option>
+                  <option value="actor">Actor / Actriz</option>
                   <option value="youtuber-streamer">YouTuber / Streamer</option>
                   <option value="otro">Otro</option>
                 </select>
@@ -191,8 +193,11 @@ export default function LearnMode(props: LearnModeProps) {
             </div>
           ) : (
             <div className="learn-question-section">
-              <h3>¡No hay más preguntas relevantes!</h3>
-              <p>Ya respondiste todas las preguntas necesarias para esta categoría.</p>
+              <h3>¡Listo! Ya tengo suficiente info</h3>
+              <p>Podés guardar o agregar una pista para diferenciar mejor a tu personaje.</p>
+              <button className="btn-primary" onClick={lm.startHint}>
+                Agregar pista
+              </button>
             </div>
           )}
 
@@ -203,8 +208,51 @@ export default function LearnMode(props: LearnModeProps) {
             <button className="btn-cancel" onClick={lm.onCancel}>
               Cancelar
             </button>
-            <button className="btn-finish" onClick={lm.handleFinishLearn}>
+            <button className="btn-finish" onClick={lm.handleFinishLearn} disabled={!lm.canFinish}>
               Terminar y guardar
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (lm.phase === 'hint') {
+    return (
+      <div className="learn-mode-overlay">
+        <div className="learn-mode-container">
+          <div className="learn-header">
+            <Avatar name="Derinator" size="sm" className="learn-avatar" />
+            <h2>Pista para {lm.learnName}</h2>
+            <p className="learn-subtitle">
+              Escribí algo que ayude a identificar a este personaje. Por ejemplo: "es el vocalista de Mägo de Oz".
+            </p>
+          </div>
+
+          <div className="learn-form">
+            <div className="learn-field">
+              <label>Pista (opcional)</label>
+              <input
+                type="text"
+                value={lm.learnHint}
+                onChange={(e) => lm.setLearnHint(e.target.value)}
+                placeholder="Ej: es conocido por..."
+                className="learn-input"
+                maxLength={200}
+              />
+            </div>
+          </div>
+
+          <div className="learn-actions">
+            <button className="btn-secondary" onClick={lm.handleFinishLearn}>
+              Guardar sin pista
+            </button>
+            <button
+              className="btn-primary"
+              onClick={lm.handleFinishLearn}
+              disabled={!lm.learnHint.trim()}
+            >
+              Guardar con pista
             </button>
           </div>
         </div>

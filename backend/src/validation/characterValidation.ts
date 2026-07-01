@@ -16,6 +16,8 @@ export const VALID_SUBCATEGORIES = [
   'youtuber-streamer',
   'historico-real',
   'deportista',
+  'musico',
+  'actor',
   'otro',
 ] as const
 export type ValidSubcategory = typeof VALID_SUBCATEGORIES[number]
