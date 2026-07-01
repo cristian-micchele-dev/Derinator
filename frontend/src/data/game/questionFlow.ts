@@ -102,14 +102,15 @@ const HUB_FLOWS: FlowNode[] = [
     next: { default: 4 },
   },
   {
-    id: 4, // ¿Es de ficción? (human path)
-    prerequisites: [{ questionId: 3, answers: ['yes'] }],
+    id: 4, // ¿Es de ficción?
+    prerequisites: [{ questionId: 1, answers: ['yes', 'probably'] }],
     next: {
       yes: 54,
       no: 16,
       default: 54,
     },
     alternatives: [16],
+    weight: 3.0,
   },
 ]
 

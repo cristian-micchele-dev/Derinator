@@ -1,16 +1,9 @@
 import { FlowNode } from '../questionFlow'
 
 // ===== NON-HUMAN FICTIONAL CREATURES =====
+// NOTE: Q4 (¿Es de ficción?) lives in HUB_FLOWS with prerequisites [Q1=yes].
+// Do NOT add Q4 here — FLOW_MAP keeps only the last entry per ID.
 export const FICTIONAL_FLOWS: FlowNode[] = [
-  {
-    id: 4, // ¿Es de ficción? (non-human path)
-    prerequisites: [{ questionId: 3, answers: ['no'] }],
-    next: {
-      yes: 82,  // Humanoid?
-      no: null, // Not fictional and not human = ??? (shouldn't happen often)
-      default: 82,
-    },
-  },
   {
     id: 82, // ¿Tiene forma humana?
     prerequisites: [{ questionId: 3, answers: ['no'] }, { questionId: 4, answers: ['yes'] }],
