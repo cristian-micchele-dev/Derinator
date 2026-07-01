@@ -1,6 +1,8 @@
 import { Answer, CharacterCategory, CharacterSubcategory } from '../../types'
 import { QuestionId, questions } from '../questions'
 import { loadLearnedCharacters } from '../learnedStorage'
+import { buildProfile } from '../game/bayesian'
+import type { CandidateWithProfile } from '../game/bayesian'
 import animales from './animales.json'
 import personajes from './personajes.json'
 import famosos from './famosos.json'
@@ -64,4 +66,12 @@ export function getAllCharacters(): Character[] {
   const builtIn = loadFromJson()
   const learned = loadLearnedCharacters().map(fillLearnedDefaults)
   return [...builtIn, ...learned]
+}
+
+/** Returns all characters with probability profiles attached */
+export function getAllCharactersWithProfiles(): CandidateWithProfile[] {
+  return getAllCharacters().map((char) => ({
+    ...char,
+    profile: buildProfile(char.answers, ALL_QUESTION_IDS),
+  }))
 }
