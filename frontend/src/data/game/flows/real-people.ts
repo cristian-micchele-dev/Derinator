@@ -67,6 +67,13 @@ export const REAL_PEOPLE_FLOWS: FlowNode[] = [
   {
     id: 17, // ¿Es atleta?
     prerequisites: [{ questionId: 3, answers: ['yes'] }, { questionId: 4, answers: ['no', 'probably_not'] }],
+    exclusions: [
+      { questionId: 18, answers: ['yes'] },
+      { questionId: 19, answers: ['yes'] },
+      { questionId: 20, answers: ['yes'] },
+      { questionId: 77, answers: ['yes'] },
+      { questionId: 78, answers: ['yes'] },
+    ],
     next: {
       yes: 76,
       no: 18,
@@ -252,6 +259,13 @@ export const REAL_PEOPLE_FLOWS: FlowNode[] = [
   {
     id: 18, // ¿Es músico?
     prerequisites: [{ questionId: 3, answers: ['yes'] }, { questionId: 4, answers: ['no', 'probably_not'] }],
+    exclusions: [
+      { questionId: 17, answers: ['yes'] },
+      { questionId: 19, answers: ['yes'] },
+      { questionId: 20, answers: ['yes'] },
+      { questionId: 77, answers: ['yes'] },
+      { questionId: 78, answers: ['yes'] },
+    ],
     next: {
       yes: 154,
       no: 19,
@@ -349,6 +363,13 @@ export const REAL_PEOPLE_FLOWS: FlowNode[] = [
   {
     id: 19, // ¿Es actor/actriz?
     prerequisites: [{ questionId: 3, answers: ['yes'] }, { questionId: 4, answers: ['no', 'probably_not'] }],
+    exclusions: [
+      { questionId: 17, answers: ['yes'] },
+      { questionId: 18, answers: ['yes'] },
+      { questionId: 20, answers: ['yes'] },
+      { questionId: 77, answers: ['yes'] },
+      { questionId: 78, answers: ['yes'] },
+    ],
     next: {
       yes: 150,
       no: 20,
@@ -404,6 +425,13 @@ export const REAL_PEOPLE_FLOWS: FlowNode[] = [
   {
     id: 20, // ¿Es figura histórica / política?
     prerequisites: [{ questionId: 3, answers: ['yes'] }, { questionId: 4, answers: ['no', 'probably_not'] }],
+    exclusions: [
+      { questionId: 17, answers: ['yes'] },
+      { questionId: 18, answers: ['yes'] },
+      { questionId: 19, answers: ['yes'] },
+      { questionId: 77, answers: ['yes'] },
+      { questionId: 78, answers: ['yes'] },
+    ],
     next: {
       yes: 79,
       no: 77,
@@ -413,6 +441,13 @@ export const REAL_PEOPLE_FLOWS: FlowNode[] = [
   {
     id: 77, // ¿Es youtuber / streamer?
     prerequisites: [{ questionId: 3, answers: ['yes'] }, { questionId: 4, answers: ['no', 'probably_not'] }],
+    exclusions: [
+      { questionId: 17, answers: ['yes'] },
+      { questionId: 18, answers: ['yes'] },
+      { questionId: 19, answers: ['yes'] },
+      { questionId: 20, answers: ['yes'] },
+      { questionId: 78, answers: ['yes'] },
+    ],
     next: {
       yes: null,
       no: 78,
@@ -422,6 +457,13 @@ export const REAL_PEOPLE_FLOWS: FlowNode[] = [
   {
     id: 78, // ¿Es científico / inventor?
     prerequisites: [{ questionId: 3, answers: ['yes'] }, { questionId: 4, answers: ['no', 'probably_not'] }],
+    exclusions: [
+      { questionId: 17, answers: ['yes'] },
+      { questionId: 18, answers: ['yes'] },
+      { questionId: 19, answers: ['yes'] },
+      { questionId: 20, answers: ['yes'] },
+      { questionId: 77, answers: ['yes'] },
+    ],
     next: {
       yes: null,
       no: 80,
@@ -431,12 +473,26 @@ export const REAL_PEOPLE_FLOWS: FlowNode[] = [
   {
     id: 79, // ¿Es artista / pintor?
     prerequisites: [{ questionId: 3, answers: ['yes'] }, { questionId: 4, answers: ['no', 'probably_not'] }],
+    exclusions: [
+      { questionId: 17, answers: ['yes'] },
+      { questionId: 18, answers: ['yes'] },
+      { questionId: 19, answers: ['yes'] },
+      { questionId: 77, answers: ['yes'] },
+      { questionId: 78, answers: ['yes'] },
+    ],
     next: { default: null },
     weight: 2.0,
   },
   {
     id: 80, // ¿Es político / líder?
     prerequisites: [{ questionId: 3, answers: ['yes'] }, { questionId: 4, answers: ['no', 'probably_not'] }],
+    exclusions: [
+      { questionId: 17, answers: ['yes'] },
+      { questionId: 18, answers: ['yes'] },
+      { questionId: 19, answers: ['yes'] },
+      { questionId: 77, answers: ['yes'] },
+      { questionId: 78, answers: ['yes'] },
+    ],
     next: { default: null },
     weight: 2.0,
   },
