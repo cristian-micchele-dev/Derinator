@@ -62,7 +62,7 @@ export default function Game(props: GameProps) {
         <div className="question-box win">
           <p className="result-text">¡Derinator wins!</p>
           <p className="hint">Pensé en {game.guessedCharacter?.name} y acerté</p>
-          <p className="hint">En {game.history.length} preguntas</p>
+          <p className="hint">En {game.history.length - game.seedCount} preguntas</p>
         </div>
         <button className="btn-primary" onClick={game.handleRestart}>
           Jugar de nuevo
@@ -97,7 +97,7 @@ export default function Game(props: GameProps) {
             <p>No pude adivinar.</p>
           )}
           <p>¡Ayudame a aprender para la próxima!</p>
-          <p className="hint">{game.history.length} preguntas usadas</p>
+          <p className="hint">{game.history.length - game.seedCount} preguntas usadas</p>
         </div>
         <button className="btn-primary" onClick={() => props.setGameState('learn_name')}>
           📚 Enseñar personaje
@@ -176,7 +176,7 @@ export default function Game(props: GameProps) {
     <div className="game-container">
       <div className="progress">
         <div className="progress-info">
-          Pregunta {game.history.length + 1}
+          Pregunta {game.history.length - game.seedCount + 1}
           <span className="candidates"> | {game.rankedCandidates.length} candidatos</span>
         </div>
         <div className="confidence-bar-container">

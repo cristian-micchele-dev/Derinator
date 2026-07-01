@@ -25,6 +25,7 @@ const mockGame = {
   rankedCandidates: [],
   isThinkingDelay: false,
   pendingAnswer: null,
+  seedCount: 0,
 }
 
 vi.mock('./useGame', () => ({

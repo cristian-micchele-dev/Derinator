@@ -334,6 +334,8 @@ export function useGame({
     }
   }, [gameState, currentQuestionId, rankedCandidates, triggerDramaticPause, onConfidenceChange, history])
 
+  const seedCount = CATEGORY_SEED_ANSWERS[selectedCategory].length
+
   return {
     gameState,
     history,
@@ -349,6 +351,7 @@ export function useGame({
     isThinkingDelay,
     pendingAnswer,
     guessedCharacter,
+    seedCount,
     handleAnswer,
     handleGuess,
     handleRestart,
