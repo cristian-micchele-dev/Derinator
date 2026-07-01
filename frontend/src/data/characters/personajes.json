@@ -2015,5 +2015,426 @@
       "232": "yes",
       "234": "yes"
     }
+  },
+  {
+    "id": 73,
+    "name": "Shrek",
+    "description": "Ogro verde del pantano",
+    "category": "personaje",
+    "answers": {
+      "1": "yes", "3": "no", "4": "yes",
+      "52": "no", "53": "yes",
+      "82": "yes", "83": "yes", "88": "yes",
+      "120": "no", "121": "yes", "122": "yes",
+      "125": "yes", "126": "no",
+      "128": "no", "129": "yes",
+      "221": "yes", "223": "no"
+    }
+  },
+  {
+    "id": 74,
+    "name": "Woody",
+    "description": "Vaquero de Toy Story",
+    "category": "personaje",
+    "subcategory": "disney",
+    "answers": {
+      "1": "yes", "3": "no", "4": "yes",
+      "57": "yes",
+      "82": "yes", "83": "yes", "88": "yes",
+      "89": "no", "121": "yes", "122": "yes",
+      "123": "yes", "125": "no",
+      "128": "no", "129": "yes"
+    }
+  },
+  {
+    "id": 75,
+    "name": "Buzz Lightyear",
+    "description": "Guardián espacial de Toy Story",
+    "category": "personaje",
+    "subcategory": "disney",
+    "answers": {
+      "1": "yes", "3": "no", "4": "yes",
+      "57": "yes",
+      "82": "yes", "83": "yes", "88": "yes",
+      "89": "probably", "121": "yes", "122": "yes",
+      "125": "no", "127": "yes",
+      "128": "no", "129": "yes",
+      "90": "yes"
+    }
+  },
+  {
+    "id": 76,
+    "name": "Simba",
+    "description": "Rey león de la Roca del Rey",
+    "category": "personaje",
+    "subcategory": "disney",
+    "answers": {
+      "1": "yes", "2": "yes", "3": "no", "4": "yes",
+      "8": "yes", "27": "yes", "28": "yes",
+      "35": "yes", "41": "yes",
+      "57": "yes", "83": "yes",
+      "121": "yes", "122": "yes", "123": "yes",
+      "235": "yes"
+    }
+  },
+  {
+    "id": 77,
+    "name": "Kratos",
+    "description": "Dios de la Guerra espartano",
+    "category": "personaje",
+    "answers": {
+      "1": "yes", "3": "yes", "4": "yes",
+      "52": "no", "53": "yes",
+      "54": "no", "55": "no", "56": "no",
+      "59": "no", "60": "yes",
+      "62": "yes", "74": "yes",
+      "82": "yes", "83": "yes", "88": "yes",
+      "103": "yes",
+      "121": "yes", "125": "yes", "126": "yes",
+      "128": "yes", "224": "yes",
+      "223": "no", "222": "no", "227": "yes"
+    }
+  },
+  {
+    "id": 78,
+    "name": "Master Chief",
+    "description": "Supersoldado Spartan de Halo",
+    "category": "personaje",
+    "answers": {
+      "1": "yes", "3": "yes", "4": "yes",
+      "52": "no", "53": "yes",
+      "55": "yes", "56": "no",
+      "59": "no", "60": "yes",
+      "62": "yes", "74": "no",
+      "82": "yes", "83": "yes", "88": "yes",
+      "89": "probably", "104": "yes",
+      "121": "yes", "123": "yes", "125": "yes",
+      "127": "yes"
+    }
+  },
+  {
+    "id": 79,
+    "name": "Lara Croft",
+    "description": "Arqueóloga aventurera de Tomb Raider",
+    "category": "personaje",
+    "answers": {
+      "1": "yes", "3": "yes", "4": "yes",
+      "52": "yes", "53": "no",
+      "56": "no", "59": "no", "60": "yes",
+      "62": "yes", "74": "no",
+      "82": "yes", "83": "yes", "88": "yes",
+      "121": "yes", "122": "yes",
+      "124": "yes", "125": "no",
+      "51": "yes"
+    }
+  },
+  {
+    "id": 80,
+    "name": "Sub-Zero",
+    "description": "Ninja de hielo de Mortal Kombat",
+    "category": "personaje",
+    "answers": {
+      "1": "yes", "3": "yes", "4": "yes",
+      "52": "no", "53": "yes",
+      "55": "yes", "56": "no",
+      "59": "no", "60": "yes",
+      "61": "yes", "74": "yes",
+      "82": "yes", "83": "yes", "88": "yes",
+      "91": "yes", "106": "yes",
+      "121": "no", "226": "yes",
+      "220": "no", "222": "no"
+    }
+  },
+  {
+    "id": 81,
+    "name": "Scorpion",
+    "description": "Ninja espectral de Mortal Kombat",
+    "category": "personaje",
+    "answers": {
+      "1": "probably", "3": "yes", "4": "yes",
+      "52": "no", "53": "yes",
+      "55": "yes", "56": "no",
+      "59": "no", "60": "yes",
+      "74": "yes", "82": "yes", "83": "yes", "88": "yes",
+      "90": "yes", "91": "yes", "106": "yes",
+      "120": "yes", "121": "no", "226": "yes"
+    }
+  },
+  {
+    "id": 82,
+    "name": "Rapunzel",
+    "description": "Princesa de pelo largo de Disney",
+    "category": "personaje",
+    "subcategory": "disney",
+    "answers": {
+      "1": "yes", "3": "yes", "4": "yes",
+      "52": "yes", "53": "no",
+      "51": "yes", "57": "yes",
+      "61": "yes", "74": "no",
+      "82": "yes", "83": "yes", "88": "yes",
+      "121": "yes", "122": "yes",
+      "196": "yes", "235": "yes"
+    }
+  },
+  {
+    "id": 83,
+    "name": "Mulan",
+    "description": "Guerrera china de Disney",
+    "category": "personaje",
+    "subcategory": "disney",
+    "answers": {
+      "1": "yes", "3": "yes", "4": "yes",
+      "52": "yes", "53": "no",
+      "57": "yes", "62": "yes",
+      "82": "yes", "83": "yes", "88": "yes",
+      "121": "yes", "122": "yes",
+      "223": "yes", "224": "yes"
+    }
+  },
+  {
+    "id": 84,
+    "name": "Maui",
+    "description": "Semidiós polinesio de Moana",
+    "category": "personaje",
+    "subcategory": "disney",
+    "answers": {
+      "1": "yes", "3": "yes", "4": "yes",
+      "52": "no", "53": "yes",
+      "57": "yes", "74": "yes",
+      "82": "yes", "83": "yes", "88": "no",
+      "121": "no", "122": "yes", "125": "yes",
+      "197": "yes"
+    }
+  },
+  {
+    "id": 85,
+    "name": "Walter White",
+    "description": "Profesor de química convertido en Heisenberg",
+    "category": "personaje",
+    "answers": {
+      "1": "yes", "3": "yes", "4": "yes",
+      "52": "no", "53": "yes",
+      "59": "no", "60": "no",
+      "49": "yes", "50": "yes", "48": "yes",
+      "82": "yes", "83": "yes",
+      "124": "yes", "128": "yes", "130": "yes",
+      "135": "yes",
+      "121": "yes", "126": "yes"
+    }
+  },
+  {
+    "id": 86,
+    "name": "Jon Snow",
+    "description": "Rey en el Norte de Game of Thrones",
+    "category": "personaje",
+    "answers": {
+      "1": "yes", "3": "yes", "4": "yes",
+      "52": "no", "53": "yes",
+      "59": "no", "60": "no",
+      "62": "yes", "82": "yes", "83": "yes", "88": "yes",
+      "121": "yes", "123": "yes", "126": "yes", "128": "yes",
+      "130": "yes", "134": "yes",
+      "223": "yes", "224": "yes", "227": "yes", "235": "yes"
+    }
+  },
+  {
+    "id": 87,
+    "name": "Daenerys Targaryen",
+    "description": "Madre de Dragones de Game of Thrones",
+    "category": "personaje",
+    "answers": {
+      "1": "yes", "3": "yes", "4": "yes",
+      "52": "yes", "53": "no",
+      "59": "no", "60": "no",
+      "82": "yes", "83": "yes", "88": "yes",
+      "121": "yes", "123": "yes", "130": "yes",
+      "134": "yes", "222": "yes",
+      "235": "yes"
+    }
+  },
+  {
+    "id": 88,
+    "name": "Eleven",
+    "description": "Chica con poderes de Stranger Things",
+    "category": "personaje",
+    "answers": {
+      "1": "yes", "3": "yes", "4": "yes",
+      "52": "yes", "53": "no",
+      "59": "no", "60": "no",
+      "74": "yes", "82": "yes", "83": "yes",
+      "95": "yes", "121": "yes", "130": "yes",
+      "136": "yes",
+      "50": "probably"
+    }
+  },
+  {
+    "id": 89,
+    "name": "Homero Simpson",
+    "description": "Padre de familia de Springfield",
+    "category": "personaje",
+    "answers": {
+      "1": "yes", "3": "yes", "4": "yes",
+      "52": "no", "53": "yes",
+      "59": "no", "60": "no",
+      "50": "yes", "82": "yes", "83": "yes", "88": "yes",
+      "121": "yes", "125": "yes",
+      "137": "yes",
+      "128": "no", "236": "yes"
+    }
+  },
+  {
+    "id": 90,
+    "name": "Bart Simpson",
+    "description": "Niño travieso de Springfield",
+    "category": "personaje",
+    "answers": {
+      "1": "yes", "3": "yes", "4": "yes",
+      "52": "no", "53": "yes",
+      "59": "no", "60": "no",
+      "82": "yes", "83": "yes", "88": "yes",
+      "95": "yes", "121": "probably",
+      "137": "yes",
+      "90": "yes"
+    }
+  },
+  {
+    "id": 91,
+    "name": "Rick Sanchez",
+    "description": "Científico loco de Rick and Morty",
+    "category": "personaje",
+    "answers": {
+      "1": "yes", "3": "yes", "4": "yes",
+      "52": "no", "53": "yes",
+      "59": "no", "60": "no",
+      "49": "no", "82": "yes", "83": "yes", "88": "yes",
+      "121": "yes", "124": "yes", "127": "yes",
+      "128": "yes", "129": "yes",
+      "138": "yes",
+      "126": "no", "50": "no",
+      "220": "yes"
+    }
+  },
+  {
+    "id": 92,
+    "name": "Geralt de Rivia",
+    "description": "Brujo cazador de monstruos de The Witcher",
+    "category": "personaje",
+    "answers": {
+      "1": "yes", "3": "yes", "4": "yes",
+      "52": "no", "53": "yes",
+      "59": "no", "60": "yes",
+      "62": "yes", "74": "yes",
+      "82": "yes", "83": "yes", "88": "yes",
+      "109": "yes",
+      "121": "yes", "125": "yes", "128": "yes", "130": "yes",
+      "222": "yes", "224": "yes", "227": "yes"
+    }
+  },
+  {
+    "id": 93,
+    "name": "Ezio Auditore",
+    "description": "Asesino renacentista de Assassin's Creed",
+    "category": "personaje",
+    "answers": {
+      "1": "yes", "3": "yes", "4": "yes",
+      "52": "no", "53": "yes",
+      "54": "yes", "55": "no",
+      "59": "no", "60": "yes",
+      "62": "yes", "74": "no",
+      "82": "yes", "83": "yes", "88": "yes",
+      "105": "yes",
+      "121": "yes", "126": "yes", "128": "yes",
+      "224": "yes", "227": "yes"
+    }
+  },
+  {
+    "id": 94,
+    "name": "Stitch",
+    "description": "Experimento 626 de Disney",
+    "category": "personaje",
+    "subcategory": "disney",
+    "answers": {
+      "1": "yes", "3": "no", "4": "yes",
+      "57": "yes",
+      "82": "no", "83": "yes",
+      "95": "yes", "120": "no",
+      "121": "yes", "122": "yes",
+      "220": "yes", "234": "yes"
+    }
+  },
+  {
+    "id": 95,
+    "name": "Wolverine",
+    "description": "Mutante con garras de adamantium",
+    "category": "personaje",
+    "answers": {
+      "1": "yes", "3": "yes", "4": "yes",
+      "52": "no", "53": "yes",
+      "56": "yes", "62": "yes",
+      "71": "yes", "74": "yes",
+      "82": "yes", "83": "yes", "88": "yes",
+      "121": "no", "122": "yes", "125": "no",
+      "126": "yes", "128": "yes",
+      "223": "yes", "227": "yes"
+    }
+  },
+  {
+    "id": 96,
+    "name": "Thor",
+    "description": "Dios del trueno de Marvel",
+    "category": "personaje",
+    "answers": {
+      "1": "yes", "3": "yes", "4": "yes",
+      "52": "no", "53": "yes",
+      "54": "yes", "56": "yes",
+      "62": "yes", "71": "yes", "74": "yes",
+      "82": "yes", "83": "yes", "86": "yes", "88": "yes",
+      "121": "no", "122": "yes", "123": "yes", "125": "yes",
+      "126": "yes", "196": "yes", "235": "yes"
+    }
+  },
+  {
+    "id": 97,
+    "name": "Black Panther",
+    "description": "Rey de Wakanda, T'Challa",
+    "category": "personaje",
+    "answers": {
+      "1": "yes", "3": "yes", "4": "yes",
+      "52": "no", "53": "yes",
+      "55": "yes", "56": "yes",
+      "71": "yes", "74": "yes",
+      "82": "yes", "83": "yes", "88": "yes",
+      "121": "yes", "122": "yes", "123": "yes",
+      "124": "yes", "127": "yes",
+      "223": "yes", "235": "yes"
+    }
+  },
+  {
+    "id": 98,
+    "name": "Creeper",
+    "description": "Criatura explosiva de Minecraft",
+    "category": "personaje",
+    "answers": {
+      "1": "yes", "3": "no", "4": "yes",
+      "59": "no", "60": "yes",
+      "82": "no", "83": "no",
+      "89": "no", "97": "yes",
+      "121": "no",
+      "221": "yes", "234": "no"
+    }
+  },
+  {
+    "id": 99,
+    "name": "Steve",
+    "description": "Protagonista de Minecraft",
+    "category": "personaje",
+    "answers": {
+      "1": "yes", "3": "yes", "4": "yes",
+      "52": "no", "53": "yes",
+      "59": "no", "60": "yes",
+      "62": "yes", "82": "yes", "83": "no",
+      "88": "yes", "97": "yes",
+      "121": "yes"
+    }
   }
 ]
