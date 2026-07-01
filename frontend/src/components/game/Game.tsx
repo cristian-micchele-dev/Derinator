@@ -2,6 +2,7 @@ import { getCategoryEmoji, getCategoryLabel } from '../../data/categoryEmojis'
 import LearnMode from './LearnMode'
 import Avatar from '../ui/Avatar'
 import { useGame, GameCategory } from './useGame'
+import { useGameBayesian } from './useGameBayesian'
 import type { GameState } from '../../types'
 import './Game.css'
 
@@ -15,9 +16,33 @@ interface GameProps {
   onDramaticPause?: (isPaused: boolean) => void
 }
 
-export default function Game(props: GameProps) {
-  const game = useGame(props)
+/** Check URL for ?engine=bayesian to toggle engine */
+function isBayesianEngine(): boolean {
+  try {
+    return new URLSearchParams(window.location.search).get('engine') === 'bayesian'
+  } catch {
+    return false
+  }
+}
 
+function GameLegacy(props: GameProps) {
+  const game = useGame(props)
+  return <GameInner game={game} />
+}
+
+function GameBayesian(props: GameProps) {
+  const game = useGameBayesian(props)
+  return <GameInner game={game} />
+}
+
+export default function Game(props: GameProps) {
+  if (isBayesianEngine()) {
+    return <GameBayesian {...props} />
+  }
+  return <GameLegacy {...props} />
+}
+
+function GameInner({ game }: { game: ReturnType<typeof useGame> }) {
   if (game.gameState === 'start') {
     return (
       <div className="game-container">
