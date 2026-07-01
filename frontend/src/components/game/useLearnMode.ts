@@ -3,7 +3,7 @@ import { Answer, CharacterCategory, CharacterSubcategory } from '../../types'
 import { questions, QuestionId } from '../../data/questions'
 import { getAllCharacters } from '../../data/characters'
 import { saveLearnedCharacter } from '../../data/learnedStorage'
-import { filterCandidates, getContradictedQuestions, getConfidenceMetrics, getBestQuestion, getQuestionWeight } from '../../data/game'
+import { filterCandidates, getContradictedQuestions, getConfidenceMetrics, getBestQuestion, getQuestionWeight, prerequisitesStrictMet, isExcluded } from '../../data/game'
 
 export type LearnModePhase = 'name' | 'questions' | 'done' | 'practice' | 'practice_result'
 
@@ -174,8 +174,10 @@ export function useLearnMode({
     const candidates = filterCandidates(allChars, newHistory)
     const contradicted = getContradictedQuestions(newHistory)
     const answeredIds = new Set(Object.keys(newAnswers).map(Number))
+    const answerMap = new Map(newHistory.map(h => [h.questionId, h.answer]))
     const remaining = questions
       .filter((q) => !answeredIds.has(q.id) && !contradicted.has(q.id))
+      .filter((q) => prerequisitesStrictMet(q.id, answerMap) && !isExcluded(q.id, answerMap))
       .map((q) => q.id)
 
     const nextId = getBestQuestion(remaining, candidates, newHistory)
@@ -206,8 +208,10 @@ export function useLearnMode({
     const candidates = filterCandidates(allChars, newHistory)
     const contradicted = getContradictedQuestions(newHistory)
     const answeredIds = new Set(Object.keys(newAnswers).map(Number))
+    const answerMap = new Map(newHistory.map(h => [h.questionId, h.answer]))
     const remaining = questions
       .filter((q) => !answeredIds.has(q.id) && !contradicted.has(q.id))
+      .filter((q) => prerequisitesStrictMet(q.id, answerMap) && !isExcluded(q.id, answerMap))
       .map((q) => q.id)
 
     const nextId = getBestQuestion(remaining, candidates, newHistory)

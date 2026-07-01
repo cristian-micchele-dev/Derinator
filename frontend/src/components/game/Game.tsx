@@ -207,28 +207,30 @@ export default function Game(props: GameProps) {
 
       {!game.isThinkingDelay && (
         <>
-          <div className="question-box">
+          <div className="question-box" key={game.currentQuestion?.id}>
             <p>{game.currentQuestion?.text}</p>
           </div>
           <div className="answer-buttons">
             <div className="answer-row">
               <button className="btn-answer btn-yes" onClick={() => game.handleAnswer('yes')}>
-                Sí
+                <span className="answer-full">Sí</span>
               </button>
               <button className="btn-answer btn-no" onClick={() => game.handleAnswer('no')}>
-                No
+                <span className="answer-full">No</span>
               </button>
             </div>
             <div className="answer-row">
               <button className="btn-answer btn-probably" onClick={() => game.handleAnswer('probably')}>
-                Probablemente
+                <span className="answer-full">Probablemente</span>
+                <span className="answer-short">Prob. sí</span>
               </button>
               <button className="btn-answer btn-probably-not" onClick={() => game.handleAnswer('probably_not')}>
-                Probablemente no
+                <span className="answer-full">Probablemente no</span>
+                <span className="answer-short">Prob. no</span>
               </button>
             </div>
             <button className="btn-answer btn-dont-know" onClick={() => game.handleAnswer('dont_know')}>
-              No lo sé
+              No sé
             </button>
           </div>
         </>

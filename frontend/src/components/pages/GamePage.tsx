@@ -116,8 +116,10 @@ export default function GamePage() {
 
   const isThinking = gameState === 'playing' || gameState === 'learn_questions'
 
+  const isInGame = gameState !== 'start' && gameState !== 'win' && gameState !== 'lose'
+
   return (
-    <div className="app">
+    <div className={`app ${isInGame ? 'app--playing' : ''}`}>
       <header className="header">
         <h1>Derinator</h1>
         <p>Piensa en un personaje y lo adivinaré</p>

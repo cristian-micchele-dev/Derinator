@@ -56,6 +56,23 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* ---- Focus-visible for keyboard accessibility ---- */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+button:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(200, 160, 90, 0.2);
+}
+
+a:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
 .app {
   min-height: 100vh;
   display: flex;
@@ -257,6 +274,32 @@ body {
 
   .header {
     padding: var(--space-4) var(--space-4) var(--space-3);
+  }
+
+  /* Shrink avatar during gameplay on mobile to give more room to controls */
+  .app--playing .image-section {
+    max-height: 160px;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+  }
+
+  .app--playing .akinator-image {
+    width: 180px;
+    height: 180px;
+    transition: width 0.4s ease, height 0.4s ease;
+  }
+
+  .app--playing .header {
+    padding: var(--space-2) var(--space-4) var(--space-1);
+  }
+
+  .app--playing .header p,
+  .app--playing .stats-bar {
+    display: none;
+  }
+
+  .app--playing .header h1 {
+    font-size: 1.5rem;
   }
 }
 

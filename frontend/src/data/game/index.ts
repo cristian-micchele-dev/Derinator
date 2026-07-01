@@ -23,7 +23,7 @@ export {
 export { filterCandidates, applyImplications, getContradictedQuestions, getConfidenceMetrics, detectFictionHeavy } from './logics'
 
 // Question selection
-export { getBestQuestion } from './questionSelection'
+export { getBestQuestion, prerequisitesStrictMet, isExcluded } from './questionSelection'
 
 // Question flow
 export { QUESTION_FLOW, FLOW_MAP, getQuestionWeight } from './questionFlow'

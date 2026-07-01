@@ -56,7 +56,7 @@ export default function DerinatorAvatar({
         className={`avatar-img avatar-${emotion} ${isThinking ? 'avatar-thinking' : ''}`}
       />
       {bubbleText && (
-        <div className={`speech-bubble ${isThinking ? 'thinking' : ''}`}>
+        <div key={bubbleText} className={`speech-bubble ${isThinking ? 'thinking' : ''}`}>
           <span className="bubble-text">{bubbleText}</span>
         </div>
       )}

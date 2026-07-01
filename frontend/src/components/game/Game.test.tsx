@@ -106,9 +106,9 @@ describe('Game component', () => {
       renderGame('playing')
       expect(screen.getByText('Sí')).toBeDefined()
       expect(screen.getByText('No')).toBeDefined()
-      expect(screen.getByText('Probablemente')).toBeDefined()
-      expect(screen.getByText('Probablemente no')).toBeDefined()
-      expect(screen.getByText('No lo sé')).toBeDefined()
+      expect(document.querySelector('.btn-probably')).toBeDefined()
+      expect(document.querySelector('.btn-probably-not')).toBeDefined()
+      expect(screen.getByText('No sé')).toBeDefined()
     })
 
     it('calls handleAnswer on button click', async () => {

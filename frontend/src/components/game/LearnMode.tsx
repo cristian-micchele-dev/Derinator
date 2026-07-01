@@ -171,19 +171,21 @@ export default function LearnMode(props: LearnModeProps) {
                   className={`learn-answer-btn probably ${isAnswered && lm.learnAnswers[lm.currentQuestion.id] === 'probably' ? 'selected' : ''}`}
                   onClick={() => lm.handleLearnAnswer('probably')}
                 >
-                  Probablemente
+                  <span className="answer-full">Probablemente</span>
+                  <span className="answer-short">Prob. sí</span>
                 </button>
                 <button
                   className={`learn-answer-btn probably-not ${isAnswered && lm.learnAnswers[lm.currentQuestion.id] === 'probably_not' ? 'selected' : ''}`}
                   onClick={() => lm.handleLearnAnswer('probably_not')}
                 >
-                  Probablemente no
+                  <span className="answer-full">Probablemente no</span>
+                  <span className="answer-short">Prob. no</span>
                 </button>
                 <button
                   className={`learn-answer-btn dont-know ${isAnswered && lm.learnAnswers[lm.currentQuestion.id] === 'dont_know' ? 'selected' : ''}`}
                   onClick={() => lm.handleLearnAnswer('dont_know')}
                 >
-                  No lo sé
+                  No sé
                 </button>
               </div>
             </div>

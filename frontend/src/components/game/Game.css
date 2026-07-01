@@ -72,9 +72,16 @@
 .question-box.guess {
   border-color: rgba(245, 158, 11, 0.35);
   box-shadow: 0 8px 40px rgba(245, 158, 11, 0.12), inset 0 1px 0 rgba(245, 158, 11, 0.06);
+  animation: fadeSlideIn 0.35s ease-out, guessReveal 0.6s 0.1s ease-out both;
 }
 .question-box.guess::before {
   background: linear-gradient(90deg, transparent, var(--color-accent), transparent);
+}
+
+@keyframes guessReveal {
+  0%   { transform: scale(0.95); }
+  50%  { transform: scale(1.02); }
+  100% { transform: scale(1); }
 }
 
 @keyframes fadeSlideIn {
@@ -811,11 +818,54 @@
   opacity: 0.6;
 }
 
+/* ---- Responsive Answer Labels ---- */
+.answer-short {
+  display: none;
+}
+
+/* ---- Win celebration glow ---- */
+.question-box.win {
+  animation: fadeSlideIn 0.35s ease-out, winGlow 2s ease-in-out infinite;
+}
+
+@keyframes winGlow {
+  0%, 100% { box-shadow: 0 8px 40px rgba(52, 211, 153, 0.12), inset 0 1px 0 rgba(52, 211, 153, 0.08); }
+  50%      { box-shadow: 0 8px 60px rgba(52, 211, 153, 0.25), 0 0 40px rgba(52, 211, 153, 0.1), inset 0 1px 0 rgba(52, 211, 153, 0.12); }
+}
+
+/* ---- Lose subtle shake ---- */
+.question-box.lose {
+  animation: fadeSlideIn 0.35s ease-out, loseShake 0.5s 0.3s ease-out;
+}
+
+@keyframes loseShake {
+  0%, 100% { transform: translateX(0); }
+  15%      { transform: translateX(-4px); }
+  30%      { transform: translateX(4px); }
+  45%      { transform: translateX(-3px); }
+  60%      { transform: translateX(3px); }
+  75%      { transform: translateX(-1px); }
+}
+
 /* ---- Responsive ---- */
 @media (max-width: 768px) {
   .btn-answer {
     padding: var(--space-3);
     font-size: 0.9rem;
+  }
+
+  .answer-full {
+    display: none;
+  }
+
+  .answer-short {
+    display: inline;
+  }
+
+  /* Sí/No buttons don't have .answer-short, show .answer-full */
+  .btn-yes .answer-full,
+  .btn-no .answer-full {
+    display: inline;
   }
 
   .question-box {

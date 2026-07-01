@@ -236,7 +236,7 @@ function getFlowGuidedQuestion(
 }
 
 
-function prerequisitesStrictMet(
+export function prerequisitesStrictMet(
   questionId: QuestionId,
   answerMap: Map<QuestionId, Answer>
 ): boolean {
@@ -251,7 +251,7 @@ function prerequisitesStrictMet(
   })
 }
 
-function isExcluded(
+export function isExcluded(
   questionId: QuestionId,
   answerMap: Map<QuestionId, Answer>
 ): boolean {

@@ -631,6 +631,11 @@
   background: rgba(255, 255, 255, 0.25);
 }
 
+/* ---- Responsive Answer Labels ---- */
+.learn-answer-btn .answer-short {
+  display: none;
+}
+
 /* ---- Responsive ---- */
 @media (max-width: 768px) {
   .learn-mode-container {
@@ -650,6 +655,14 @@
     padding: var(--space-2) var(--space-3);
     font-size: 0.85rem;
     min-width: 80px;
+  }
+
+  .learn-answer-btn .answer-full {
+    display: none;
+  }
+
+  .learn-answer-btn .answer-short {
+    display: inline;
   }
 
   .learn-actions {
