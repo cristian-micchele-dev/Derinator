@@ -3,6 +3,7 @@ import {
   saveLearnedCharacter,
   loadLearnedCharacters,
   clearLearnedCharacters,
+  deleteLearnedCharacter,
   syncLearnedCharactersFromServer,
 } from './learnedStorage'
 import type { ValidationError } from './game/validation'
@@ -82,6 +83,48 @@ describe('learnedStorage', () => {
   })
 
   // ===================================================================
+  // deleteLearnedCharacter
+  // ===================================================================
+  describe('deleteLearnedCharacter', () => {
+    const STORAGE_KEY = 'derinator_learned_characters'
+    const chars = [
+      { id: 1, name: 'Pikachu', category: 'animal', answers: {} },
+      { id: 2, name: 'Goku', category: 'personaje', answers: {} },
+      { id: 3, name: 'Batman', category: 'personaje', answers: {} },
+    ]
+
+    beforeEach(() => {
+      localStorageMock.setItem(STORAGE_KEY, JSON.stringify(chars))
+    })
+
+    it('removes the character with the given id', () => {
+      deleteLearnedCharacter(2)
+      const result = loadLearnedCharacters()
+      expect(result.map(c => c.id)).not.toContain(2)
+      expect(result).toHaveLength(2)
+    })
+
+    it('keeps other characters intact', () => {
+      deleteLearnedCharacter(2)
+      const result = loadLearnedCharacters()
+      expect(result.map(c => c.name)).toContain('Pikachu')
+      expect(result.map(c => c.name)).toContain('Batman')
+    })
+
+    it('removes the storage key entirely when the last character is deleted', () => {
+      localStorageMock.setItem(STORAGE_KEY, JSON.stringify([{ id: 99, name: 'Solo', category: 'personaje', answers: {} }]))
+      deleteLearnedCharacter(99)
+      expect(localStorageMock.removeItem).toHaveBeenCalledWith(STORAGE_KEY)
+      expect(loadLearnedCharacters()).toEqual([])
+    })
+
+    it('does nothing when the id does not exist', () => {
+      deleteLearnedCharacter(9999)
+      expect(loadLearnedCharacters()).toHaveLength(3)
+    })
+  })
+
+  // ===================================================================
   // clearLearnedCharacters
   // ===================================================================
   describe('clearLearnedCharacters', () => {
@@ -131,7 +174,7 @@ describe('learnedStorage', () => {
       expect(stored[0].name).toBe('Pikachu')
     })
 
-    it('returns duplicate error on server 409', async () => {
+    it('saves locally and returns success on server 409 (already exists on server)', async () => {
       mockFetch.mockResolvedValueOnce({
         status: 409,
         ok: false,
@@ -139,9 +182,14 @@ describe('learnedStorage', () => {
       })
 
       const result = await saveLearnedCharacter(validInput)
-      expect(result.success).toBe(false)
+      expect(result.success).toBe(true)
       expect(result.isDuplicate).toBe(true)
-      expect(result.errors[0].message).toContain('servidor')
+      expect(result.errors).toHaveLength(0)
+
+      // Character should be saved locally so the game can use it
+      const stored = JSON.parse(localStorage.getItem('derinator_learned_characters') || '[]')
+      expect(stored).toHaveLength(1)
+      expect(stored[0].name).toBe(validInput.name)
     })
 
     it('returns error on server 429 (rate limit)', async () => {
@@ -169,7 +217,7 @@ describe('learnedStorage', () => {
       expect(result.errors[0].field).toBe('server')
     })
 
-    it('saves locally when server returns 500 without details', async () => {
+    it('returns error when server returns 500 without details', async () => {
       mockFetch.mockResolvedValueOnce({
         status: 500,
         ok: false,
@@ -177,8 +225,8 @@ describe('learnedStorage', () => {
       })
 
       const result = await saveLearnedCharacter(validInput)
-      // Server error without details → throws, caught, saves locally
-      expect(result.success).toBe(true)
+      expect(result.success).toBe(false)
+      expect(result.errors[0].field).toBe('general')
     })
 
     it('saves character to localStorage with correct structure', async () => {
@@ -220,7 +268,8 @@ describe('learnedStorage', () => {
       mockFetch.mockResolvedValueOnce({
         ok: true,
         json: () => Promise.resolve({
-          characters: [{
+          success: true,
+          data: [{
             name: 'Server',
             description: 'From server',
             category: 'personaje',
@@ -245,7 +294,8 @@ describe('learnedStorage', () => {
       mockFetch.mockResolvedValueOnce({
         ok: true,
         json: () => Promise.resolve({
-          characters: [{
+          success: true,
+          data: [{
             name: 'Conflict',
             description: 'Server version',
             category: 'personaje',
@@ -270,11 +320,92 @@ describe('learnedStorage', () => {
     it('handles server returning null/undefined characters', async () => {
       mockFetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve({ characters: null }),
+        json: () => Promise.resolve({ success: true, data: null }),
       })
 
       const result = await syncLearnedCharactersFromServer()
       expect(result).toEqual([])
     })
+  })
+})
+
+// ===================================================================
+// confirmerQuestion — sanitization and validation
+// ===================================================================
+describe('saveLearnedCharacter — confirmerQuestion sanitization', () => {
+  const baseInput = {
+    name: 'José Andrea',
+    description: 'Músico argentino',
+    category: 'personaje' as const,
+    answers: { 1: 'yes' } as Record<number, 'yes'>,
+  }
+
+  beforeEach(() => {
+    localStorageMock.clear()
+    mockFetch.mockResolvedValue({ ok: true, json: () => Promise.resolve({}) })
+  })
+
+  it('saves a valid confirmerQuestion sanitized', async () => {
+    const result = await saveLearnedCharacter({
+      ...baseInput,
+      confirmerQuestion: '¿Fue vocalista de Mago de Oz?',
+    })
+    expect(result.success).toBe(true)
+    const saved = loadLearnedCharacters()
+    expect(saved[0].confirmerQuestion).toBe('¿Fue vocalista de Mago de Oz?')
+  })
+
+  it('strips HTML tags from confirmerQuestion', async () => {
+    const result = await saveLearnedCharacter({
+      ...baseInput,
+      name: 'Artista Test',
+      confirmerQuestion: '<script>alert("xss")</script>¿Fue vocalista?',
+    })
+    expect(result.success).toBe(true)
+    const saved = loadLearnedCharacters()
+    expect(saved[0].confirmerQuestion).not.toContain('<script>')
+    expect(saved[0].confirmerQuestion).toContain('¿Fue vocalista?')
+  })
+
+  it('rejects confirmerQuestion shorter than 5 characters', async () => {
+    const result = await saveLearnedCharacter({
+      ...baseInput,
+      name: 'Otro Artista',
+      confirmerQuestion: 'Hm',
+    })
+    expect(result.success).toBe(false)
+    expect(result.errors[0].field).toBe('confirmerQuestion')
+  })
+
+  it('truncates confirmerQuestion to 200 characters', async () => {
+    const longHint = '¿'.repeat(300)
+    const result = await saveLearnedCharacter({
+      ...baseInput,
+      name: 'Artista Largo',
+      confirmerQuestion: longHint,
+    })
+    expect(result.success).toBe(true)
+    const saved = loadLearnedCharacters()
+    expect(saved[0].confirmerQuestion!.length).toBeLessThanOrEqual(200)
+  })
+
+  it('saves without confirmerQuestion when not provided', async () => {
+    const result = await saveLearnedCharacter(baseInput)
+    expect(result.success).toBe(true)
+    const saved = loadLearnedCharacters()
+    expect(saved[0].confirmerQuestion).toBeUndefined()
+  })
+
+  it('strips angle brackets and quotes from confirmerQuestion', async () => {
+    const result = await saveLearnedCharacter({
+      ...baseInput,
+      name: 'Artista Sanitizado',
+      confirmerQuestion: '¿Es el "mejor" de <Argentina>?',
+    })
+    expect(result.success).toBe(true)
+    const saved = loadLearnedCharacters()
+    expect(saved[0].confirmerQuestion).not.toContain('"')
+    expect(saved[0].confirmerQuestion).not.toContain('<')
+    expect(saved[0].confirmerQuestion).not.toContain('>')
   })
 })

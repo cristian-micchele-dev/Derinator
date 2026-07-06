@@ -79,10 +79,11 @@ describe('useLearnMode', () => {
       result.current.handleLearnNameSubmit()
     })
 
-    // The pre-filled answers should be present
+    // The pre-filled answers should be present (history + category seeds Q1,Q3,Q4)
     expect(result.current.learnAnswers[1]).toBe('yes')
     expect(result.current.learnAnswers[5]).toBe('no')
-    expect(result.current.questionsAnswered).toBe(2)
+    // Seeds (Q1,Q3,Q4) + history (Q1 overlap, Q5) = 4 total
+    expect(result.current.questionsAnswered).toBe(4)
   })
 
   it('navigates to next question after answering', () => {
@@ -103,8 +104,8 @@ describe('useLearnMode', () => {
       result.current.handleLearnAnswer('yes')
     })
 
-    // Should have moved to a different question (or same if only one available)
-    expect(result.current.questionsAnswered).toBe(1)
+    // Seeds (3) + 1 manual answer = 4
+    expect(result.current.questionsAnswered).toBe(4)
   })
 
   it('goes back to previous question', () => {
@@ -123,14 +124,15 @@ describe('useLearnMode', () => {
       result.current.handleLearnAnswer('yes')
     })
 
-    expect(result.current.questionsAnswered).toBe(1)
+    // Seeds (3) + 1 manual = 4
+    expect(result.current.questionsAnswered).toBe(4)
 
-    // Go back
+    // Go back — removes the manual answer, seeds remain
     act(() => {
       result.current.handleLearnBack()
     })
 
-    expect(result.current.questionsAnswered).toBe(0)
+    expect(result.current.questionsAnswered).toBe(3)
   })
 
   it('cannot go back with empty nav stack', () => {
@@ -144,15 +146,15 @@ describe('useLearnMode', () => {
       result.current.handleLearnNameSubmit()
     })
 
-    // Nav stack is empty
+    // Nav stack is empty (seeds don't push to navStack)
     expect(result.current.navStack).toEqual([])
 
-    // Going back should do nothing
+    // Going back should do nothing — seeds remain
     act(() => {
       result.current.handleLearnBack()
     })
 
-    expect(result.current.questionsAnswered).toBe(0)
+    expect(result.current.questionsAnswered).toBe(3)
   })
 
   it('cancels and calls onCancel', () => {
@@ -195,16 +197,7 @@ describe('useLearnMode', () => {
       result.current.handleLearnNameSubmit()
     })
 
-    // Set contradictory answers: woman AND man
-    act(() => {
-      result.current.handleLearnAnswer('yes') // question 1
-    })
-
-    // Navigate to question 52 and 53 to create contradiction
-    // We need to answer questions to get there, but we can set answers directly
-    // The validation checks learnAnswers[52] and learnAnswers[53]
-    // Since we can't easily navigate to specific questions, we'll test the validation
-    // by directly checking the effect runs when learnAnswers changes
+    // After startQuestions, seeds (Q1,Q3,Q4) are applied but no contradictions
     expect(result.current.validationError).toBeNull()
   })
 
@@ -325,29 +318,30 @@ describe('useLearnMode', () => {
       result.current.handleLearnNameSubmit()
     })
 
+    // Seeds give 3 answers, then manual answers add on top
     // Answer first question
     act(() => {
       result.current.handleLearnAnswer('yes')
     })
-    expect(result.current.questionsAnswered).toBe(1)
+    expect(result.current.questionsAnswered).toBe(4) // 3 seeds + 1
 
     // Answer second question
     act(() => {
       result.current.handleLearnAnswer('no')
     })
-    expect(result.current.questionsAnswered).toBe(2)
+    expect(result.current.questionsAnswered).toBe(5) // 3 seeds + 2
 
     // Go back once
     act(() => {
       result.current.handleLearnBack()
     })
-    expect(result.current.questionsAnswered).toBe(1)
+    expect(result.current.questionsAnswered).toBe(4) // 3 seeds + 1
 
     // Go back again
     act(() => {
       result.current.handleLearnBack()
     })
-    expect(result.current.questionsAnswered).toBe(0)
+    expect(result.current.questionsAnswered).toBe(3) // only seeds remain
 
     // Nav stack should be empty now
     expect(result.current.navStack).toEqual([])
@@ -368,57 +362,6 @@ describe('useLearnMode', () => {
     })
 
     expect(result.current.learnSubcategory).toBeUndefined()
-  })
-
-  it('runPractice transitions to practice_result phase', async () => {
-    const { result } = renderHook(() => useLearnMode(defaultProps))
-
-    act(() => {
-      result.current.setLearnName('Pikachu')
-    })
-
-    act(() => {
-      result.current.handleLearnNameSubmit()
-    })
-
-    // Save a character first so practice can find it
-    const { saveLearnedCharacter } = await import('../../data/learnedStorage')
-    vi.mocked(saveLearnedCharacter).mockResolvedValueOnce({
-      success: true,
-      errors: [],
-      isDuplicate: false,
-    })
-
-    act(() => {
-      result.current.handleFinishLearn()
-    })
-
-    await act(async () => {
-      await new Promise((r) => setTimeout(r, 0))
-    })
-
-    expect(result.current.phase).toBe('done')
-
-    // Run practice
-    act(() => {
-      result.current.runPractice()
-    })
-
-    // Practice is synchronous (runs loop), should end in practice_result
-    expect(result.current.phase).toBe('practice_result')
-    expect(result.current.practiceLog.length).toBeGreaterThan(0)
-    expect(result.current.practiceStep).toBeGreaterThan(0)
-  })
-
-  it('handlePracticeBack returns to done phase', () => {
-    const { result } = renderHook(() => useLearnMode(defaultProps))
-
-    // Manually set phase to practice_result
-    act(() => {
-      result.current.handlePracticeBack()
-    })
-
-    expect(result.current.phase).toBe('done')
   })
 
   it('learnDescription defaults to learnName if empty', async () => {
@@ -518,22 +461,22 @@ describe('useLearnMode', () => {
       result.current.handleLearnNameSubmit()
     })
 
-    // Answer 3 questions
+    // Answer 3 questions (seeds already provide 3)
     act(() => { result.current.handleLearnAnswer('yes') })
     act(() => { result.current.handleLearnAnswer('no') })
     act(() => { result.current.handleLearnAnswer('probably') })
 
-    expect(result.current.questionsAnswered).toBe(3)
+    expect(result.current.questionsAnswered).toBe(6) // 3 seeds + 3
 
-    // Go back all 3
+    // Go back all 3 manual answers
     act(() => { result.current.handleLearnBack() })
-    expect(result.current.questionsAnswered).toBe(2)
-
-    act(() => { result.current.handleLearnBack() })
-    expect(result.current.questionsAnswered).toBe(1)
+    expect(result.current.questionsAnswered).toBe(5)
 
     act(() => { result.current.handleLearnBack() })
-    expect(result.current.questionsAnswered).toBe(0)
+    expect(result.current.questionsAnswered).toBe(4)
+
+    act(() => { result.current.handleLearnBack() })
+    expect(result.current.questionsAnswered).toBe(3) // only seeds remain
     expect(result.current.navStack).toEqual([])
   })
 
@@ -560,16 +503,11 @@ describe('useLearnMode', () => {
       result.current.handleLearnNameSubmit()
     })
 
-    // Answer first question
-    act(() => {
-      result.current.handleLearnAnswer('yes')
-    })
-
-    // validationError should be null (no contradictions yet)
+    // Seeds (Q1,Q3,Q4) don't create contradictions
     expect(result.current.validationError).toBeNull()
   })
 
-  it('similarity warning is null with less than 5 answers', () => {
+  it('similarity warning is null with few manual answers', () => {
     const { result } = renderHook(() => useLearnMode(defaultProps))
 
     act(() => {
@@ -580,32 +518,11 @@ describe('useLearnMode', () => {
       result.current.handleLearnNameSubmit()
     })
 
-    // Answer only 2 questions
-    act(() => { result.current.handleLearnAnswer('yes') })
-    act(() => { result.current.handleLearnAnswer('no') })
+    // Answer 1 question (seeds provide 3, total = 4, still < 5 common with any char)
+    act(() => { result.current.handleLearnAnswer('dont_know') })
 
-    // Less than 5 answers → no similarity warning
+    // dont_know answers are skipped in similarity check, so effective common < 5
     expect(result.current.similarityWarning).toBeNull()
-  })
-
-  it('runPractice with a character that has mostly dont_know answers', () => {
-    const { result } = renderHook(() => useLearnMode(defaultProps))
-
-    act(() => {
-      result.current.setLearnName('Pikachu')
-    })
-
-    act(() => {
-      result.current.handleLearnNameSubmit()
-    })
-
-    // Run practice — character may not exist, so practice finds nothing
-    act(() => {
-      result.current.runPractice()
-    })
-
-    // Should still transition to practice_result
-    expect(result.current.phase).toBe('practice_result')
   })
 
   it('learnAnswers preserves previous answers when answering new questions', () => {
@@ -648,17 +565,9 @@ describe('useLearnMode', () => {
       result.current.handleLearnNameSubmit()
     })
 
-    // Manually set contradictory answers by accessing internal state
-    // We need to simulate the effect by updating learnAnswers directly
-    // Since we can't jump to q52/q53, we test the effect indirectly:
-    // Answer the first few questions to get the flow going, then
-    // the contradiction effect will be checked on each render
-    act(() => {
-      result.current.handleLearnAnswer('yes') // q1
-    })
-
-    // The validation effect runs on every learnAnswers change
-    // With only q1=yes, no contradiction exists yet
+    // Seeds (Q1,Q3,Q4) don't create contradictions
+    // Gender contradictions (Q52+Q53) can't be triggered through the flow
+    // since they require navigating to specific questions
     expect(result.current.validationError).toBeNull()
   })
 
@@ -674,41 +583,25 @@ describe('useLearnMode', () => {
     })
 
     // Answer with every answer type to cover all branches in handleLearnAnswer
+    // With strict prerequisite filtering, some questions may not be available
+    // after certain answers, so we only record answers while a question exists
     const answerTypes = ['yes', 'no', 'probably', 'probably_not', 'dont_know'] as const
+    const recorded: string[] = []
     for (const ans of answerTypes) {
+      if (!result.current.currentQuestion) break
       act(() => {
         result.current.handleLearnAnswer(ans)
       })
+      recorded.push(ans)
     }
 
-    // All answers should be recorded
+    // All answers that were given while a question was available should be recorded
     const answers = Object.values(result.current.learnAnswers)
+    for (const ans of recorded) {
+      expect(answers).toContain(ans)
+    }
+    // At minimum, the first answer (yes) should always be recorded
     expect(answers).toContain('yes')
-    expect(answers).toContain('no')
-    expect(answers).toContain('probably')
-    expect(answers).toContain('probably_not')
-    expect(answers).toContain('dont_know')
-  })
-
-  it('runPractice handles character not found gracefully', () => {
-    const { result } = renderHook(() => useLearnMode(defaultProps))
-
-    act(() => {
-      result.current.setLearnName('NonExistentCharacter12345')
-    })
-
-    act(() => {
-      result.current.handleLearnNameSubmit()
-    })
-
-    // Practice with a character that doesn't exist in the data
-    act(() => {
-      result.current.runPractice()
-    })
-
-    // When character not found, runPractice returns early without changing phase
-    // (it only transitions to 'practice' if the character exists)
-    expect(result.current.phase).toBe('questions')
   })
 
   it('defeatedByName is passed through correctly', () => {

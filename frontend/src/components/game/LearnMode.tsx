@@ -22,10 +22,15 @@ export default function LearnMode(props: LearnModeProps) {
   if (lm.phase === 'name') {
     return (
       <div className="learn-mode-overlay">
-        <div className="learn-mode-container">
+        <div
+          className="learn-mode-container"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="learn-dialog-title"
+        >
           <div className="learn-header">
             <Avatar name="Derinator" size="sm" className="learn-avatar" />
-            <h2>
+            <h2 id="learn-dialog-title">
               {lm.defeatedByName
                 ? `¡Ups! No conocía a "${lm.defeatedByName}"`
                 : '¡Ayudame a aprender!'}
@@ -37,84 +42,128 @@ export default function LearnMode(props: LearnModeProps) {
             </p>
           </div>
 
-          <div className="learn-form">
-            <div className="learn-field">
-              <label>Nombre del personaje *</label>
-              <input
-                type="text"
-                value={lm.learnName}
-                onChange={(e) => lm.setLearnName(e.target.value)}
-                placeholder="Ej: Lionel Messi"
-                className="learn-input"
-                maxLength={100}
-              />
-            </div>
+          <form
+            onSubmit={(e) => { e.preventDefault(); lm.handleLearnNameSubmit() }}
+          >
+            <div className="learn-form">
+              <div className="learn-field">
+                <label>Nombre del personaje *</label>
+                <input
+                  type="text"
+                  autoFocus
+                  value={lm.learnName}
+                  onChange={(e) => lm.setLearnName(e.target.value)}
+                  placeholder="Ej: Lionel Messi"
+                  className="learn-input"
+                  maxLength={100}
+                />
+              </div>
 
-            <div className="learn-field">
-              <label>Descripción (opcional)</label>
-              <input
-                type="text"
-                value={lm.learnDescription}
-                onChange={(e) => lm.setLearnDescription(e.target.value)}
-                placeholder="Ej: Futbolista argentino, la Pulga"
-                className="learn-input"
-                maxLength={200}
-              />
-            </div>
+              <div className="learn-field">
+                <label>Descripción (opcional)</label>
+                <input
+                  type="text"
+                  value={lm.learnDescription}
+                  onChange={(e) => lm.setLearnDescription(e.target.value)}
+                  placeholder="Ej: Futbolista argentino, la Pulga"
+                  className="learn-input"
+                  maxLength={200}
+                />
+              </div>
 
-            <div className="learn-field">
-              <label>Categoría</label>
-              <div className="category-buttons">
-                {(['personaje', 'animal'] as const).map((cat) => (
+              <div className="learn-field">
+                <label>Categoría</label>
+                <div className="category-buttons">
                   <button
-                    key={cat}
-                    className={`category-btn ${lm.learnCategory === cat ? 'active' : ''}`}
+                    type="button"
+                    className={`category-btn ${lm.learnCategory === 'personaje' && lm.learnPersonType === 'ficcion' ? 'active' : ''}`}
+                    aria-pressed={lm.learnCategory === 'personaje' && lm.learnPersonType === 'ficcion'}
                     onClick={() => {
-                      lm.setLearnCategory(cat)
+                      lm.setLearnCategory('personaje')
+                      lm.setLearnPersonType('ficcion')
                       lm.setLearnSubcategory(undefined)
                     }}
                   >
-                    {getCategoryEmoji(cat)} {cat === 'personaje' ? 'Personaje' : 'Animal'}
+                    🎭 Ficción
                   </button>
-                ))}
+                  <button
+                    type="button"
+                    className={`category-btn ${lm.learnCategory === 'personaje' && lm.learnPersonType === 'famoso' ? 'active' : ''}`}
+                    aria-pressed={lm.learnCategory === 'personaje' && lm.learnPersonType === 'famoso'}
+                    onClick={() => {
+                      lm.setLearnCategory('personaje')
+                      lm.setLearnPersonType('famoso')
+                      lm.setLearnSubcategory(undefined)
+                    }}
+                  >
+                    🌟 Famoso
+                  </button>
+                  <button
+                    type="button"
+                    className={`category-btn ${lm.learnCategory === 'animal' ? 'active' : ''}`}
+                    aria-pressed={lm.learnCategory === 'animal'}
+                    onClick={() => {
+                      lm.setLearnCategory('animal')
+                      lm.setLearnPersonType('ficcion')
+                      lm.setLearnSubcategory(undefined)
+                    }}
+                  >
+                    {getCategoryEmoji('animal')} Animal
+                  </button>
+                </div>
               </div>
+
+              {lm.learnCategory === 'personaje' && lm.learnPersonType === 'ficcion' && (
+                <div className="learn-field">
+                  <label>Subcategoría (opcional)</label>
+                  <select
+                    className="learn-select"
+                    value={lm.learnSubcategory || ''}
+                    onChange={(e) => lm.setLearnSubcategory(e.target.value as CharacterSubcategory || undefined)}
+                  >
+                    <option value="">Sin subcategoría</option>
+                    <option value="anime-shonen">Anime Shonen</option>
+                    <option value="videojuego">Videojuego</option>
+                    <option value="superheroe">Superhéroe</option>
+                    <option value="disney">Disney</option>
+                    <option value="nintendo">Nintendo</option>
+                  </select>
+                </div>
+              )}
+
+              {lm.learnCategory === 'personaje' && lm.learnPersonType === 'famoso' && (
+                <div className="learn-field">
+                  <label>Subcategoría (opcional)</label>
+                  <select
+                    className="learn-select"
+                    value={lm.learnSubcategory || ''}
+                    onChange={(e) => lm.setLearnSubcategory(e.target.value as CharacterSubcategory || undefined)}
+                  >
+                    <option value="">Sin subcategoría</option>
+                    <option value="historico-real">Histórico / Real</option>
+                    <option value="deportista">Deportista</option>
+                    <option value="musico">Músico</option>
+                    <option value="actor">Actor / Actriz</option>
+                    <option value="youtuber-streamer">YouTuber / Streamer</option>
+                    <option value="otro">Otro</option>
+                  </select>
+                </div>
+              )}
             </div>
 
-            {lm.learnCategory === 'personaje' && (
-              <div className="learn-field">
-                <label>Subcategoría (opcional)</label>
-                <select
-                  className="learn-select"
-                  value={lm.learnSubcategory || ''}
-                  onChange={(e) => lm.setLearnSubcategory(e.target.value as CharacterSubcategory || undefined)}
-                >
-                  <option value="">Sin subcategoría</option>
-                  <option value="anime-shonen">Anime Shonen</option>
-                  <option value="videojuego">Videojuego</option>
-                  <option value="superheroe">Superhéroe</option>
-                  <option value="disney">Disney</option>
-                  <option value="nintendo">Nintendo</option>
-                  <option value="historico-real">Histórico / Real</option>
-                  <option value="deportista">Deportista</option>
-                  <option value="youtuber-streamer">YouTuber / Streamer</option>
-                  <option value="otro">Otro</option>
-                </select>
-              </div>
-            )}
-
             <div className="learn-actions">
-              <button className="btn-cancel" onClick={lm.onCancel}>
+              <button type="button" className="btn-cancel" onClick={lm.onCancel}>
                 Cancelar
               </button>
               <button
+                type="submit"
                 className="btn-primary"
-                onClick={lm.handleLearnNameSubmit}
                 disabled={!lm.learnName.trim()}
               >
                 Comenzar
               </button>
             </div>
-          </div>
+          </form>
         </div>
       </div>
     )
@@ -125,10 +174,15 @@ export default function LearnMode(props: LearnModeProps) {
 
     return (
       <div className="learn-mode-overlay">
-        <div className="learn-mode-container">
+        <div
+          className="learn-mode-container"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="learn-dialog-title"
+        >
           <div className="learn-header">
             <Avatar name="Derinator" size="sm" className="learn-avatar" />
-            <h2>Enseñando a {lm.learnName}</h2>
+            <h2 id="learn-dialog-title">Enseñando a {lm.learnName}</h2>
             <div className="learn-progress-bar">
               <div
                 className="learn-progress-fill"
@@ -171,26 +225,31 @@ export default function LearnMode(props: LearnModeProps) {
                   className={`learn-answer-btn probably ${isAnswered && lm.learnAnswers[lm.currentQuestion.id] === 'probably' ? 'selected' : ''}`}
                   onClick={() => lm.handleLearnAnswer('probably')}
                 >
-                  Probablemente
+                  <span className="answer-full">Probablemente</span>
+                  <span className="answer-short">Prob. sí</span>
                 </button>
                 <button
                   className={`learn-answer-btn probably-not ${isAnswered && lm.learnAnswers[lm.currentQuestion.id] === 'probably_not' ? 'selected' : ''}`}
                   onClick={() => lm.handleLearnAnswer('probably_not')}
                 >
-                  Probablemente no
+                  <span className="answer-full">Probablemente no</span>
+                  <span className="answer-short">Prob. no</span>
                 </button>
                 <button
                   className={`learn-answer-btn dont-know ${isAnswered && lm.learnAnswers[lm.currentQuestion.id] === 'dont_know' ? 'selected' : ''}`}
                   onClick={() => lm.handleLearnAnswer('dont_know')}
                 >
-                  No lo sé
+                  No sé
                 </button>
               </div>
             </div>
           ) : (
             <div className="learn-question-section">
-              <h3>¡No hay más preguntas relevantes!</h3>
-              <p>Ya respondiste todas las preguntas necesarias para esta categoría.</p>
+              <h3>¡Listo! Ya tengo suficiente info</h3>
+              <p>Podés guardar o agregar una pista para diferenciar mejor a tu personaje.</p>
+              <button className="btn-primary" onClick={lm.startHint}>
+                Agregar pista
+              </button>
             </div>
           )}
 
@@ -201,8 +260,76 @@ export default function LearnMode(props: LearnModeProps) {
             <button className="btn-cancel" onClick={lm.onCancel}>
               Cancelar
             </button>
-            <button className="btn-finish" onClick={lm.handleFinishLearn}>
-              Terminar y guardar
+            <button
+              className="btn-finish"
+              onClick={lm.handleFinishLearn}
+              disabled={!lm.canFinish || lm.isSaving}
+              aria-busy={lm.isSaving}
+            >
+              {lm.isSaving ? 'Guardando...' : 'Terminar y guardar'}
+            </button>
+          </div>
+          {!lm.canFinish && lm.questionsRemaining > 0 && (
+            <p className="learn-min-hint">
+              Falt{lm.questionsRemaining === 1 ? 'a' : 'an'} {lm.questionsRemaining} pregunta{lm.questionsRemaining !== 1 ? 's' : ''} más
+            </p>
+          )}
+        </div>
+      </div>
+    )
+  }
+
+  if (lm.phase === 'hint') {
+    return (
+      <div className="learn-mode-overlay">
+        <div
+          className="learn-mode-container"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="learn-dialog-title"
+        >
+          <div className="learn-header">
+            <Avatar name="Derinator" size="sm" className="learn-avatar" />
+            <h2 id="learn-dialog-title">Pista para {lm.learnName}</h2>
+            <p className="learn-subtitle">
+              Escribí algo que ayude a identificar a este personaje. Por ejemplo: "es el vocalista de Mägo de Oz".
+            </p>
+          </div>
+
+          {lm.validationError && (
+            <div className="learn-validation-error">{lm.validationError}</div>
+          )}
+
+          <div className="learn-form">
+            <div className="learn-field">
+              <label>Pista (opcional)</label>
+              <input
+                type="text"
+                value={lm.learnHint}
+                onChange={(e) => lm.setLearnHint(e.target.value)}
+                placeholder="Ej: es conocido por..."
+                className="learn-input"
+                maxLength={200}
+              />
+            </div>
+          </div>
+
+          <div className="learn-actions">
+            <button
+              className="btn-secondary"
+              onClick={lm.handleFinishLearn}
+              disabled={lm.isSaving}
+              aria-busy={lm.isSaving}
+            >
+              {lm.isSaving ? 'Guardando...' : 'Guardar sin pista'}
+            </button>
+            <button
+              className="btn-primary"
+              onClick={lm.handleFinishLearn}
+              disabled={!lm.learnHint.trim() || lm.isSaving}
+              aria-busy={lm.isSaving}
+            >
+              {lm.isSaving ? 'Guardando...' : 'Guardar con pista'}
             </button>
           </div>
         </div>
@@ -213,85 +340,23 @@ export default function LearnMode(props: LearnModeProps) {
   if (lm.phase === 'done') {
     return (
       <div className="learn-mode-overlay">
-        <div className="learn-mode-container">
+        <div
+          className="learn-mode-container"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="learn-dialog-title"
+        >
           <div className="learn-header success">
             <Avatar name="Derinator" size="sm" className="learn-avatar" />
-            <h2>¡Aprendí a {lm.learnName}!</h2>
-            <p>Gracias por enseñarme. Ahora voy a practicar para ver si lo aprendí bien.</p>
+            <h2 id="learn-dialog-title">¡Aprendí a {lm.learnName}!</h2>
+            <p>Gracias por enseñarme. Lo voy a recordar para la próxima.</p>
           </div>
 
           <div className="learn-actions">
-            <button className="btn-primary" onClick={lm.runPractice}>
-              Probar si aprendí
-            </button>
-            <button className="btn-secondary" onClick={lm.onComplete}>
+            <button className="btn-primary" onClick={lm.onComplete}>
               Terminar
             </button>
           </div>
-        </div>
-      </div>
-    )
-  }
-
-  if (lm.phase === 'practice' || lm.phase === 'practice_result') {
-    const guessedCorrectly = lm.practiceGuess === lm.learnName.trim()
-
-    return (
-      <div className="learn-mode-overlay">
-        <div className="learn-mode-container">
-          <div className="learn-header">
-            <Avatar name="Derinator" size="sm" className="learn-avatar" />
-            <h2>Practicando...</h2>
-          </div>
-
-          {lm.phase === 'practice' && (
-            <div className="practice-loading">
-              <p>Estoy simulando una partida para ver si adivino a {lm.learnName}...</p>
-              <div className="practice-spinner" />
-            </div>
-          )}
-
-          {lm.phase === 'practice_result' && (
-            <>
-              <div className={`practice-result ${guessedCorrectly ? 'success' : 'fail'}`}>
-                {guessedCorrectly ? (
-                  <>
-                    <h3>¡Lo adiviné! 🎯</h3>
-                    <p>Identifiqué a <strong>{lm.learnName}</strong> en {lm.practiceStep} preguntas.</p>
-                  </>
-                ) : (
-                  <>
-                    <h3>¡No lo adiviné! 😅</h3>
-                    <p>Pensé que era <strong>{lm.practiceGuess || 'nadie'}</strong> en lugar de <strong>{lm.learnName}</strong>.</p>
-                    <p>Tal vez necesitás responder más preguntas específicas.</p>
-                  </>
-                )}
-              </div>
-
-              {lm.practiceLog.length > 0 && (
-                <div className="practice-log">
-                  <h4>Simulación:</h4>
-                  <div className="practice-steps">
-                    {lm.practiceLog.map((step, i) => (
-                      <div key={i} className="practice-step">
-                        <span className="step-q">{step.question}</span>
-                        <span className={`step-a ${step.answer}`}>{step.answer}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              <div className="learn-actions">
-                <button className="btn-secondary" onClick={lm.handlePracticeBack}>
-                  Volver
-                </button>
-                <button className="btn-primary" onClick={lm.onComplete}>
-                  Terminar
-                </button>
-              </div>
-            </>
-          )}
         </div>
       </div>
     )
