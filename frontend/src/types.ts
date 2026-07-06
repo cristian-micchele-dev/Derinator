@@ -17,4 +17,4 @@ export type CharacterSubcategory =
   | 'actor'
   | 'otro'
 
-export type GameState = 'start' | 'playing' | 'guess' | 'win' | 'lose' | 'learn_name' | 'learn_questions'
+export type GameState = 'start' | 'playing' | 'firma' | 'guess' | 'win' | 'lose' | 'learn_name' | 'learn_questions'

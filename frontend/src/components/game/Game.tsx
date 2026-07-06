@@ -75,6 +75,15 @@ function GameView({ game }: { game: Game }) {
     )
   }
 
+  if (state.gameState === 'firma') {
+    return (
+      <GameFirma
+        firmaQuestion={state.firmaQuestion}
+        handleFirmaAnswer={actions.handleFirmaAnswer}
+      />
+    )
+  }
+
   if (state.gameState === 'guess') {
     return (
       <GameGuess
@@ -259,6 +268,35 @@ function GameLose({ guessedCharacter, topCandidate, filteredCharacters, historyL
       <button className="btn-secondary" onClick={handleRestart}>
         Intentar de nuevo
       </button>
+    </div>
+  )
+}
+
+interface GameFirmaProps {
+  firmaQuestion: string | null
+  handleFirmaAnswer: (isYes: boolean) => void
+}
+
+function GameFirma({ firmaQuestion, handleFirmaAnswer }: GameFirmaProps) {
+  return (
+    <div className="game-container">
+      <div className="question-box firma">
+        <p className="firma-label">Tengo una corazonada...</p>
+        <p className="firma-question">{firmaQuestion}</p>
+      </div>
+      <div className="answer-buttons">
+        <div className="answer-row">
+          <button className="btn-answer btn-yes" onClick={() => handleFirmaAnswer(true)}>
+            ¡Sí!
+          </button>
+          <button className="btn-answer btn-no" onClick={() => handleFirmaAnswer(false)}>
+            No
+          </button>
+        </div>
+        <button className="btn-answer btn-dont-know" onClick={() => handleFirmaAnswer(false)}>
+          No sé
+        </button>
+      </div>
     </div>
   )
 }

@@ -14,6 +14,8 @@ export interface Character {
   answers: Record<QuestionId, Answer>
   /** Free-text question that uniquely identifies this character (learned characters only) */
   confirmerQuestion?: string
+  /** 2-5 dramatic, hyper-specific questions used for the firma moment before guessing */
+  signatureQuestions?: string[]
 }
 
 interface RawCharacter {
@@ -23,6 +25,7 @@ interface RawCharacter {
   category: string
   subcategory?: string
   answers: Record<string, string>
+  signatureQuestions?: string[]
 }
 
 const ALL_QUESTION_IDS = questions.map(q => q.id)
@@ -46,6 +49,7 @@ function fillDefaults(raw: RawCharacter): Character {
     category: raw.category as CharacterCategory,
     subcategory: (raw.subcategory || undefined) as CharacterSubcategory | undefined,
     answers: fullAnswers,
+    signatureQuestions: raw.signatureQuestions,
   }
 }
 

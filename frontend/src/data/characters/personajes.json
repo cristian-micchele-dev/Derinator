@@ -68,7 +68,11 @@
       "267": "yes",
       "319": "no",
       "320": "no"
-    }
+    },
+    "signatureQuestions": [
+      "¿Es un fontanero italiano que vive en el Reino Champiñón?",
+      "¿Rescata a la Princesa Peach del castillo de Bowser?"
+    ]
   },
   {
     "id": 2,
@@ -216,7 +220,11 @@
       "337": "no",
       "338": "no",
       "339": "no"
-    }
+    },
+    "signatureQuestions": [
+      "¿Es la mascota oficial de la franquicia Pokémon?",
+      "¿Es de tipo Eléctrico y dice su propio nombre al hablar?"
+    ]
   },
   {
     "id": 4,
@@ -399,7 +407,11 @@
       "288": "no",
       "289": "no",
       "290": "no"
-    }
+    },
+    "signatureQuestions": [
+      "¿Su ataque más icónico es el Kamehameha?",
+      "¿Puede transformarse en Super Saiyan cuando su ira supera sus límites?"
+    ]
   },
   {
     "id": 7,
@@ -480,7 +492,11 @@
       "291": "no",
       "292": "no",
       "341": "no"
-    }
+    },
+    "signatureQuestions": [
+      "¿Su técnica especial es el Jutsu de la sombra de clones?",
+      "¿Lleva al Kyūbi, el zorro de nueve colas, sellado en su cuerpo desde que nació?"
+    ]
   },
   {
     "id": 8,
@@ -565,7 +581,11 @@
       "257": "no",
       "271": "no",
       "304": "no"
-    }
+    },
+    "signatureQuestions": [
+      "¿Presenció el asesinato de sus padres en un callejón de Gotham cuando era niño?",
+      "¿Usa un murciélago como símbolo y tiene una cueva secreta bajo su mansión?"
+    ]
   },
   {
     "id": 9,
@@ -651,7 +671,11 @@
       "256": "no",
       "257": "no",
       "271": "no"
-    }
+    },
+    "signatureQuestions": [
+      "¿Fue picado por una araña radiactiva que le dio sus poderes?",
+      "¿Su lema es 'Un gran poder conlleva una gran responsabilidad'?"
+    ]
   },
   {
     "id": 10,
@@ -1136,7 +1160,11 @@
       "308": "no",
       "309": "no",
       "310": "no"
-    }
+    },
+    "signatureQuestions": [
+      "¿Tiene una cicatriz en forma de rayo en la frente, regalo del mago oscuro que mató a sus padres?",
+      "¿Va a la escuela de magia Hogwarts y pertenece a la casa Gryffindor?"
+    ]
   },
   {
     "id": 16,
@@ -1817,7 +1845,11 @@
       "227": "yes",
       "272": "no",
       "273": "yes"
-    }
+    },
+    "signatureQuestions": [
+      "¿Revela al protagonista que es su padre en una de las escenas más icónicas del cine?",
+      "¿Su respiración mecánica es uno de los sonidos más reconocibles de la cultura pop?"
+    ]
   },
   {
     "id": 25,
@@ -2270,7 +2302,11 @@
       "288": "no",
       "289": "no",
       "290": "no"
-    }
+    },
+    "signatureQuestions": [
+      "¿Es el príncipe de los Saiyan y rival eterno de Goku?",
+      "¿Su ataque más icónico es el Galick Gun y el Big Bang Attack?"
+    ]
   },
   {
     "id": 31,
@@ -2345,7 +2381,11 @@
       "227": "yes",
       "277": "yes",
       "346": "no"
-    }
+    },
+    "signatureQuestions": [
+      "¿Su sueño es convertirse en el Rey de los Piratas encontrando el One Piece?",
+      "¿Comió una Fruta del Diablo que convirtió su cuerpo en goma?"
+    ]
   },
   {
     "id": 32,

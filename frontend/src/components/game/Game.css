@@ -751,6 +751,38 @@
   50%      { box-shadow: 0 8px 60px rgba(52, 211, 153, 0.25), 0 0 40px rgba(52, 211, 153, 0.1), inset 0 1px 0 rgba(52, 211, 153, 0.12); }
 }
 
+/* ---- Firma moment (dramatic signature question) ---- */
+.question-box.firma {
+  border-color: rgba(167, 139, 250, 0.5);
+  box-shadow: 0 8px 40px rgba(167, 139, 250, 0.2), inset 0 1px 0 rgba(167, 139, 250, 0.1);
+  animation: fadeSlideIn 0.35s ease-out, firmaGlow 1.5s ease-in-out infinite;
+}
+.question-box.firma::before {
+  background: linear-gradient(90deg, transparent, #a78bfa, transparent);
+  opacity: 0.8;
+}
+
+.firma-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #a78bfa;
+  margin-bottom: var(--space-3);
+}
+
+.firma-question {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--color-text);
+  line-height: 1.5;
+}
+
+@keyframes firmaGlow {
+  0%, 100% { box-shadow: 0 8px 40px rgba(167, 139, 250, 0.15), inset 0 1px 0 rgba(167, 139, 250, 0.08); }
+  50%       { box-shadow: 0 8px 60px rgba(167, 139, 250, 0.35), 0 0 40px rgba(167, 139, 250, 0.12), inset 0 1px 0 rgba(167, 139, 250, 0.15); }
+}
+
 /* ---- Lose subtle shake ---- */
 .question-box.lose {
   animation: fadeSlideIn 0.35s ease-out, loseShake 0.5s 0.3s ease-out;

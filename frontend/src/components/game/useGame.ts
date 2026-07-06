@@ -52,8 +52,10 @@ export function useGame({
   const [isThinkingDelay, setIsThinkingDelay] = useState(false)
   const [pendingAnswer, setPendingAnswer] = useState<Answer | null>(null)
   const [guessedCharacter, setGuessedCharacter] = useState<{ name: string; description: string } | null>(null)
+  const [firmaQuestion, setFirmaQuestion] = useState<string | null>(null)
   const [learnedChars, setLearnedChars] = useState<Character[]>(() => loadLearnedCharacters())
   const hasTriggeredGuess = useRef(false)
+  const firmaUsed = useRef(false)
   // Tracks which characters are still in play. null = all characters active (initial state).
   // Once a character is filtered out it never comes back — the pool is monotonically decreasing.
   const [candidateIds, setCandidateIds] = useState<Set<number> | null>(null)
@@ -162,7 +164,16 @@ export function useGame({
         name: newCandidates[0].name,
         description: newCandidates[0].description || '',
       })
-      triggerDramaticPause('guess')
+      const sqs = newCandidates[0].signatureQuestions
+      const firmaQ = sqs?.length && !firmaUsed.current
+        ? sqs[Math.floor(Math.random() * sqs.length)]
+        : null
+      if (firmaQ) {
+        setFirmaQuestion(firmaQ)
+        setGameState('firma')
+      } else {
+        triggerDramaticPause('guess')
+      }
     }
   }, [currentQuestionId, history, candidatePool, selectedCategory, triggerDramaticPause, learnedConfirmerIdsSet])
 
@@ -177,12 +188,24 @@ export function useGame({
     }, 1200))
   }, [currentQuestionId, isThinkingDelay, processAnswer, timersRef])
 
+  const handleFirmaAnswer = useCallback((isYes: boolean) => {
+    firmaUsed.current = true
+    setFirmaQuestion(null)
+    if (isYes) {
+      setGameState('win')
+    } else {
+      triggerDramaticPause('guess')
+    }
+  }, [setGameState, triggerDramaticPause])
+
   const handleRestart = useCallback(() => {
     setGameState('start')
     setHistory(CATEGORY_SEED_ANSWERS[selectedCategory])
     setGuessedCharacter(null)
+    setFirmaQuestion(null)
     setCandidateIds(null)
     hasTriggeredGuess.current = false
+    firmaUsed.current = false
     setIsThinkingDelay(false)
     setPendingAnswer(null)
     onDramaticPause?.(false)
@@ -191,8 +214,23 @@ export function useGame({
   const handleStart = useCallback(() => {
     setGameState('playing')
     setHistory(CATEGORY_SEED_ANSWERS[selectedCategory])
+    setFirmaQuestion(null)
     setCandidateIds(null)
+    firmaUsed.current = false
   }, [setGameState, selectedCategory])
+
+  function triggerGuessOrFirma(topChar: Character) {
+    const sqs = topChar.signatureQuestions
+    const firmaQ = sqs?.length && !firmaUsed.current
+      ? sqs[Math.floor(Math.random() * sqs.length)]
+      : null
+    if (firmaQ) {
+      setFirmaQuestion(firmaQ)
+      setGameState('firma')
+    } else {
+      triggerDramaticPause('guess')
+    }
+  }
 
   // Smart guessing
   useEffect(() => {
@@ -206,7 +244,7 @@ export function useGame({
         name: rankedCandidates[0].name,
         description: rankedCandidates[0].description || '',
       })
-      triggerDramaticPause('guess')
+      triggerGuessOrFirma(rankedCandidates[0])
       return
     }
 
@@ -229,7 +267,7 @@ export function useGame({
         name: rankedCandidates[0].name,
         description: rankedCandidates[0].description || '',
       })
-      triggerDramaticPause('guess')
+      triggerGuessOrFirma(rankedCandidates[0])
     }
   }, [gameState, currentQuestionId, rankedCandidates, triggerDramaticPause, onConfidenceChange, history])
 
@@ -239,6 +277,7 @@ export function useGame({
       isThinkingDelay,
       pendingAnswer,
       guessedCharacter,
+      firmaQuestion,
     },
     category: {
       selectedCategory,
@@ -264,6 +303,7 @@ export function useGame({
       handleGuess,
       handleRestart,
       handleStart,
+      handleFirmaAnswer,
       setGameState,
     },
   }

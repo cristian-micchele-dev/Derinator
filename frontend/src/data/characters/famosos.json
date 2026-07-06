@@ -52,7 +52,11 @@
       "203": "yes",
       "236": "yes",
       "347": "yes"
-    }
+    },
+    "signatureQuestions": [
+      "¿Ganó la Copa del Mundo con Argentina en 2022?",
+      "¿Es considerado el mejor jugador de fútbol de la historia?"
+    ]
   },
   {
     "id": 202,
@@ -106,7 +110,11 @@
       "202": "yes",
       "236": "yes",
       "348": "yes"
-    }
+    },
+    "signatureQuestions": [
+      "¿Metió el famoso 'Gol del Siglo' contra Inglaterra en el Mundial de 1986?",
+      "¿Fue campeón del mundo con Argentina en 1986?"
+    ]
   },
   {
     "id": 203,
@@ -306,7 +314,11 @@
       "199": "yes",
       "236": "yes",
       "352": "yes"
-    }
+    },
+    "signatureQuestions": [
+      "¿Es conocido mundialmente como el Rey del Pop?",
+      "¿Popularizó el 'moonwalk' en televisión durante los años 80?"
+    ]
   },
   {
     "id": 207,
@@ -448,7 +460,11 @@
       "199": "yes",
       "236": "no",
       "355": "yes"
-    }
+    },
+    "signatureQuestions": [
+      "¿Sus caderas no mienten?",
+      "¿Mezcla música latina con ritmos del Medio Oriente en sus canciones?"
+    ]
   },
   {
     "id": 210,
@@ -771,7 +787,11 @@
       "199": "no",
       "236": "yes",
       "362": "yes"
-    }
+    },
+    "signatureQuestions": [
+      "¿Es el creador del movimiento artístico cubista?",
+      "¿Pintó el Guernica, sobre el bombardeo de una ciudad española?"
+    ]
   },
   {
     "id": 217,
@@ -1995,9 +2015,14 @@
       "197": "no",
       "198": "yes",
       "199": "yes",
+      "155": "yes",
       "236": "no",
       "387": "yes"
-    }
+    },
+    "signatureQuestions": [
+      "¿Fue el vocalista principal del grupo de rock Queen?",
+      "¿Es famoso por el tema Bohemian Rhapsody y su actuación en Live Aid 1985?"
+    ]
   },
   {
     "id": 242,
@@ -2696,7 +2721,11 @@
       "199": "no",
       "236": "yes",
       "402": "yes"
-    }
+    },
+    "signatureQuestions": [
+      "¿Es conocido por la ecuación E=mc²?",
+      "¿Desarrolló la teoría de la relatividad especial y general?"
+    ]
   },
   {
     "id": 257,
@@ -2736,7 +2765,11 @@
       "199": "yes",
       "236": "yes",
       "403": "yes"
-    }
+    },
+    "signatureQuestions": [
+      "¿Fundó SpaceX con el objetivo de colonizar Marte?",
+      "¿Compró Twitter y lo renombró 'X'?"
+    ]
   },
   {
     "id": 258,
@@ -2776,7 +2809,11 @@
       "199": "yes",
       "236": "yes",
       "404": "yes"
-    }
+    },
+    "signatureQuestions": [
+      "¿Cofundó Microsoft junto a Paul Allen?",
+      "¿Fue durante muchos años el hombre más rico del mundo?"
+    ]
   },
   {
     "id": 259,
@@ -2816,7 +2853,11 @@
       "199": "no",
       "236": "yes",
       "405": "yes"
-    }
+    },
+    "signatureQuestions": [
+      "¿Presentó al mundo el primer iPhone en enero de 2007?",
+      "¿Era conocido por decir 'One more thing...' al final de sus presentaciones?"
+    ]
   },
   {
     "id": 260,
@@ -2862,7 +2903,11 @@
       "199": "yes",
       "236": "yes",
       "406": "yes"
-    }
+    },
+    "signatureQuestions": [
+      "¿Fue el primer presidente afroamericano de los Estados Unidos?",
+      "¿Ganó el Premio Nobel de la Paz en 2009?"
+    ]
   },
   {
     "id": 261,
@@ -2995,7 +3040,11 @@
       "199": "no",
       "236": "yes",
       "409": "yes"
-    }
+    },
+    "signatureQuestions": [
+      "¿Estuvo encarcelado más de 27 años en la isla de Robben Island?",
+      "¿Fue el primer presidente negro elegido democráticamente en Sudáfrica?"
+    ]
   },
   {
     "id": 264,
@@ -5147,7 +5196,11 @@
       "199": "yes",
       "236": "no",
       "453": "yes"
-    }
+    },
+    "signatureQuestions": [
+      "¿Es conocida mundialmente como la Reina del Pop?",
+      "¿Es famosa por el videoclip 'Like a Prayer' que generó enorme polémica religiosa?"
+    ]
   },
   {
     "id": 308,
@@ -5331,7 +5384,11 @@
       "199": "yes",
       "236": "no",
       "457": "yes"
-    }
+    },
+    "signatureQuestions": [
+      "¿Organizó La Velada del Año, el evento de boxeo amateur más visto de internet?",
+      "¿Fue el streamer en español con más espectadores simultáneos en Twitch?"
+    ]
   },
   {
     "id": 312,
@@ -6767,7 +6824,11 @@
       "199": "yes",
       "236": "no",
       "487": "yes"
-    }
+    },
+    "signatureQuestions": [
+      "¿Tuvo un skin oficial suyo en el videojuego Fortnite?",
+      "¿Batió el récord mundial de espectadores simultáneos en Twitch al revelar su skin?"
+    ]
   },
   {
     "id": 342,
