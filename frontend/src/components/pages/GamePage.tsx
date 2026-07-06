@@ -9,6 +9,7 @@ import type { GameState } from '../../types'
 const BUBBLE_TEXTS: Record<GameState, string[]> = {
   start: ['Pensá en alguien...', '¿Listo para jugar?', 'Yo leo tu mente...', 'Concentrate...', 'Elige bien...'],
   playing: ['Hmm...', 'Déjame pensar...', 'Interesante...', 'Se me ocurre algo...', 'Ya casi...', 'Procesando...'],
+  firma: ['Tengo una corazonada...', 'Creo que sé quién es...', 'Déjame confirmar algo...', 'Casi seguro...'],
   guess: ['¡Ya sé!', 'Lo tengo...', '¿Será...?', 'Estoy seguro...', 'Creo que es...'],
   win: ['¡Te atrapé!', '¡Yo gano!', 'Jeje, lo sabía', '¡Nadie me escapa!', '¡Demasiado fácil!', '¡Lo sabía!'],
   lose: ['Me ganaste...', 'Hmm, la próxima...', '¿En quién pensabas?', 'Enseñame...', 'Me venciste...'],

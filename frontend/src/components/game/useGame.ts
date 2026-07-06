@@ -164,7 +164,8 @@ export function useGame({
         name: newCandidates[0].name,
         description: newCandidates[0].description || '',
       })
-      const sqs = newCandidates[0].signatureQuestions
+      const topFullChar = candidatePool.find(c => c.id === newCandidates[0].id)
+      const sqs = topFullChar?.signatureQuestions
       const firmaQ = sqs?.length && !firmaUsed.current
         ? sqs[Math.floor(Math.random() * sqs.length)]
         : null
@@ -219,8 +220,9 @@ export function useGame({
     firmaUsed.current = false
   }, [setGameState, selectedCategory])
 
-  function triggerGuessOrFirma(topChar: Character) {
-    const sqs = topChar.signatureQuestions
+  function triggerGuessOrFirma(id: number) {
+    const topFullChar = candidatePool.find(c => c.id === id)
+    const sqs = topFullChar?.signatureQuestions
     const firmaQ = sqs?.length && !firmaUsed.current
       ? sqs[Math.floor(Math.random() * sqs.length)]
       : null
@@ -244,7 +246,7 @@ export function useGame({
         name: rankedCandidates[0].name,
         description: rankedCandidates[0].description || '',
       })
-      triggerGuessOrFirma(rankedCandidates[0])
+      triggerGuessOrFirma(rankedCandidates[0].id)
       return
     }
 
@@ -267,7 +269,7 @@ export function useGame({
         name: rankedCandidates[0].name,
         description: rankedCandidates[0].description || '',
       })
-      triggerGuessOrFirma(rankedCandidates[0])
+      triggerGuessOrFirma(rankedCandidates[0].id)
     }
   }, [gameState, currentQuestionId, rankedCandidates, triggerDramaticPause, onConfidenceChange, history])
 
