@@ -110,6 +110,10 @@ export function calculateScore(
       (charAnswer === 'probably' || charAnswer === 'probably_not')
     ) {
       score += weight * SCORE_PARTIAL_MATCH_BONUS
+    } else if (userAnswer === 'yes' && charAnswer === 'dont_know' && weight >= WEIGHT_CONFIRMER) {
+      // Confirmer answered "yes" — only the specific character has this trait.
+      // Treat it as a near-contradiction for everyone else.
+      score -= weight * SCORE_CONTRADICTION_PENALTY
     } else {
       score -= weight * SCORE_DEFAULT_MISMATCH_PENALTY
     }
