@@ -560,6 +560,18 @@ export const questions = [
   { id: 497, text: '¿Protagonizó la película "Barbie" de 2023 junto a Ryan Gosling?' },
   { id: 498, text: '¿Fundó Facebook en su dormitorio de Harvard?' },
   { id: 499, text: '¿Fundó Amazon comenzando como librería online desde su garaje?' },
+
+  // Músicos famosos — confirmers
+  { id: 501, text: '¿Es conocido como el "Rey del Rock and Roll" y fue pionero del rock en los años 50?' },
+  { id: 502, text: '¿Es el músico jamaicano famoso por el reggae y canciones como "No Woman, No Cry"?' },
+  { id: 503, text: '¿Fue cofundador de The Beatles y compuso el himno de paz "Imagine"?' },
+  { id: 504, text: '¿Grabó "I Will Always Love You" para la película El Guardaespaldas?' },
+  { id: 505, text: '¿Es el cantante británico de lentes espectaculares conocido por "Rocket Man" y "Crocodile Rock"?' },
+  { id: 506, text: '¿Es la cantante de soul británica del álbum "Back to Black", fallecida a los 27 años?' },
+  { id: 507, text: '¿Fue el vocalista de Nirvana e ícono del grunge, fallecido a los 27 años?' },
+  { id: 508, text: '¿Es conocido como el "Príncipe de las Tinieblas" y fue vocalista fundador de Black Sabbath?' },
+  { id: 509, text: '¿Es el rapero con tatuajes en la cara conocido por "Rockstar" y "Sunflower"?' },
+  { id: 510, text: '¿Es el cantante mexicano de corridos tumbados conocido por "La Bebe" y "Ella Baila Sola"?' },
 ] as const
 
 export type QuestionId = typeof questions[number]['id']
