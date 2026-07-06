@@ -1,16 +1,9 @@
 import { FlowNode } from '../questionFlow'
 
 // ===== NON-HUMAN FICTIONAL CREATURES =====
+// NOTE: Q4 (¿Es de ficción?) lives in HUB_FLOWS with prerequisites [Q1=yes].
+// Do NOT add Q4 here — FLOW_MAP keeps only the last entry per ID.
 export const FICTIONAL_FLOWS: FlowNode[] = [
-  {
-    id: 4, // ¿Es de ficción? (non-human path)
-    prerequisites: [{ questionId: 3, answers: ['no'] }],
-    next: {
-      yes: 82,  // Humanoid?
-      no: null, // Not fictional and not human = ??? (shouldn't happen often)
-      default: 82,
-    },
-  },
   {
     id: 82, // ¿Tiene forma humana?
     prerequisites: [{ questionId: 3, answers: ['no'] }, { questionId: 4, answers: ['yes'] }],
@@ -506,4 +499,46 @@ export const FICTIONAL_FLOWS: FlowNode[] = [
     next: { default: null },
     weight: 3.5,
   },
+
+  // ---- Hair color (fiction only) ----
+  { id: 220, prerequisites: [{ questionId: 4, answers: ['yes'] }], next: { default: null }, weight: 1.0 }, // pelo azul
+  { id: 221, prerequisites: [{ questionId: 4, answers: ['yes'] }], next: { default: null }, weight: 1.0 }, // pelo verde
+  { id: 222, prerequisites: [{ questionId: 4, answers: ['yes'] }], next: { default: null }, weight: 1.0 }, // pelo blanco
+  { id: 223, prerequisites: [{ questionId: 4, answers: ['yes'] }], next: { default: null }, weight: 1.0 }, // pelo negro
+
+  // ---- Cicatriz / marca (fiction only) ----
+  { id: 227, prerequisites: [{ questionId: 4, answers: ['yes'] }], next: { default: null }, weight: 1.0 },
+
+  // ---- Dragon Ball specific (require DB confirmed) ----
+  { id: 228, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 84, answers: ['yes'] }], next: { default: null }, weight: 2.5 }, // Saiyajin
+  { id: 229, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 84, answers: ['yes'] }], next: { default: null }, weight: 2.5 }, // Namekiano
+  { id: 230, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 84, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // androide
+  { id: 231, prerequisites: [{ questionId: 4, answers: ['yes'] }], next: { default: null }, weight: 1.5 }, // villano principal
+  { id: 232, prerequisites: [{ questionId: 4, answers: ['yes'] }], next: { default: null }, weight: 1.5 }, // múltiples formas
+  { id: 233, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 84, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // humano puro DB
+  { id: 235, prerequisites: [{ questionId: 4, answers: ['yes'] }], next: { default: null }, weight: 1.0 }, // realeza/príncipe (fiction)
+
+  // ---- Pokémon starter/type (require Pokémon confirmed) ----
+  { id: 161, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 85, answers: ['yes'] }], next: { default: null }, weight: 2.5 }, // starter
+  { id: 162, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 85, answers: ['yes'] }], next: { default: null }, weight: 2.5 }, // tipo fuego
+  { id: 163, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 85, answers: ['yes'] }], next: { default: null }, weight: 2.5 }, // tipo agua
+  { id: 164, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 85, answers: ['yes'] }], next: { default: null }, weight: 2.5 }, // tipo planta
+  { id: 165, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 85, answers: ['yes'] }], next: { default: null }, weight: 2.5 }, // tipo eléctrico
+
+  // ---- Pokémon specific (require Pokémon confirmed) ----
+  { id: 166, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 85, answers: ['yes'] }], next: { default: null }, weight: 2.5 }, // evolución
+  { id: 167, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 85, answers: ['yes'] }], next: { default: null }, weight: 2.5 }, // legendario
+  { id: 168, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 85, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // primera gen
+  { id: 169, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 85, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // tipo dragón
+  { id: 170, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 85, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // tipo psíquico
+  { id: 171, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 85, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // tipo fantasma
+  { id: 172, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 85, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // tipo hielo
+  { id: 173, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 85, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // tipo lucha
+  { id: 174, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 85, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // tipo volador
+  { id: 175, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 85, answers: ['yes'] }], next: { default: null }, weight: 2.5 }, // compañero Ash
+  { id: 176, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 85, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // dice su nombre
+  { id: 177, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 85, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // evoluciona piedra
+  { id: 178, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 85, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // tipo normal
+  { id: 179, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 85, answers: ['yes'] }], next: { default: null }, weight: 1.5 }, // roedor
+  { id: 180, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 85, answers: ['yes'] }], next: { default: null }, weight: 1.5 }, // reptil
 ]

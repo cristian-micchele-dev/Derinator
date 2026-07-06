@@ -1,7 +1,7 @@
 import { QuestionId } from '../questions'
 import { Answer } from '../../types'
 import { ANIMAL_FLOWS } from './flows/animals'
-import { REAL_PEOPLE_FLOWS } from './flows/real-people'
+import { REAL_PEOPLE_FLOWS } from './flows/realPeople'
 import { FICTIONAL_FLOWS } from './flows/fictional'
 
 /**
@@ -102,14 +102,15 @@ const HUB_FLOWS: FlowNode[] = [
     next: { default: 4 },
   },
   {
-    id: 4, // ¿Es de ficción? (human path)
-    prerequisites: [{ questionId: 3, answers: ['yes'] }],
+    id: 4, // ¿Es de ficción?
+    prerequisites: [{ questionId: 1, answers: ['yes', 'probably'] }],
     next: {
       yes: 54,
-      no: 16,
+      no: 3,
       default: 54,
     },
     alternatives: [16],
+    weight: 3.0,
   },
 ]
 

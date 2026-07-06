@@ -40,7 +40,7 @@ describe('validateCharacterInput', () => {
     description: 'Un Pokemon electrico',
     category: 'animal',
     subcategory: 'videojuego',
-    answers: { 1: 'yes', 2: 'yes', 4: 'yes' },
+    answers: { 1: 'yes', 2: 'yes', 4: 'yes', 5: 'no', 6: 'probably' },
   }
 
   it('returns isValid=true for valid input', () => {
@@ -186,7 +186,7 @@ describe('validateCharacterInput', () => {
     for (const ans of validAnswers) {
       const result = validateCharacterInput({
         ...validInput,
-        answers: { 1: ans },
+        answers: { 1: ans, 2: 'yes', 3: 'no', 4: 'yes', 5: 'no', 6: 'probably' },
       })
       expect(result.isValid).toBe(true)
       expect(result.answers[1]).toBe(ans)
@@ -229,5 +229,60 @@ describe('validateCharacterInput', () => {
     })
     // After stripping <>, name becomes empty → too short
     expect(result.isValid).toBe(false)
+  })
+
+  it('rejects when fewer than 5 meaningful answers (dont_know does not count)', () => {
+    // 4 real answers + 2 dont_know = only 4 meaningful → rejected
+    const result = validateCharacterInput({
+      ...validInput,
+      answers: { 1: 'yes', 2: 'no', 3: 'yes', 4: 'no', 5: 'dont_know', 6: 'dont_know' },
+    })
+    expect(result.isValid).toBe(false)
+    expect(result.errors).toContainEqual(
+      expect.objectContaining({ field: 'answers', message: expect.stringContaining('5 respuestas') })
+    )
+  })
+
+  it('accepts exactly 5 meaningful answers (boundary condition)', () => {
+    const result = validateCharacterInput({
+      ...validInput,
+      answers: { 1: 'yes', 2: 'no', 3: 'yes', 4: 'no', 5: 'probably' },
+    })
+    expect(result.isValid).toBe(true)
+  })
+
+  it('dont_know-only answers fail the minimum check', () => {
+    const result = validateCharacterInput({
+      ...validInput,
+      answers: { 1: 'dont_know', 2: 'dont_know', 3: 'dont_know', 4: 'dont_know', 5: 'dont_know' },
+    })
+    expect(result.isValid).toBe(false)
+    expect(result.errors).toContainEqual(
+      expect.objectContaining({ field: 'answers', message: expect.stringContaining('5 respuestas') })
+    )
+  })
+
+  it('rejects more than 250 answers', () => {
+    // Build 251 valid answers using real question IDs (1..236)
+    const manyAnswers: Record<number, string> = {}
+    for (let i = 1; i <= 236; i++) manyAnswers[i] = 'yes'
+    // Add extra using confirmer range (248..264)
+    for (let i = 248; i <= 264; i++) manyAnswers[i] = 'no'
+    const result = validateCharacterInput({ ...validInput, answers: manyAnswers })
+    // 236 + 17 = 253 entries → exceeds 250
+    expect(result.isValid).toBe(false)
+    expect(result.errors).toContainEqual(
+      expect.objectContaining({ field: 'answers', message: expect.stringContaining('250') })
+    )
+  })
+
+  it('uses dynamic question IDs from questions data (not hardcoded)', () => {
+    // Frontend derives valid IDs from the questions array — any real question ID should work
+    // Q1 and Q2 are always valid regardless of hardcoded backend set
+    const result = validateCharacterInput({
+      ...validInput,
+      answers: { 1: 'yes', 2: 'yes', 3: 'yes', 4: 'yes', 5: 'yes' },
+    })
+    expect(result.isValid).toBe(true)
   })
 })

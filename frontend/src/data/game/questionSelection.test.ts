@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { getBestQuestion } from './questionSelection'
+import { getBestQuestion, prerequisitesStrictMet, isExcluded } from './questionSelection'
 import { QuestionId } from '../questions'
 import { Answer } from '../../types'
 
@@ -181,7 +181,10 @@ describe('getBestQuestion — Phase 1.5 (sub-universe)', () => {
     const candidates = Array.from({ length: 10 }, (_, i) =>
       char(i, `Char${i}`, { 59: 'yes', 84: i < 5 ? 'yes' : 'no' })
     )
-    const history = [{ questionId: q(59), answer: 'yes' as Answer }]
+    const history = [
+      { questionId: q(4), answer: 'yes' as Answer },  // always seeded in real game
+      { questionId: q(59), answer: 'yes' as Answer },
+    ]
     const result = getBestQuestion(qIds([84, 85, 16]), candidates, history)
     expect(result).toBe(84) // Sub-universe: Dragon Ball
   })
@@ -190,21 +193,24 @@ describe('getBestQuestion — Phase 1.5 (sub-universe)', () => {
     const candidates = Array.from({ length: 10 }, (_, i) =>
       char(i, `Char${i}`, { 84: i < 5 ? 'yes' : 'no', 16: i < 3 ? 'yes' : 'no' })
     )
+    // No history → no strict prereq filtering → Phase 3 picks best discriminator
     const result = getBestQuestion(qIds([84, 16]), candidates)
-    // No history → Phase 1.5 skipped → Phase 3 entropy picks best discriminator
     expect(result).not.toBeNull()
     expect([84, 16]).toContain(result)
   })
 
   it('with "no" history, falls through to later phases', () => {
+    // q84 needs q4=yes + q59=yes; provide both so Phase 3 strict prereqs pass
     const candidates = Array.from({ length: 10 }, (_, i) =>
       char(i, `Char${i}`, { 84: i < 5 ? 'yes' : 'no', 16: i < 5 ? 'yes' : 'no' })
     )
-    const history = [{ questionId: q(59), answer: 'no' as Answer }]
+    const history = [
+      { questionId: q(4), answer: 'yes' as Answer },
+      { questionId: q(59), answer: 'yes' as Answer },
+    ]
     const result = getBestQuestion(qIds([84, 16]), candidates, history)
-    // Broad universe was "no" → Phase 1.5 skipped → Phase 3 picks best discriminator
-    expect(result).not.toBeNull()
-    expect([84, 16]).toContain(result)
+    // q84 prereqs met → Phase 3 picks it; q16 prereqs NOT met → blocked
+    expect(result).toBe(84)
   })
 
   it('with ≤2 candidates, getBestQuestion returns null', () => {
@@ -214,7 +220,10 @@ describe('getBestQuestion — Phase 1.5 (sub-universe)', () => {
       char(1, 'A', { 84: 'yes', 16: 'yes' }),
       char(2, 'B', { 84: 'no', 16: 'no' }),
     ]
-    const history = [{ questionId: q(59), answer: 'yes' as Answer }]
+    const history = [
+      { questionId: q(4), answer: 'yes' as Answer },  // always seeded in real game
+      { questionId: q(59), answer: 'yes' as Answer },
+    ]
     const result = getBestQuestion(qIds([84, 16]), candidates, history)
     // Phase 1.5 needs >2 candidates, but Phase 3 picks the best entropy question
     expect(result).not.toBeNull()
@@ -235,14 +244,15 @@ describe('getBestQuestion — Phase 1.6 (Pokémon type)', () => {
   })
 
   it('without Pokémon confirmation, skips to later phases', () => {
+    // q161 requires q85=yes; with q85=no its prerequisites are unmet
+    // q1 (¿Es un ser vivo?) has no flow node → always eligible
     const candidates = Array.from({ length: 6 }, (_, i) =>
-      char(i, `Char${i}`, { 161: i < 3 ? 'yes' : 'no', 16: i < 3 ? 'yes' : 'no' })
+      char(i, `Char${i}`, { 161: i < 3 ? 'yes' : 'no', 1: i < 3 ? 'yes' : 'no' })
     )
     const history = [{ questionId: q(85), answer: 'no' as Answer }]
-    const result = getBestQuestion(qIds([161, 16]), candidates, history)
-    // q85 was "no" → Phase 1.6 skipped → Phase 3 picks best entropy question
-    expect(result).not.toBeNull()
-    expect([161, 16]).toContain(result)
+    const result = getBestQuestion(qIds([161, 1]), candidates, history)
+    // q161 filtered out by strict prerequisites → only q1 remains
+    expect(result).toBe(1)
   })
 })
 
@@ -323,6 +333,150 @@ describe('getBestQuestion — Phase 3 (entropy fallback)', () => {
     // Only q100 available, but all candidates agree → no discrimination
     const result = getBestQuestion([q(100)], candidates)
     expect(result).toBeNull()
+  })
+})
+
+// ===================================================================
+// Phase 1.8: Confirmers before Phase 2
+// ===================================================================
+describe('getBestQuestion — Phase 1.8 (confirmers run before Phase 2)', () => {
+  // Q248 is a fiction confirmer (WEIGHT_CONFIRMER = 5.0)
+  // Q142 is a discriminative question (¿Ganó un premio importante?) used by Phase 2
+  const CONFIRMER = 248 as QuestionId
+  const DISCRIMINATIVE = 142 as QuestionId
+
+  it('picks confirmer over Phase-2 question when candidateCount ≤ 15', () => {
+    // 5 candidates: one unique confirmer match, Phase-2 question has 3/5 split
+    const candidates = [
+      char(1, 'Target',   { [CONFIRMER]: 'yes', [DISCRIMINATIVE]: 'yes' }),
+      char(2, 'Other1',   { [CONFIRMER]: 'no',  [DISCRIMINATIVE]: 'yes' }),
+      char(3, 'Other2',   { [CONFIRMER]: 'no',  [DISCRIMINATIVE]: 'yes' }),
+      char(4, 'Other3',   { [CONFIRMER]: 'no',  [DISCRIMINATIVE]: 'no' }),
+      char(5, 'Other4',   { [CONFIRMER]: 'no',  [DISCRIMINATIVE]: 'no' }),
+    ]
+    const result = getBestQuestion(qIds([CONFIRMER, DISCRIMINATIVE]), candidates)
+    expect(result).toBe(CONFIRMER)
+  })
+
+  it('does NOT pick confirmer when candidateCount > 15 (Phase 1.8 gate)', () => {
+    // 16 candidates: confirmer has 1/16 split, discriminative has 8/16 (better entropy)
+    const candidates = Array.from({ length: 16 }, (_, i) =>
+      char(i + 1, `Char${i}`, {
+        [CONFIRMER]: i === 0 ? 'yes' : 'no',
+        [DISCRIMINATIVE]: i < 8 ? 'yes' : 'no',
+      })
+    )
+    const result = getBestQuestion(qIds([CONFIRMER, DISCRIMINATIVE]), candidates)
+    // Phase 1.8 skipped (>15 candidates); entropy/Phase 2 picks DISCRIMINATIVE
+    expect(result).toBe(DISCRIMINATIVE)
+  })
+
+  it('picks confirmer with 2 candidates — still ≤ 15', () => {
+    const candidates = [
+      char(1, 'Brad',  { [CONFIRMER]: 'yes' }),
+      char(2, 'Other', { [CONFIRMER]: 'no'  }),
+    ]
+    const result = getBestQuestion(qIds([CONFIRMER, DISCRIMINATIVE]), candidates)
+    expect(result).toBe(CONFIRMER)
+  })
+})
+
+// ===================================================================
+// Phase 1.8: Learned confirmer IDs (dynamic, 10000+ range)
+// ===================================================================
+describe('getBestQuestion — Phase 1.8 with learned confirmer IDs', () => {
+  const LEARNED_ID = 10005678 as unknown as QuestionId
+  const DISCRIMINATIVE = 142 as QuestionId
+  const learnedIds = new Set([10005678])
+
+  it('picks learned confirmer over discriminative question when ≤ 15 candidates', () => {
+    const candidates = [
+      char(10005678, 'José Andrea', { [LEARNED_ID]: 'yes', [DISCRIMINATIVE]: 'yes' }),
+      char(2, 'Otro Músico',        { [LEARNED_ID]: 'no',  [DISCRIMINATIVE]: 'yes' }),
+      char(3, 'Otro Músico 2',      { [LEARNED_ID]: 'no',  [DISCRIMINATIVE]: 'no'  }),
+    ]
+    const result = getBestQuestion(
+      qIds([DISCRIMINATIVE]).concat([LEARNED_ID]),
+      candidates,
+      undefined,
+      learnedIds,
+    )
+    expect(result).toBe(LEARNED_ID)
+  })
+
+  it('learned confirmer is selectable even as the only question', () => {
+    const candidates = [
+      char(10005678, 'José Andrea', { [LEARNED_ID]: 'yes' }),
+      char(2, 'Taylor Swift',       { [LEARNED_ID]: 'no'  }),
+      char(3, 'Bad Bunny',          { [LEARNED_ID]: 'no'  }),
+    ]
+    const result = getBestQuestion(
+      [LEARNED_ID],
+      candidates,
+      undefined,
+      learnedIds,
+    )
+    expect(result).toBe(LEARNED_ID)
+  })
+})
+
+// ===================================================================
+// prerequisitesStrictMet
+// ===================================================================
+describe('prerequisitesStrictMet', () => {
+  it('returns true for a question not in FLOW_MAP (no prerequisites defined)', () => {
+    // Q1 (¿Es un ser vivo?) is the root question — no prerequisites
+    const emptyMap = new Map<QuestionId, Answer>()
+    expect(prerequisitesStrictMet(q(1), emptyMap)).toBe(true)
+  })
+
+  it('returns false when a required prerequisite has not been answered', () => {
+    // Q161 (Pokemon type) requires Q85=yes in FLOW_MAP
+    const emptyMap = new Map<QuestionId, Answer>()
+    expect(prerequisitesStrictMet(q(161), emptyMap)).toBe(false)
+  })
+
+  it('returns true when all prerequisites are met with the correct answer', () => {
+    // Q161 (Pokémon starter) requires Q4=yes AND Q85=yes
+    const answerMap = new Map<QuestionId, Answer>([
+      [q(4), 'yes'],
+      [q(85), 'yes'],
+    ])
+    expect(prerequisitesStrictMet(q(161), answerMap)).toBe(true)
+  })
+
+  it('returns false when only one of multiple prerequisites is met', () => {
+    // Q161 requires Q4=yes AND Q85=yes; only Q85=yes given
+    const answerMap = new Map<QuestionId, Answer>([[q(85), 'yes']])
+    expect(prerequisitesStrictMet(q(161), answerMap)).toBe(false)
+  })
+
+  it('returns false when prerequisite exists but has wrong answer value', () => {
+    // Q161 requires Q85=yes, but we give Q85=no
+    const answerMap = new Map<QuestionId, Answer>([[q(4), 'yes'], [q(85), 'no']])
+    expect(prerequisitesStrictMet(q(161), answerMap)).toBe(false)
+  })
+})
+
+// ===================================================================
+// isExcluded
+// ===================================================================
+describe('isExcluded', () => {
+  it('returns false for a question not in FLOW_MAP (no exclusions defined)', () => {
+    const emptyMap = new Map<QuestionId, Answer>()
+    expect(isExcluded(q(1), emptyMap)).toBe(false)
+  })
+
+  it('returns false when no exclusion trigger is present in answerMap', () => {
+    // Any question with exclusions → returns false when the trigger is absent
+    const emptyMap = new Map<QuestionId, Answer>()
+    expect(isExcluded(q(84), emptyMap)).toBe(false)
+  })
+
+  it('returns false for a question with no exclusion rules', () => {
+    // Q10 is not in FLOW_MAP → no exclusions → always false
+    const filledMap = new Map<QuestionId, Answer>([[q(4), 'yes'], [q(85), 'no']])
+    expect(isExcluded(q(10), filledMap)).toBe(false)
   })
 })
 

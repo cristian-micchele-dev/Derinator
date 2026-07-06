@@ -15,6 +15,8 @@ export const VALID_SUBCATEGORIES = [
   'youtuber-streamer',
   'historico-real',
   'deportista',
+  'musico',
+  'actor',
   'otro',
 ] as const
 export type ValidSubcategory = typeof VALID_SUBCATEGORIES[number]
@@ -23,6 +25,7 @@ const VALID_ANSWERS: Answer[] = ['yes', 'no', 'probably', 'probably_not', 'dont_
 const MAX_NAME_LENGTH = 100
 const MAX_DESCRIPTION_LENGTH = 200
 const MAX_ANSWERS = 250
+const MIN_ANSWERS = 5
 
 /**
  * Sanitize user input: strip HTML tags, trim, limit length
@@ -68,8 +71,8 @@ export function validateCharacterInput(raw: {
     errors.push({ field: 'name', message: 'El nombre es obligatorio' })
   } else {
     name = sanitizeInput(raw.name, MAX_NAME_LENGTH)
-    if (name.length < 2) {
-      errors.push({ field: 'name', message: 'El nombre debe tener al menos 2 caracteres' })
+    if (name.length < 3) {
+      errors.push({ field: 'name', message: 'El nombre debe tener al menos 3 caracteres' })
     }
     if (!/^\p{L}[\p{L}\p{N}\s\-_.]+$/u.test(name)) {
       errors.push({ field: 'name', message: 'El nombre contiene caracteres inválidos' })
@@ -125,6 +128,11 @@ export function validateCharacterInput(raw: {
         continue
       }
       answers[qId as QuestionId] = value as Answer
+    }
+
+    const meaningfulAnswers = Object.values(answers).filter(a => a !== 'dont_know').length
+    if (meaningfulAnswers < MIN_ANSWERS) {
+      errors.push({ field: 'answers', message: `Se necesitan al menos ${MIN_ANSWERS} respuestas (sin contar "No lo sé")` })
     }
   }
 

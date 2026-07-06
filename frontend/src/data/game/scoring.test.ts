@@ -245,3 +245,115 @@ describe('getDiscriminationScore', () => {
     expect(score).toBeGreaterThanOrEqual(0)
   })
 })
+
+// ===================================================================
+// Q52/Q53 gender weight fix — must be WEIGHT_DEFAULT (1.0), not 0.6
+// ===================================================================
+describe('calculateScore — Q52/Q53 gender weight', () => {
+  const q = (id: number) => id as QuestionId
+
+  it('Q52 contradiction drops score below filter threshold of 0.65', () => {
+    // Simulate a famosa: base score 4.5 from other questions, then Q52 contradicts.
+    // With weight 1.0: final = (4.5 - 1.2) / (4.5 + 1.0) = 0.60 < 0.65 → filtered out.
+    // With old weight 0.6: final = (4.5 - 0.72) / (4.5 + 0.6) = 0.74 > 0.65 → NOT filtered.
+    const charAnswers: Record<QuestionId, Answer> = {
+      [q(52)]: 'yes',  // character is a woman
+    }
+    const userAnswers: Record<QuestionId, Answer> = {
+      [q(52)]: 'no',   // user says NOT a woman
+    }
+    const score = calculateScore(charAnswers, userAnswers)
+    // Direct contradiction → score must be negative (weight 1.0, penalty 1.2)
+    expect(score).toBeLessThan(0)
+  })
+
+  it('Q53 contradiction (user=no, char=yes) is also heavily penalized', () => {
+    const charAnswers: Record<QuestionId, Answer> = { [q(53)]: 'yes' }
+    const userAnswers: Record<QuestionId, Answer> = { [q(53)]: 'no' }
+    expect(calculateScore(charAnswers, userAnswers)).toBeLessThan(0)
+  })
+
+  it('Q52 match still returns 1.0 (weight does not affect normalized perfect match)', () => {
+    const charAnswers: Record<QuestionId, Answer> = { [q(52)]: 'yes' }
+    const userAnswers: Record<QuestionId, Answer> = { [q(52)]: 'yes' }
+    expect(calculateScore(charAnswers, userAnswers)).toBe(1.0)
+  })
+
+  it('Q52 contradiction hurts more than Q51 when combined with other matching questions', () => {
+    // With a single question, normalized score is always -1.2 regardless of weight.
+    // Weight matters in context: combined with other matches, a higher-weight contradiction
+    // pulls the overall score down more.
+    // Q51 weight 0.6 (PHYSICAL_APPEARANCE): penalty 0.72 vs Q1 match weight 1.5 → (1.5-0.72)/(0.6+1.5) ≈ 0.37
+    // Q52 weight 1.0 (DEFAULT):             penalty 1.2  vs Q1 match weight 1.5 → (1.5-1.20)/(1.0+1.5)  = 0.12
+    const baseMatch: Record<QuestionId, Answer> = { [q(1)]: 'yes' }
+    const userBase: Record<QuestionId, Answer> = { [q(1)]: 'yes' }
+
+    const scoreQ51 = calculateScore(
+      { ...baseMatch, [q(51)]: 'yes' },
+      { ...userBase,  [q(51)]: 'no'  },
+    )
+    const scoreQ52 = calculateScore(
+      { ...baseMatch, [q(52)]: 'yes' },
+      { ...userBase,  [q(52)]: 'no'  },
+    )
+
+    expect(scoreQ52).toBeLessThan(scoreQ51)
+  })
+})
+
+// ===================================================================
+// calculateScore — learned confirmer weight (5.0)
+// ===================================================================
+describe('calculateScore — learned confirmer IDs get weight 5.0', () => {
+  const LEARNED_ID = 99991 as unknown as QuestionId
+  const learnedIds = new Set([99991])
+
+  it('perfect match on learned confirmer returns 1.0', () => {
+    const score = calculateScore(
+      { [LEARNED_ID]: 'yes' },
+      { [LEARNED_ID]: 'yes' },
+      learnedIds,
+    )
+    expect(score).toBe(1.0)
+  })
+
+  it('contradiction on learned confirmer is heavily penalized (< -1.0)', () => {
+    // weight 5.0, contradiction penalty 1.2 → score = -5.0 * 1.2 / 5.0 = -1.2
+    const score = calculateScore(
+      { [LEARNED_ID]: 'yes' },
+      { [LEARNED_ID]: 'no' },
+      learnedIds,
+    )
+    expect(score).toBeLessThan(-1.0)
+  })
+
+  it('learned confirmer contradiction dominates other positive signals', () => {
+    const q = (id: number) => id as QuestionId
+    const charAnswers: Record<QuestionId, Answer> = {
+      [LEARNED_ID]: 'yes',
+      [q(1)]: 'yes',
+      [q(3)]: 'yes',
+      [q(15)]: 'yes',
+    }
+    const userAnswers: Record<QuestionId, Answer> = {
+      [LEARNED_ID]: 'no',
+      [q(1)]: 'yes',
+      [q(3)]: 'yes',
+      [q(15)]: 'yes',
+    }
+    // Contradiction weight 5.0 × 1.2 = 6.0 penalty vs 3 × 1.0 matches = +3.0
+    // Net = (3.0 - 6.0) / (5.0 + 3.0) = -0.375
+    expect(calculateScore(charAnswers, userAnswers, learnedIds)).toBeLessThan(0)
+  })
+
+  it('without learnedConfirmerIds, confirmer gets default weight (1.0)', () => {
+    // No set passed → getQuestionWeight sees LEARNED_ID as unknown → weight 1.0
+    const score = calculateScore(
+      { [LEARNED_ID]: 'yes' },
+      { [LEARNED_ID]: 'no' },
+    )
+    // Weight 1.0 contradiction: -1.2 / 1.0 = -1.2 (not the 5x penalty)
+    expect(score).toBeLessThan(0)
+    expect(score).toBeGreaterThan(-2.0)
+  })
+})

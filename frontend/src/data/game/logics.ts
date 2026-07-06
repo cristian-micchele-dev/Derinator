@@ -3,6 +3,7 @@ import { QuestionId } from '../questions'
 import { IMPLICATIONS } from './rules/implications'
 import { CONTRADICTIONS } from './rules/contradictions'
 import { calculateScore } from './scoring'
+import { SPECIFIC_UNIVERSE_QUESTIONS } from './questionGroups'
 
 // ===== Filter Thresholds =====
 
@@ -22,25 +23,25 @@ const MIN_QUESTIONS_FICTION_HEAVY = 8
 const FICTION_HEAVY_RATIO = 0.5
 
 // Gap thresholds that relax over time
-const GAP_INITIAL = 0.40
-const GAP_AFTER_15_QUESTIONS = 0.30
-const GAP_AFTER_20_QUESTIONS = 0.20
-const GAP_FICTION_HEAVY = 0.50
+const GAP_INITIAL = 0.25
+const GAP_AFTER_15_QUESTIONS = 0.18
+const GAP_AFTER_20_QUESTIONS = 0.12
+const GAP_FICTION_HEAVY = 0.35
 
 // Score thresholds for guessing by candidate pool size
-const SCORE_2_CANDIDATES = 0.95
-const SCORE_5_CANDIDATES = 0.97
-const SCORE_5_CANDIDATES_LATE = 0.85
-const SCORE_10_CANDIDATES = 0.98
-const SCORE_10plus_CANDIDATES = 0.99
+const SCORE_2_CANDIDATES = 0.72
+const SCORE_5_CANDIDATES = 0.80
+const SCORE_5_CANDIDATES_LATE = 0.70
+const SCORE_10_CANDIDATES = 0.88
+const SCORE_10plus_CANDIDATES = 0.92
 
 // Gap thresholds for guessing by candidate pool size
-const GAP_5_CANDIDATES = 0.50
-const GAP_10_CANDIDATES = 0.60
-const GAP_10plus_EARLY = 0.85
-const GAP_10plus_EARLY_FICTION = 0.60
-const GAP_10plus_LATE = 0.70
-const GAP_10plus_LATE_FICTION = 0.50
+const GAP_5_CANDIDATES = 0.30
+const GAP_10_CANDIDATES = 0.40
+const GAP_10plus_EARLY = 0.55
+const GAP_10plus_EARLY_FICTION = 0.45
+const GAP_10plus_LATE = 0.40
+const GAP_10plus_LATE_FICTION = 0.35
 
 // Candidate pool size boundaries
 const CANDIDATES_FEW = 2
@@ -96,18 +97,11 @@ export function getContradictedQuestions(
   history: { questionId: QuestionId; answer: Answer }[]
 ): Set<QuestionId> {
   const excluded = new Set<QuestionId>()
-
-  for (const [srcId, srcAnswer, excludeId] of CONTRADICTIONS) {
-    const currentAnswer = history.find(h => h.questionId === srcId)?.answer
-    if (currentAnswer === srcAnswer) {
-      excluded.add(excludeId)
-    }
-  }
-
   const expandedHistory = applyImplications(history)
+  const expandedMap = new Map(expandedHistory.map(h => [h.questionId, h.answer]))
+
   for (const [srcId, srcAnswer, excludeId] of CONTRADICTIONS) {
-    const currentAnswer = expandedHistory.find(h => h.questionId === srcId)?.answer
-    if (currentAnswer === srcAnswer) {
+    if (expandedMap.get(srcId) === srcAnswer) {
       excluded.add(excludeId)
     }
   }
@@ -121,21 +115,27 @@ export function getContradictedQuestions(
 
 /**
  * Filter and score candidates based on answer history.
+ *
+ * Scoring uses DIRECT answers only (not implications). This is intentional:
+ * applyImplications for Q4='no' (famosos mode) derives 25+ fiction-universe
+ * answers that all match every famosos character, drowning out the signal from
+ * actual discriminating questions (nationality, profession) and preventing
+ * the candidate pool from shrinking. Implications are still used by
+ * getContradictedQuestions to exclude already-answered questions from selection.
  */
 export function filterCandidates(
   characters: { id: number; name: string; description?: string; answers: Record<QuestionId, Answer> }[],
-  history: { questionId: QuestionId; answer: Answer }[]
+  history: { questionId: QuestionId; answer: Answer }[],
+  learnedConfirmerIds?: ReadonlySet<number>,
 ): { id: number; name: string; description?: string; answers: Record<QuestionId, Answer>; score: number }[] {
-  const expandedHistory = applyImplications(history)
-
   const userAnswers: Record<QuestionId, Answer> = {} as Record<QuestionId, Answer>
-  for (const h of expandedHistory) {
+  for (const h of history) {
     userAnswers[h.questionId] = h.answer
   }
 
   const scored = characters.map((char) => ({
     ...char,
-    score: calculateScore(char.answers, userAnswers),
+    score: calculateScore(char.answers, userAnswers, learnedConfirmerIds),
   }))
 
   scored.sort((a, b) => b.score - a.score)
@@ -146,18 +146,27 @@ export function filterCandidates(
   return scored.filter(c => c.score >= threshold)
 }
 
+// Anime/game universe question IDs used to detect fiction-heavy pools.
+// Derived from SPECIFIC_UNIVERSE_QUESTIONS so new franchises propagate automatically.
+// Western franchises (Disney, Marvel, DC, Star Wars, HP) are intentionally excluded:
+// their characters are visually distinctive and don't share the disambiguation difficulty
+// that anime/game characters have (transformations, power-ups, shared tropes).
+const FICTION_DETECTION_QUESTIONS: QuestionId[] = [
+  4 as QuestionId,  // ¿Es de ficción? — root flag
+  59 as QuestionId, // ¿Es de anime? — broad anime bucket
+  84 as QuestionId, // ¿Es de Dragon Ball?
+  85 as QuestionId, // ¿Es un Pokémon?
+  ...SPECIFIC_UNIVERSE_QUESTIONS,
+]
+
 /**
  * Detect if candidate pool is fiction-heavy (many anime/game/fiction characters
  * that share similar base answers, making differentiation harder).
  */
-function detectFictionHeavy(candidates: { answers: Record<QuestionId, Answer> }[]): boolean {
-  const fictionQuestions: QuestionId[] = [
-    4, 59, 84, 85, 93, 94, 111, 112, 113, 114, 115, 116, 117, 131, 132, 133,
-  ]
-
+export function detectFictionHeavy(candidates: { answers: Record<QuestionId, Answer> }[]): boolean {
   const fictionCount = candidates.filter(c => {
     const a = c.answers
-    return fictionQuestions.some(qId => a[qId] === 'yes')
+    return FICTION_DETECTION_QUESTIONS.some(qId => a[qId] === 'yes')
   }).length
 
   return candidates.length > 0 && fictionCount / candidates.length > FICTION_HEAVY_RATIO
@@ -175,15 +184,16 @@ export function getConfidenceMetrics(
     return { shouldGuess: false, confidence: 0, gap: 0 }
   }
 
+  // Single candidate → always guess, regardless of question count
+  if (candidates.length === 1) {
+    return { shouldGuess: true, confidence: CONFIDENCE_SINGLE_CANDIDATE, gap: 1 }
+  }
+
   const isFictionHeavy = detectFictionHeavy(candidates)
   const minQuestions = isFictionHeavy ? MIN_QUESTIONS_FICTION_HEAVY : MIN_QUESTIONS_NORMAL
 
   if (questionsAsked < minQuestions && !noMoreQuestions) {
     return { shouldGuess: false, confidence: 0, gap: 0 }
-  }
-
-  if (candidates.length === 1) {
-    return { shouldGuess: true, confidence: CONFIDENCE_SINGLE_CANDIDATE, gap: 1 }
   }
 
   const top = candidates[0]

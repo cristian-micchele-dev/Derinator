@@ -1,5 +1,36 @@
 import { Answer } from '../../types'
-import { QuestionId } from '../questions'
+import { QuestionId, type AnyQuestionId } from '../questions'
+import {
+  CONFIRMER_QUESTIONS_SET,
+  UNIVERSE_QUESTIONS_SET,
+  ROLE_QUESTIONS_SET,
+  POWER_QUESTIONS_SET,
+  CATEGORY_QUESTIONS_SET,
+  PHYSICAL_APPEARANCE_QUESTIONS_SET,
+  RACIAL_APPEARANCE_QUESTIONS_SET,
+  SPECIAL_WEIGHT_QUESTIONS_SET,
+} from './questionGroups'
+
+// Re-export question groups for backward compatibility
+export {
+  CATEGORY_QUESTIONS,
+  BROAD_UNIVERSE_QUESTIONS,
+  SPECIFIC_UNIVERSE_QUESTIONS,
+  UNIVERSE_QUESTIONS,
+  POKEMON_TYPE_QUESTIONS,
+  DRAGON_BALL_QUESTIONS,
+  CONFIRMER_QUESTIONS,
+  ROLE_QUESTIONS,
+  POWER_QUESTIONS,
+  NATIONALITY_QUESTIONS,
+  DISCRIMINATIVE_QUESTIONS,
+  ANIMAL_DISCRIMINATIVE_QUESTIONS,
+  FAMOSOS_BROAD_NAT_QUESTIONS,
+  FAMOSOS_SPECIFIC_EU_QUESTIONS,
+  FAMOSOS_SPECIFIC_OTHER_QUESTIONS,
+  PHYSICAL_APPEARANCE_QUESTIONS,
+  RACIAL_APPEARANCE_QUESTIONS,
+} from './questionGroups'
 
 // ===== Utilities =====
 
@@ -7,56 +38,23 @@ export function safeAnswer(answer: Answer | undefined): Answer {
   return answer ?? 'dont_know'
 }
 
-// ===== Question Groups (used by questionSelection.ts) =====
-
-export const CATEGORY_QUESTIONS: QuestionId[] = [1, 2, 3, 4]
-
-/** Broad fiction universe questions (top-level categories) */
-export const BROAD_UNIVERSE_QUESTIONS: QuestionId[] = [
-  57, 58, 59, 60, 71, 73, 75, 81, 84, 85, 134, 135, 136, 137, 138
-]
-
-/** Specific universe drill-down questions (only relevant after broad confirmation) */
-export const SPECIFIC_UNIVERSE_QUESTIONS: QuestionId[] = [
-  93, 94, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 131, 132, 133, 219
-]
-
-/** All universe questions combined (for backward compat / weight lookup) */
-export const UNIVERSE_QUESTIONS: QuestionId[] = [
-  ...BROAD_UNIVERSE_QUESTIONS,
-  ...SPECIFIC_UNIVERSE_QUESTIONS,
-]
-
-export const POKEMON_TYPE_QUESTIONS: QuestionId[] = [
-  161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180
-]
-
-export const DRAGON_BALL_QUESTIONS: QuestionId[] = [228, 229, 230, 231, 232, 233, 234, 235, 236]
-
-export const ROLE_QUESTIONS: QuestionId[] = [121, 122, 123, 124, 128, 129, 224, 225, 226]
-export const POWER_QUESTIONS: QuestionId[] = [56, 61, 74, 86, 87, 127]
-export const NATIONALITY_QUESTIONS: QuestionId[] = [16, 44, 45, 46, 47]
-export const DISCRIMINATIVE_QUESTIONS: QuestionId[] = [139, 140, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 201, 202, 203, 220, 221, 222, 223, 227, 228, 229, 230, 231, 233, 234, 235, 236]
-
 // ===== Question Weights =====
 
+const WEIGHT_CONFIRMER = 5.0
 const WEIGHT_UNIVERSE = 2.5
 const WEIGHT_ROLE_POWER = 1.8
 const WEIGHT_CATEGORY = 1.5
 const WEIGHT_COLOR_APPEARANCE = 0.6
 const WEIGHT_DEFAULT = 1.0
 
-const COLOR_APPEARANCE_QUESTIONS: QuestionId[] = [48, 49, 50, 51, 52, 53, 63, 126, 125]
-const NATIONALITY_APPEARANCE_QUESTIONS: QuestionId[] = [36, 37, 38, 39, 40, 41, 42]
-const SPECIAL_WEIGHT_QUESTIONS: QuestionId[] = [122, 130]
-
-function getQuestionWeight(qId: QuestionId): number {
-  if (UNIVERSE_QUESTIONS.includes(qId)) return WEIGHT_UNIVERSE
-  if (ROLE_QUESTIONS.includes(qId) || POWER_QUESTIONS.includes(qId)) return WEIGHT_ROLE_POWER
-  if (CATEGORY_QUESTIONS.includes(qId)) return WEIGHT_CATEGORY
-  if (SPECIAL_WEIGHT_QUESTIONS.includes(qId)) return WEIGHT_CATEGORY
-  if (COLOR_APPEARANCE_QUESTIONS.includes(qId)) return WEIGHT_COLOR_APPEARANCE
-  if (NATIONALITY_APPEARANCE_QUESTIONS.includes(qId)) return WEIGHT_CATEGORY
+function getQuestionWeight(qId: QuestionId, learnedConfirmerIds?: ReadonlySet<number>): number {
+  if (CONFIRMER_QUESTIONS_SET.has(qId) || learnedConfirmerIds?.has(qId as AnyQuestionId as number)) return WEIGHT_CONFIRMER
+  if (UNIVERSE_QUESTIONS_SET.has(qId)) return WEIGHT_UNIVERSE
+  if (ROLE_QUESTIONS_SET.has(qId) || POWER_QUESTIONS_SET.has(qId)) return WEIGHT_ROLE_POWER
+  if (CATEGORY_QUESTIONS_SET.has(qId)) return WEIGHT_CATEGORY
+  if (SPECIAL_WEIGHT_QUESTIONS_SET.has(qId)) return WEIGHT_CATEGORY
+  if (PHYSICAL_APPEARANCE_QUESTIONS_SET.has(qId)) return WEIGHT_COLOR_APPEARANCE
+  if (RACIAL_APPEARANCE_QUESTIONS_SET.has(qId)) return WEIGHT_CATEGORY
   return WEIGHT_DEFAULT
 }
 
@@ -66,19 +64,21 @@ const SCORE_CONTRADICTION_PENALTY = 1.2
 const SCORE_PARTIAL_MISMATCH_PENALTY = 0.6
 const SCORE_PARTIAL_MATCH_BONUS = 0.5
 const SCORE_DEFAULT_MISMATCH_PENALTY = 0.15
-const SCORE_EMPTY_MAX = 1.0
+const SCORE_NO_HISTORY = 1.0
 
 // ===== Scoring =====
 
 export function calculateScore(
   characterAnswers: Record<QuestionId, Answer>,
-  userAnswers: Record<QuestionId, Answer>
+  userAnswers: Record<QuestionId, Answer>,
+  learnedConfirmerIds?: ReadonlySet<number>,
 ): number {
   let score = 0
   let maxScore = 0
 
-  for (const qId of Object.keys(userAnswers) as unknown as QuestionId[]) {
-    const weight = getQuestionWeight(qId)
+  for (const key of Object.keys(userAnswers)) {
+    const qId = Number(key) as QuestionId
+    const weight = getQuestionWeight(qId, learnedConfirmerIds)
     const userAnswer = safeAnswer(userAnswers[qId])
     const charAnswer = safeAnswer(characterAnswers[qId])
 
@@ -115,7 +115,7 @@ export function calculateScore(
     }
   }
 
-  return maxScore === 0 ? SCORE_EMPTY_MAX : score / maxScore
+  return maxScore === 0 ? SCORE_NO_HISTORY : score / maxScore
 }
 
 // ===== Discrimination Score (entropy-based) =====

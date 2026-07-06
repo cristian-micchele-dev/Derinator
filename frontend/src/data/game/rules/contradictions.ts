@@ -89,20 +89,20 @@ export function buildContradictions(): Contradiction[] {
   }
 
   // --- NATIONALITY MUTUAL EXCLUSION ---
-  // If one nationality is confirmed, skip all other nationality questions
-  const NATIONALITIES: QuestionId[] = [16, 44, 45, 46, 47, 181, 182, 183, 184, 185, 186]
+  // Specific countries only — Q45 (Europeo) is regional, not a country,
+  // so answering European should NOT exclude asking about Spain, UK, etc.
+  const NATIONALITIES: QuestionId[] = [16, 44, 46, 47, 181, 182, 183, 184, 185, 186]
   for (const n of NATIONALITIES) {
     const others = NATIONALITIES.filter((o) => o !== n)
     add(n, 'yes', ...others)
   }
 
-  // --- NEW NATIONALITY: specific country → not American-ish regions ---
-  add(181, 'yes', 44) // Mexican → not American
-  add(182, 'yes', 44) // Colombian → not American
-  add(183, 'yes', 44) // Spanish → not American
-  add(184, 'yes', 44) // British → not American
-  add(185, 'yes', 44) // Italian → not American
-  add(186, 'yes', 44) // French → not American
+  // --- MUSIC GENRE MUTUAL EXCLUSION ---
+  const MUSIC_GENRES: QuestionId[] = [154, 155, 156, 157]
+  for (const g of MUSIC_GENRES) {
+    const others = MUSIC_GENRES.filter((o) => o !== g)
+    add(g, 'yes', ...others)
+  }
 
   // --- SPORT MUTUAL EXCLUSION (only one primary sport) ---
   const SPORTS: QuestionId[] = [76, 187, 188, 189, 190]
@@ -136,6 +136,9 @@ export function buildContradictions(): Contradiction[] {
   add(82, 'no', 83, 88)
 
   // UNIVERSE MUTUAL EXCLUSION
+  // SYNC REQUIRED with learnModeConfig.ts:
+  // The universe/franchise entries here must mirror the corresponding EXCLUSIVE_GROUPS in learnModeConfig.ts.
+  // Adding a new franchise? Update BOTH files. A sync test exists in contradictions.test.ts.
   const UNIVERSES: QuestionId[] = [57, 58, 59, 71, 73, 75, 81, 84, 85, 93, 94, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 131, 132, 133, 134, 135, 136, 137, 138]
   for (const u of UNIVERSES) {
     const others = UNIVERSES.filter((o) => o !== u)
@@ -152,7 +155,14 @@ export function buildContradictions(): Contradiction[] {
   add(230, 'yes', 228, 229, 233)  // Androide → not Saiyajin, not Namekiano, not humano puro
   add(233, 'yes', 228, 229, 230)  // Humano puro → not Saiyajin, not Namekiano, not androide
 
-  return contradictions
+  // Deduplicate
+  const seen = new Set<string>()
+  return contradictions.filter(rule => {
+    const key = rule.join(',')
+    if (seen.has(key)) return false
+    seen.add(key)
+    return true
+  })
 }
 
 export const CONTRADICTIONS: Contradiction[] = buildContradictions()
