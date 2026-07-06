@@ -33,7 +33,8 @@ export function detectLearnContradictions(
     errors.push(`Un personaje no puede ser múltiples profesiones: ${profNames}`)
   }
 
-  const nationalities = [16, 44, 45, 46, 47, 181, 182, 183, 184, 185, 186]
+  // Q45 (europeo) is a broad region, not a specific country — excluded from mutual exclusion
+  const nationalities = [16, 44, 46, 47, 181, 182, 183, 184, 185, 186]
   const yesNats = nationalities.filter((id) => learnAnswers[id] === 'yes')
   if (yesNats.length > 1) {
     errors.push('No puede ser de múltiples nacionalidades')
