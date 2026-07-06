@@ -37,15 +37,6 @@ Evaluación de confianza → ¿adivinar ahora o seguir preguntando?
 
 Decisión deliberada: aplicar las implicaciones al scoring haría que `Q4='no'` (personaje no ficticio) derive 25+ respuestas de universos ficticios, que coinciden con *todos* los personajes reales — destruyendo la señal discriminante. Las implicaciones solo se usan para **excluir preguntas ya respondidas**, no para calcular similitud.
 
-### Dos motores coexistiendo
-
-| Motor | Algoritmo | Selección de preguntas |
-|-------|-----------|----------------------|
-| Legacy (`useGame`) | Entropía de Shannon + 7 fases adaptativas | Scoring por similitud de respuestas |
-| Bayesian (`useGameBayesian`) | Teorema de Bayes sobre `ProbabilityProfile` por personaje | Expected Information Gain (EIG) |
-
-Se selecciona con `?engine=bayesian` en la URL. El motor legacy es el default en producción.
-
 ---
 
 ## Arquitectura
@@ -64,8 +55,7 @@ src/
 │       └── contradictions.ts  ← 300+ reglas de exclusión (generadas programáticamente)
 │
 └── components/game/    ← React: estado, efectos, UI
-    ├── useGame.ts       ← máquina de estados del juego (legacy engine)
-    ├── useGameBayesian.ts ← drop-in replacement con motor Bayesiano
+    ├── useGame.ts       ← máquina de estados del juego
     ├── useGameEffects.ts  ← side-effects extraídos: confetti, stats, sync
     └── useLearnMode.ts    ← flujo de enseñanza de personajes nuevos
 ```
