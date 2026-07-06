@@ -1,80 +1,71 @@
 /* ============================================
-   DERINATOR AVATAR — Emotional States & Animations
+   DERINATOR AVATAR — Full character display
+   Shows the complete genie, not a cropped circle
    ============================================ */
 
+.akinator-image {
+  position: relative;
+  width: 400px;
+  height: 460px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .akinator-image .avatar-img {
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: cover !important;
-  border-radius: 50% !important;
-  max-width: none !important;
-  max-height: none !important;
-  margin-top: 0 !important;
-  filter: none !important;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 0;
+  filter: drop-shadow(0 8px 32px rgba(0, 0, 0, 0.5));
   transition: filter 0.4s ease, transform 0.3s ease;
+  margin-top: 20px;
 }
 
-/* ---- Thinking ---- */
+/* ---- Emotion States ---- */
 .akinator-image .avatar-thinking {
-  animation: avatarFloat 3s ease-in-out infinite, avatarPulse 2s ease-in-out infinite !important;
+  animation: avatarFloat 3s ease-in-out infinite;
 }
 
-/* ---- Confident ---- */
 .akinator-image .avatar-confident {
-  animation: avatarGlow 2.5s ease-in-out infinite !important;
+  animation: avatarFloat 3s ease-in-out infinite;
+  filter: drop-shadow(0 8px 32px rgba(200, 160, 90, 0.3)) brightness(1.1) contrast(1.05);
 }
 
-/* ---- Surprised ---- */
 .akinator-image .avatar-surprised {
-  animation: avatarBounce 0.6s ease-out !important;
+  animation: avatarBounce 0.6s ease-out;
 }
 
-/* ---- Worried ---- */
 .akinator-image .avatar-worried {
-  animation: avatarShake 2s ease-in-out infinite !important;
+  animation: avatarShake 2s ease-in-out infinite;
 }
 
-/* ---- Triumphant ---- */
 .akinator-image .avatar-triumphant {
-  animation: avatarVictory 1s ease-out, avatarGlowGold 2s ease-in-out infinite !important;
+  animation: avatarVictory 1s ease-out, avatarFloat 3s 1s ease-in-out infinite;
+  filter: drop-shadow(0 8px 40px rgba(245, 158, 11, 0.4)) brightness(1.15) saturate(1.2);
 }
 
-/* ---- Defeated ---- */
 .akinator-image .avatar-defeated {
-  animation: avatarShakeSlow 3s ease-in-out infinite !important;
+  animation: avatarShakeSlow 3s ease-in-out infinite;
+  filter: drop-shadow(0 8px 32px rgba(0, 0, 0, 0.5)) grayscale(0.3) brightness(0.8);
 }
 
-/* ---- Neutral ---- */
 .akinator-image .avatar-neutral {
-  animation: avatarFloat 4s ease-in-out infinite !important;
+  animation: avatarFloat 4s ease-in-out infinite;
 }
 
 /* ========== KEYFRAMES ========== */
 
 @keyframes avatarFloat {
   0%, 100% { transform: translateY(0); }
-  50%       { transform: translateY(-8px); }
-}
-
-@keyframes avatarPulse {
-  0%, 100% { transform: scale(1); }
-  50%       { transform: scale(1.02); }
-}
-
-@keyframes avatarGlow {
-  0%, 100% {
-    box-shadow: 0 0 20px rgba(200, 160, 90, 0.3), 0 8px 32px rgba(0,0,0,0.2);
-  }
-  50% {
-    box-shadow: 0 0 40px rgba(200, 160, 90, 0.5), 0 8px 32px rgba(0,0,0,0.2);
-  }
+  50%      { transform: translateY(-8px); }
 }
 
 @keyframes avatarBounce {
   0%   { transform: scale(1); }
-  30%  { transform: scale(1.15); }
-  50%  { transform: scale(0.95); }
-  70%  { transform: scale(1.05); }
+  30%  { transform: scale(1.12); }
+  50%  { transform: scale(0.96); }
+  70%  { transform: scale(1.04); }
   100% { transform: scale(1); }
 }
 
@@ -95,21 +86,12 @@
 
 @keyframes avatarVictory {
   0%   { transform: scale(1) translateY(0); }
-  40%  { transform: scale(1.15) translateY(-15px); }
-  60%  { transform: scale(1.1) translateY(-5px); }
-  100% { transform: scale(1.08) translateY(0); }
+  40%  { transform: scale(1.12) translateY(-12px); }
+  60%  { transform: scale(1.08) translateY(-4px); }
+  100% { transform: scale(1.05) translateY(0); }
 }
 
-@keyframes avatarGlowGold {
-  0%, 100% {
-    box-shadow: 0 0 25px rgba(245, 158, 11, 0.4), 0 8px 32px rgba(0,0,0,0.2);
-  }
-  50% {
-    box-shadow: 0 0 60px rgba(245, 158, 11, 0.7), 0 8px 32px rgba(0,0,0,0.2);
-  }
-}
-
-/* ---- Particle overlay for thinking ---- */
+/* ---- Thinking Particles ---- */
 .thinking-particles {
   position: absolute;
   inset: -20px;
@@ -121,7 +103,7 @@
   position: absolute;
   width: 6px;
   height: 6px;
-  background: rgba(200, 160, 90, 0.6);
+  background: rgba(200, 160, 90, 0.5);
   border-radius: 50%;
   animation: particleFloat 2s ease-in-out infinite;
 }
@@ -132,6 +114,14 @@
 .thinking-particle:nth-child(4) { top: 80%; right: 25%; animation-delay: 1.5s; }
 
 @keyframes particleFloat {
-  0%, 100% { transform: translateY(0) scale(1); opacity: 0.6; }
-  50%       { transform: translateY(-20px) scale(1.3); opacity: 0; }
+  0%, 100% { transform: translateY(0) scale(1); opacity: 0.5; }
+  50%      { transform: translateY(-20px) scale(1.3); opacity: 0; }
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 768px) {
+  .akinator-image {
+    width: 260px;
+    height: 300px;
+  }
 }

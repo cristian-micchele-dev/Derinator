@@ -1,3 +1,7 @@
+/* ============================================
+   DAILY CHARACTER — Warm medieval style
+   ============================================ */
+
 .daily-page {
   min-height: 100vh;
   position: relative;
@@ -7,8 +11,26 @@
 .daily-background {
   position: fixed;
   inset: 0;
-  background: linear-gradient(135deg, #1a1208 0%, #2a1a0a 50%, #3d2b15 100%);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   z-index: 0;
+}
+
+.daily-background::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(5, 10, 25, 0.45);
+}
+
+.daily-background::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(5, 10, 25, 0.2) 0%, transparent 30%, rgba(5, 10, 25, 0.65) 100%);
+  pointer-events: none;
 }
 
 .daily-content {
@@ -21,56 +43,82 @@
 
 .daily-header {
   text-align: center;
-  margin-bottom: var(--space-10);
+  margin-bottom: var(--space-8);
 }
 
 .daily-back {
   position: fixed;
   top: var(--space-4);
   left: var(--space-4);
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(2px);
-  color: var(--color-text);
+  background: rgba(40, 25, 10, 0.7);
+  backdrop-filter: blur(8px);
+  color: var(--color-text-secondary);
   border: 1px solid rgba(200, 160, 90, 0.2);
-  padding: var(--space-3) var(--space-5);
-  font-size: 0.9rem;
-  font-weight: 500;
-  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-4);
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: var(--radius-full);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.25s ease;
   font-family: var(--font-family);
   z-index: 100;
 }
 
 .daily-back:hover {
   background: rgba(200, 160, 90, 0.15);
-  border-color: var(--color-primary);
+  border-color: rgba(200, 160, 90, 0.4);
+  color: var(--color-text);
+  transform: translateX(-2px);
 }
 
 .daily-title {
   font-family: var(--font-display);
-  font-size: 2.2rem;
-  font-weight: 700;
-  color: var(--color-text);
+  font-size: 2.4rem;
+  font-weight: 900;
+  color: #ffffff;
   margin-bottom: var(--space-2);
-  letter-spacing: 0.03em;
+  letter-spacing: 0.04em;
+  text-shadow:
+    0 2px 16px rgba(0, 0, 0, 0.7),
+    0 0 40px rgba(200, 160, 90, 0.2);
 }
 
 .daily-subtitle {
   color: var(--color-text-muted);
   font-size: 0.9rem;
   line-height: 1.5;
+  letter-spacing: 0.02em;
 }
 
 /* ---- Card ---- */
 .daily-card {
-  background: rgba(255, 255, 255, 0.04);
+  background: linear-gradient(145deg, rgba(45, 28, 12, 0.55), rgba(25, 14, 6, 0.45));
+  backdrop-filter: blur(8px);
   border: 1px solid rgba(200, 160, 90, 0.12);
   border-radius: var(--radius-xl);
   padding: var(--space-8) var(--space-6);
   text-align: center;
   animation: fadeSlideIn 0.5s ease-out;
   margin-bottom: var(--space-6);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.daily-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--color-accent), transparent);
+  opacity: 0.4;
+}
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .daily-result {
@@ -78,15 +126,22 @@
 }
 
 .daily-result-title {
-  font-size: 1.3rem;
-  font-weight: 600;
+  font-size: 1.4rem;
+  font-weight: 800;
   color: var(--color-text);
   margin-bottom: var(--space-3);
-  letter-spacing: 0.02em;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
 }
 
 .daily-won .daily-result-title {
-  color: var(--color-primary);
+  color: var(--color-success);
+  text-shadow: 0 0 20px rgba(52, 211, 153, 0.3);
+}
+
+.daily-pending .daily-result-title {
+  color: var(--color-accent);
+  text-shadow: 0 0 20px rgba(245, 158, 11, 0.2);
 }
 
 .daily-result-text {
@@ -98,7 +153,7 @@
 
 .daily-result-text strong {
   color: var(--color-accent);
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .daily-result-hint {
@@ -111,10 +166,16 @@
 .daily-result-stats {
   font-size: 0.8rem;
   color: var(--color-text-muted);
-  font-weight: 500;
-  letter-spacing: 0.02em;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  background: rgba(200, 160, 90, 0.06);
+  display: inline-block;
+  padding: 2px var(--space-3);
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(200, 160, 90, 0.1);
 }
 
+/* ---- Timer ---- */
 .daily-timer {
   display: flex;
   flex-direction: column;
@@ -122,25 +183,26 @@
   gap: var(--space-2);
   margin-bottom: var(--space-6);
   padding: var(--space-4);
-  background: rgba(40, 25, 10, 0.4);
+  background: rgba(40, 25, 10, 0.5);
   border-radius: var(--radius-lg);
   border: 1px solid rgba(200, 160, 90, 0.08);
 }
 
 .daily-timer-label {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   color: var(--color-text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-weight: 500;
+  letter-spacing: 0.1em;
+  font-weight: 600;
 }
 
 .daily-timer-value {
-  font-size: 2rem;
-  font-weight: 600;
+  font-size: 2.2rem;
+  font-weight: 700;
   color: var(--color-accent);
   font-family: var(--font-family);
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
+  text-shadow: 0 0 20px rgba(245, 158, 11, 0.2);
 }
 
 /* ---- Actions ---- */
@@ -153,18 +215,21 @@
 
 /* ---- Instructions ---- */
 .daily-instructions {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(200, 160, 90, 0.08);
-  border-radius: var(--radius-lg);
+  background: linear-gradient(145deg, rgba(45, 28, 12, 0.35), rgba(25, 14, 6, 0.25));
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(200, 160, 90, 0.06);
+  border-radius: var(--radius-xl);
   padding: var(--space-6);
 }
 
 .daily-instructions-title {
-  font-size: 1.05rem;
-  font-weight: 600;
-  color: var(--color-text);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-primary);
   margin-bottom: var(--space-4);
-  letter-spacing: 0.02em;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-variant: small-caps;
 }
 
 .daily-instructions-list {
@@ -177,7 +242,7 @@
   padding-left: var(--space-8);
   margin-bottom: var(--space-3);
   color: var(--color-text-secondary);
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   line-height: 1.5;
 }
 
@@ -190,18 +255,18 @@
   content: counter(daily-step);
   position: absolute;
   left: 0;
-  top: 0;
+  top: 1px;
   width: 22px;
   height: 22px;
-  background: rgba(200, 160, 90, 0.1);
-  border: 1px solid rgba(200, 160, 90, 0.2);
+  background: rgba(200, 160, 90, 0.08);
+  border: 1px solid rgba(200, 160, 90, 0.15);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 0.7rem;
-  font-weight: 600;
-  color: var(--color-text-muted);
+  font-weight: 700;
+  color: var(--color-primary);
 }
 
 /* ---- Responsive ---- */
@@ -211,7 +276,7 @@
   }
 
   .daily-title {
-    font-size: 1.6rem;
+    font-size: 1.8rem;
   }
 
   .daily-card {
@@ -219,7 +284,7 @@
   }
 
   .daily-timer-value {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
   }
 
   .daily-back {
@@ -228,5 +293,9 @@
     left: auto;
     margin-bottom: var(--space-4);
     align-self: flex-start;
+  }
+
+  .daily-header {
+    margin-bottom: var(--space-6);
   }
 }

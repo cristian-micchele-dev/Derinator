@@ -1,3 +1,7 @@
+import deriPensando from '../../assets/DeriPensando2.png'
+import deriConcelu from '../../assets/Dericoncelu2.png'
+import deriSonriente from '../../assets/Derisonriente.png'
+
 export type DerinatorEmotion =
   | 'thinking'
   | 'confident'
@@ -15,13 +19,13 @@ interface DerinatorAvatarProps {
 }
 
 const EMOTION_IMAGES: Record<DerinatorEmotion, string> = {
-  thinking: 'DeriPensando2.png',
-  confident: 'Dericoncelu2.png',
-  surprised: 'DeriPensando2.png',
-  worried: 'DeriPensando2.png',
-  triumphant: 'Derisonriente.png',
-  defeated: 'Dericoncelu2.png',
-  neutral: 'DeriPensando2.png',
+  thinking: deriPensando,
+  confident: deriConcelu,
+  surprised: deriPensando,
+  worried: deriPensando,
+  triumphant: deriSonriente,
+  defeated: deriConcelu,
+  neutral: deriPensando,
 }
 
 const EMOTION_FILTERS: Record<DerinatorEmotion, string> = {
@@ -46,13 +50,13 @@ export default function DerinatorAvatar({
   return (
     <div className={`akinator-image ${className}`}>
       <img
-        src={`/src/assets/${image}`}
+        src={image}
         alt={`Derinator ${emotion}`}
         style={{ filter }}
         className={`avatar-img avatar-${emotion} ${isThinking ? 'avatar-thinking' : ''}`}
       />
       {bubbleText && (
-        <div className={`speech-bubble ${isThinking ? 'thinking' : ''}`}>
+        <div key={bubbleText} className={`speech-bubble ${isThinking ? 'thinking' : ''}`}>
           <span className="bubble-text">{bubbleText}</span>
         </div>
       )}

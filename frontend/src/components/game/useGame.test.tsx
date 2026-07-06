@@ -16,10 +16,6 @@ vi.mock('../../data/stats/gameStats', () => ({
   recordDefeatedBy: vi.fn(),
 }))
 
-vi.mock('../../data/stats/hallOfFame', () => ({
-  addToHallOfFame: vi.fn(),
-}))
-
 vi.mock('../../data/stats/achievements', () => ({
   recordPerfectGuess: vi.fn(),
   recordCategoryWin: vi.fn(),
@@ -35,8 +31,12 @@ vi.mock('../../data/stats/daily', () => ({
 
 vi.mock('../../data/stats/persistence', () => ({
   saveGameState: vi.fn(),
-  syncToServer: vi.fn(),
   getFingerprint: vi.fn(() => 'test-fingerprint-123'),
+  getPlayerToken: vi.fn(() => 'test-token-abc'),
+}))
+
+vi.mock('../../data/stats/serverSync', () => ({
+  syncToServer: vi.fn(),
 }))
 
 vi.mock('../../data/api/api', () => ({
@@ -46,9 +46,8 @@ vi.mock('../../data/api/api', () => ({
 // Get references to the mocked functions
 import { loadDailyCharacter, getDailyCharacterIndex } from '../../data/stats/daily'
 import { recordDerinatorWin, recordUserWin } from '../../data/stats/gameStats'
-import { addToHallOfFame } from '../../data/stats/hallOfFame'
 import { recordCategoryWin, checkAchievements } from '../../data/stats/achievements'
-import { syncToServer } from '../../data/stats/persistence'
+import { syncToServer } from '../../data/stats/serverSync'
 
 describe('useGame', () => {
   beforeEach(() => {
@@ -63,11 +62,11 @@ describe('useGame', () => {
       })
     )
 
-    expect(result.current.gameState).toBe('start')
+    expect(result.current.state.gameState).toBe('start')
     // History starts empty before any game starts
-    expect(result.current.history).toEqual([])
-    expect(result.current.selectedCategory).toBe('personajes')
-    expect(result.current.learnedCount).toBe(0)
+    expect(result.current.question.history).toEqual([])
+    expect(result.current.category.selectedCategory).toBe('personajes')
+    expect(result.current.meta.learnedCount).toBe(0)
   })
 
   it('starts game with handleStart', () => {
@@ -80,7 +79,7 @@ describe('useGame', () => {
     )
 
     act(() => {
-      result.current.handleStart()
+      result.current.actions.handleStart()
     })
 
     expect(setGameState).toHaveBeenCalledWith('playing')
@@ -90,7 +89,7 @@ describe('useGame', () => {
       { questionId: 3, answer: 'yes' },
       { questionId: 4, answer: 'yes' },
     ]
-    expect(result.current.history).toEqual(personajesSeed)
+    expect(result.current.question.history).toEqual(personajesSeed)
   })
 
   it('category seeds differ between personajes and animales', () => {
@@ -104,7 +103,7 @@ describe('useGame', () => {
 
     // Default is personajes — start the game to get the seed
     act(() => {
-      result.current.handleStart()
+      result.current.actions.handleStart()
     })
 
     const personajesSeed = [
@@ -112,27 +111,27 @@ describe('useGame', () => {
       { questionId: 3, answer: 'yes' },
       { questionId: 4, answer: 'yes' },
     ]
-    expect(result.current.history).toEqual(personajesSeed)
-    expect(result.current.selectedCategory).toBe('personajes')
+    expect(result.current.question.history).toEqual(personajesSeed)
+    expect(result.current.category.selectedCategory).toBe('personajes')
 
     // Switch to animales and restart to get animales seed
     act(() => {
-      result.current.setSelectedCategory('animales')
+      result.current.category.setSelectedCategory('animales')
     })
 
     act(() => {
-      result.current.handleRestart()
+      result.current.actions.handleRestart()
     })
 
     act(() => {
-      result.current.handleStart()
+      result.current.actions.handleStart()
     })
 
     const animalesSeed = [
       { questionId: 1, answer: 'yes' },
       { questionId: 2, answer: 'yes' },
     ]
-    expect(result.current.history).toEqual(animalesSeed)
+    expect(result.current.question.history).toEqual(animalesSeed)
   })
 
   it('handleStart with animales category seeds animal answers', () => {
@@ -145,18 +144,18 @@ describe('useGame', () => {
     )
 
     act(() => {
-      result.current.setSelectedCategory('animales')
+      result.current.category.setSelectedCategory('animales')
     })
 
     act(() => {
-      result.current.handleStart()
+      result.current.actions.handleStart()
     })
 
     const animalesSeed = [
       { questionId: 1, answer: 'yes' },
       { questionId: 2, answer: 'yes' },
     ]
-    expect(result.current.history).toEqual(animalesSeed)
+    expect(result.current.question.history).toEqual(animalesSeed)
   })
 
   it('changes category with setSelectedCategory', () => {
@@ -168,10 +167,10 @@ describe('useGame', () => {
     )
 
     act(() => {
-      result.current.setSelectedCategory('animales')
+      result.current.category.setSelectedCategory('animales')
     })
 
-    expect(result.current.selectedCategory).toBe('animales')
+    expect(result.current.category.selectedCategory).toBe('animales')
   })
 
   it('handles answer and updates history', () => {
@@ -185,14 +184,14 @@ describe('useGame', () => {
     // Process an answer directly (bypassing the dramatic delay)
     act(() => {
       // The hook has a timeout, so we trigger and wait
-      result.current.handleAnswer('yes')
+      result.current.actions.handleAnswer('yes')
     })
 
     // After the timeout (1200ms), history should be updated
     // For unit testing, we verify the hook structure exists
-    expect(typeof result.current.handleAnswer).toBe('function')
-    expect(typeof result.current.handleRestart).toBe('function')
-    expect(typeof result.current.handleGuess).toBe('function')
+    expect(typeof result.current.actions.handleAnswer).toBe('function')
+    expect(typeof result.current.actions.handleRestart).toBe('function')
+    expect(typeof result.current.actions.handleGuess).toBe('function')
   })
 
   it('resets state with handleRestart', () => {
@@ -205,7 +204,7 @@ describe('useGame', () => {
     )
 
     act(() => {
-      result.current.handleRestart()
+      result.current.actions.handleRestart()
     })
 
     expect(setGameState).toHaveBeenCalledWith('start')
@@ -220,15 +219,15 @@ describe('useGame', () => {
     )
 
     // Default is 'personajes'
-    expect(result.current.filteredCharacters.length).toBeGreaterThan(0)
+    expect(result.current.category.filteredCharacters.length).toBeGreaterThan(0)
 
     // Switch to animales
     act(() => {
-      result.current.setSelectedCategory('animales')
+      result.current.category.setSelectedCategory('animales')
     })
 
     // All filtered characters should be animals
-    const allAnimals = result.current.filteredCharacters.every(
+    const allAnimals = result.current.category.filteredCharacters.every(
       (c) => c.category === 'animal'
     )
     expect(allAnimals).toBe(true)
@@ -243,8 +242,8 @@ describe('useGame', () => {
     )
 
     // With no history, all characters are candidates
-    expect(result.current.rankedCandidates.length).toBeGreaterThan(0)
-    expect(result.current.topCandidate).toBeDefined()
+    expect(result.current.candidates.rankedCandidates.length).toBeGreaterThan(0)
+    expect(result.current.candidates.topCandidate).toBeDefined()
   })
 
   it('handleGuess triggers win state when correct', () => {
@@ -257,7 +256,7 @@ describe('useGame', () => {
     )
 
     act(() => {
-      result.current.handleGuess(true)
+      result.current.actions.handleGuess(true)
     })
 
     expect(setGameState).toHaveBeenCalledWith('win')
@@ -275,16 +274,16 @@ describe('useGame', () => {
 
     // Trigger first answer → sets isThinkingDelay=true
     act(() => {
-      result.current.handleAnswer('yes')
+      result.current.actions.handleAnswer('yes')
     })
 
     // While thinking, second answer should be ignored
     act(() => {
-      result.current.handleAnswer('no')
+      result.current.actions.handleAnswer('no')
     })
 
     // Only the first answer should be queued (history still empty because timeout hasn't fired)
-    expect(result.current.history).toEqual([])
+    expect(result.current.question.history).toEqual([])
   })
 
   it('handleGuess(false) triggers dramatic pause to lose', () => {
@@ -300,12 +299,12 @@ describe('useGame', () => {
     )
 
     act(() => {
-      result.current.handleGuess(false)
+      result.current.actions.handleGuess(false)
     })
 
     // Should start dramatic pause
     expect(onDramaticPause).toHaveBeenCalledWith(true)
-    expect(result.current.isThinkingDelay).toBe(true)
+    expect(result.current.state.isThinkingDelay).toBe(true)
 
     // After 1800ms, should transition to lose
     act(() => {
@@ -327,17 +326,17 @@ describe('useGame', () => {
     )
 
     act(() => {
-      result.current.setSelectedCategory('famosos')
+      result.current.category.setSelectedCategory('famosos')
     })
 
-    const allFamosos = result.current.filteredCharacters.every(
+    const allFamosos = result.current.category.filteredCharacters.every(
       (c) =>
         c.subcategory === 'historico-real' ||
         c.subcategory === 'deportista' ||
         c.subcategory === 'youtuber-streamer'
     )
     expect(allFamosos).toBe(true)
-    expect(result.current.filteredCharacters.length).toBeGreaterThan(0)
+    expect(result.current.category.filteredCharacters.length).toBeGreaterThan(0)
   })
 
   it('filters characters for "all" category includes everything', () => {
@@ -349,11 +348,11 @@ describe('useGame', () => {
     )
 
     act(() => {
-      result.current.setSelectedCategory('all')
+      result.current.category.setSelectedCategory('all')
     })
 
     // 'all' should return characters (all of them)
-    expect(result.current.filteredCharacters.length).toBeGreaterThan(0)
+    expect(result.current.category.filteredCharacters.length).toBeGreaterThan(0)
   })
 
   it('handleRestart clears history and resets guessedCharacter', () => {
@@ -370,7 +369,7 @@ describe('useGame', () => {
 
     // Simulate some state
     act(() => {
-      result.current.handleRestart()
+      result.current.actions.handleRestart()
     })
 
     expect(setGameState).toHaveBeenCalledWith('start')
@@ -380,8 +379,8 @@ describe('useGame', () => {
       { questionId: 3, answer: 'yes' },
       { questionId: 4, answer: 'yes' },
     ]
-    expect(result.current.history).toEqual(personajesSeed)
-    expect(result.current.guessedCharacter).toBeNull()
+    expect(result.current.question.history).toEqual(personajesSeed)
+    expect(result.current.state.guessedCharacter).toBeNull()
 
     vi.useRealTimers()
   })
@@ -411,7 +410,7 @@ describe('useGame', () => {
     )
 
     // topScore is derived, callback should be called during smart guessing effect
-    expect(typeof result.current.topScore).toBe('number')
+    expect(typeof result.current.candidates.topScore).toBe('number')
   })
 
   it('handleAnswer with dont_know updates history', () => {
@@ -425,7 +424,7 @@ describe('useGame', () => {
     )
 
     act(() => {
-      result.current.handleAnswer('dont_know')
+      result.current.actions.handleAnswer('dont_know')
     })
 
     // After the 1200ms timeout
@@ -433,8 +432,8 @@ describe('useGame', () => {
       vi.advanceTimersByTime(1200)
     })
 
-    expect(result.current.history.length).toBe(1)
-    expect(result.current.history[0].answer).toBe('dont_know')
+    expect(result.current.question.history.length).toBe(1)
+    expect(result.current.question.history[0].answer).toBe('dont_know')
 
     vi.useRealTimers()
   })
@@ -447,7 +446,7 @@ describe('useGame', () => {
       })
     )
 
-    const initialCount = result.current.remainingQuestions.length
+    const initialCount = result.current.question.remainingQuestions.length
     expect(initialCount).toBeGreaterThan(0)
   })
 
@@ -461,7 +460,7 @@ describe('useGame', () => {
     )
 
     act(() => {
-      result.current.handleAnswer('yes')
+      result.current.actions.handleAnswer('yes')
     })
 
     act(() => {
@@ -469,8 +468,8 @@ describe('useGame', () => {
     })
 
     // After answering, candidates should be re-ranked
-    expect(result.current.rankedCandidates.length).toBeGreaterThan(0)
-    expect(result.current.topCandidate).toBeDefined()
+    expect(result.current.candidates.rankedCandidates.length).toBeGreaterThan(0)
+    expect(result.current.candidates.topCandidate).toBeDefined()
 
     vi.useRealTimers()
   })
@@ -541,7 +540,6 @@ describe('useGame', () => {
     )
 
     expect(recordUserWin).toHaveBeenCalled()
-    expect(addToHallOfFame).toHaveBeenCalled()
     expect(recordCategoryWin).toHaveBeenCalled()
     expect(checkAchievements).toHaveBeenCalled()
     expect(syncToServer).toHaveBeenCalled()
@@ -559,12 +557,12 @@ describe('useGame', () => {
 
     // handleGuess(false) calls setGameState('win') on false → triggers dramatic pause
     act(() => {
-      result.current.handleGuess(false)
+      result.current.actions.handleGuess(false)
     })
 
     // The hook called setGameState but the parent doesn't update,
     // so we just verify the dramatic pause started
-    expect(result.current.isThinkingDelay).toBe(true)
+    expect(result.current.state.isThinkingDelay).toBe(true)
 
     vi.useRealTimers()
   })
@@ -581,15 +579,15 @@ describe('useGame', () => {
     )
 
     act(() => {
-      result.current.handleAnswer('probably')
+      result.current.actions.handleAnswer('probably')
     })
 
     act(() => {
       vi.advanceTimersByTime(1200)
     })
 
-    expect(result.current.history.length).toBe(1)
-    expect(result.current.history[0].answer).toBe('probably')
+    expect(result.current.question.history.length).toBe(1)
+    expect(result.current.question.history[0].answer).toBe('probably')
 
     vi.useRealTimers()
   })
@@ -604,15 +602,15 @@ describe('useGame', () => {
     )
 
     act(() => {
-      result.current.handleAnswer('probably_not')
+      result.current.actions.handleAnswer('probably_not')
     })
 
     act(() => {
       vi.advanceTimersByTime(1200)
     })
 
-    expect(result.current.history.length).toBe(1)
-    expect(result.current.history[0].answer).toBe('probably_not')
+    expect(result.current.question.history.length).toBe(1)
+    expect(result.current.question.history[0].answer).toBe('probably_not')
 
     vi.useRealTimers()
   })
@@ -627,15 +625,15 @@ describe('useGame', () => {
     )
 
     act(() => {
-      result.current.handleAnswer('no')
+      result.current.actions.handleAnswer('no')
     })
 
     act(() => {
       vi.advanceTimersByTime(1200)
     })
 
-    expect(result.current.history.length).toBe(1)
-    expect(result.current.history[0].answer).toBe('no')
+    expect(result.current.question.history.length).toBe(1)
+    expect(result.current.question.history[0].answer).toBe('no')
 
     vi.useRealTimers()
   })
@@ -651,7 +649,7 @@ describe('useGame', () => {
     )
 
     // Should still have a question at start
-    expect(result.current.currentQuestion).toBeDefined()
+    expect(result.current.question.currentQuestion).toBeDefined()
   })
 
   it('filteredCharacters changes rankedCandidates', () => {
@@ -662,14 +660,14 @@ describe('useGame', () => {
       })
     )
 
-    const personajeCount = result.current.rankedCandidates.length
+    const personajeCount = result.current.candidates.rankedCandidates.length
 
     act(() => {
-      result.current.setSelectedCategory('animales')
+      result.current.category.setSelectedCategory('animales')
     })
 
     // Animal candidates should be different from personaje candidates
-    expect(result.current.rankedCandidates.length).not.toBe(personajeCount)
+    expect(result.current.candidates.rankedCandidates.length).not.toBe(personajeCount)
   })
 
   it('handleRestart resets all derived state', () => {
@@ -681,7 +679,7 @@ describe('useGame', () => {
     )
 
     act(() => {
-      result.current.handleRestart()
+      result.current.actions.handleRestart()
     })
 
     // After restart, history resets to personajes seed (Q1=yes, Q3=yes, Q4=yes)
@@ -690,10 +688,10 @@ describe('useGame', () => {
       { questionId: 3, answer: 'yes' },
       { questionId: 4, answer: 'yes' },
     ]
-    expect(result.current.history).toEqual(personajesSeed)
-    expect(result.current.guessedCharacter).toBeNull()
-    expect(result.current.isThinkingDelay).toBe(false)
-    expect(result.current.pendingAnswer).toBeNull()
+    expect(result.current.question.history).toEqual(personajesSeed)
+    expect(result.current.state.guessedCharacter).toBeNull()
+    expect(result.current.state.isThinkingDelay).toBe(false)
+    expect(result.current.state.pendingAnswer).toBeNull()
   })
 
   // ===== BRANCH COVERAGE: category-specific excluded questions =====
@@ -707,16 +705,16 @@ describe('useGame', () => {
     )
 
     act(() => {
-      personajesResult.current.setSelectedCategory('personajes')
+      personajesResult.current.category.setSelectedCategory('personajes')
     })
 
-    const personajeQuestions = personajesResult.current.remainingQuestions.length
+    const personajeQuestions = personajesResult.current.question.remainingQuestions.length
 
     act(() => {
-      personajesResult.current.setSelectedCategory('animales')
+      personajesResult.current.category.setSelectedCategory('animales')
     })
 
-    const animalQuestions = personajesResult.current.remainingQuestions.length
+    const animalQuestions = personajesResult.current.question.remainingQuestions.length
 
     // Different categories should have different question counts
     expect(animalQuestions).not.toBe(personajeQuestions)

@@ -111,7 +111,7 @@ describe('onboarding', () => {
 // ===================================================================
 describe('syncToServer', () => {
   it('does not throw when API call succeeds', async () => {
-    const { syncToServer } = await import('./persistence')
+    const { syncToServer } = await import('./serverSync')
     await expect(syncToServer()).resolves.toBeUndefined()
   })
 })
@@ -124,7 +124,7 @@ describe('loadFromServer', () => {
     const { fetchStats } = await import('../api/api')
     vi.mocked(fetchStats).mockResolvedValueOnce({ success: false })
 
-    const { loadFromServer } = await import('./persistence')
+    const { loadFromServer } = await import('./serverSync')
     const result = await loadFromServer()
     expect(result).toBe(false)
   })
@@ -151,7 +151,7 @@ describe('loadFromServer', () => {
       },
     })
 
-    const { loadFromServer } = await import('./persistence')
+    const { loadFromServer } = await import('./serverSync')
     const result = await loadFromServer()
     expect(result).toBe(true)
 
@@ -167,8 +167,122 @@ describe('loadFromServer', () => {
     const { fetchStats } = await import('../api/api')
     vi.mocked(fetchStats).mockRejectedValueOnce(new Error('Network error'))
 
-    const { loadFromServer } = await import('./persistence')
+    const { loadFromServer } = await import('./serverSync')
     const result = await loadFromServer()
     expect(result).toBe(false)
+  })
+
+  it('saves achievements from server when non-empty', async () => {
+    const { fetchStats } = await import('../api/api')
+    vi.mocked(fetchStats).mockResolvedValueOnce({
+      success: true,
+      data: {
+        derinator_wins: 0,
+        user_wins: 0,
+        current_streak: 0,
+        best_streak: 0,
+        total_games: 0,
+        achievements: [{ id: 'first_win', unlocked: true }],
+        hall_of_fame: [],
+        daily_guessed: false,
+        daily_guesses: 0,
+      },
+    })
+
+    const { loadFromServer } = await import('./serverSync')
+    const result = await loadFromServer()
+    expect(result).toBe(true)
+
+    const { loadAchievements } = await import('./achievements')
+    const saved = loadAchievements()
+    const firstWin = saved.find((a) => a.id === 'first_win')
+    expect(firstWin).toBeDefined()
+    expect(firstWin!.unlocked).toBe(true)
+  })
+
+  it('saves hall_of_fame from server when non-empty', async () => {
+    const { fetchStats } = await import('../api/api')
+    vi.mocked(fetchStats).mockResolvedValueOnce({
+      success: true,
+      data: {
+        derinator_wins: 0,
+        user_wins: 0,
+        current_streak: 0,
+        best_streak: 0,
+        total_games: 0,
+        achievements: [],
+        hall_of_fame: [{ name: 'Goku', questionsCount: 5 }],
+        daily_guessed: false,
+        daily_guesses: 0,
+      },
+    })
+
+    const { loadFromServer } = await import('./serverSync')
+    const result = await loadFromServer()
+    expect(result).toBe(true)
+
+    const { HALL_OF_FAME_KEY } = await import('./types')
+    const raw = localStorage.getItem(HALL_OF_FAME_KEY)
+    expect(JSON.parse(raw!)).toEqual([{ name: 'Goku', questionsCount: 5 }])
+  })
+
+  it('does not overwrite daily character if date already matches today', async () => {
+    const today = new Date().toISOString().split('T')[0]
+    const { saveDailyCharacter } = await import('./daily')
+    saveDailyCharacter({ characterName: 'Pikachu', date: today, guessed: true, guesses: 3 })
+
+    const { fetchStats } = await import('../api/api')
+    vi.mocked(fetchStats).mockResolvedValueOnce({
+      success: true,
+      data: {
+        derinator_wins: 0,
+        user_wins: 0,
+        current_streak: 0,
+        best_streak: 0,
+        total_games: 0,
+        achievements: [],
+        hall_of_fame: [],
+        daily_guessed: true,
+        daily_guesses: 5,
+      },
+    })
+
+    const { loadFromServer } = await import('./serverSync')
+    await loadFromServer()
+
+    const { loadDailyCharacter } = await import('./daily')
+    const daily = loadDailyCharacter()
+    // Existing daily should not be overwritten (date matches today)
+    expect(daily?.characterName).toBe('Pikachu')
+    expect(daily?.guesses).toBe(3)
+  })
+
+  it('saves daily_guessed from server when no local daily exists', async () => {
+    const today = new Date().toISOString().split('T')[0]
+
+    const { fetchStats } = await import('../api/api')
+    vi.mocked(fetchStats).mockResolvedValueOnce({
+      success: true,
+      data: {
+        derinator_wins: 0,
+        user_wins: 0,
+        current_streak: 0,
+        best_streak: 0,
+        total_games: 0,
+        achievements: [],
+        hall_of_fame: [],
+        daily_guessed: true,
+        daily_guesses: 2,
+      },
+    })
+
+    const { loadFromServer } = await import('./serverSync')
+    await loadFromServer()
+
+    const { loadDailyCharacter } = await import('./daily')
+    const daily = loadDailyCharacter()
+    expect(daily?.date).toBe(today)
+    expect(daily?.guessed).toBe(true)
+    expect(daily?.guesses).toBe(2)
   })
 })

@@ -2,7 +2,7 @@
  * Stats & persistence barrel export.
  * 
  * Centralizes access to achievements, daily character,
- * game stats, hall of fame, and persistence modules.
+ * game stats, and persistence modules.
  */
 
 // Achievements
@@ -38,20 +38,24 @@ export {
   getTopGuessedCharacters,
 } from './gameStats'
 
-// Hall of fame
-export { addToHallOfFame, getHallOfFame } from './hallOfFame'
-
-// Persistence
+// Persistence (localStorage only)
 export {
   getFingerprint,
+  getPlayerToken,
+  savePlayerToken,
   saveGameState,
   loadGameState,
   clearGameState,
   hasSeenOnboarding,
   markOnboardingSeen,
-  syncToServer,
-  loadFromServer,
 } from './persistence'
+
+// Server sync (network layer)
+export {
+  syncToServer,
+  ensureRegistered,
+  loadFromServer,
+} from './serverSync'
 
 // Types
 export type {

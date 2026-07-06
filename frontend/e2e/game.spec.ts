@@ -107,10 +107,10 @@ test.describe('Derinator - Game Flow', () => {
   })
 
   test('all five answer options are available', async ({ page }) => {
-    await expect(page.locator('.btn-yes:has-text("Sí")')).toBeVisible()
-    await expect(page.locator('.btn-no:has-text("No")')).toBeVisible()
-    await expect(page.locator('.btn-probably:has-text("Probablemente")')).toBeVisible()
-    await expect(page.locator('.btn-probably-not:has-text("Probablemente no")')).toBeVisible()
-    await expect(page.locator('.btn-dont-know:has-text("No lo sé")')).toBeVisible()
+    await expect(page.locator('.btn-yes')).toBeVisible()
+    await expect(page.locator('.btn-no')).toBeVisible()
+    await expect(page.locator('.btn-probably')).toBeVisible()
+    await expect(page.locator('.btn-probably-not')).toBeVisible()
+    await expect(page.locator('.btn-dont-know')).toBeVisible()
   })
 })

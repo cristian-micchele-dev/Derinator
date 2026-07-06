@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback, useMemo } from 'react'
 import Game from '../game/Game'
 import DerinatorAvatar, { DerinatorEmotion } from '../ui/DerinatorAvatar'
 import { getStatsDisplay, loadGameState, clearGameState, loadFromServer } from '../../data/stats'
-import './App.css'
 import '../ui/DerinatorAvatar.css'
 
 import type { GameState } from '../../types'
@@ -117,11 +116,13 @@ export default function GamePage() {
 
   const isThinking = gameState === 'playing' || gameState === 'learn_questions'
 
+  const isInGame = gameState !== 'start' && gameState !== 'win' && gameState !== 'lose'
+
   return (
-    <div className="app">
+    <div className={`app ${isInGame ? 'app--playing' : ''}`}>
       <header className="header">
         <h1>Derinator</h1>
-        <p>Piensa en un personaje y lo adivinaré</p>
+        <p>Pensá en un personaje y lo voy a adivinar</p>
         {statsDisplay && (
           <div className="stats-bar">{statsDisplay}</div>
         )}

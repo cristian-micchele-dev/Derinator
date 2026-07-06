@@ -1,51 +1,6 @@
 import { test, expect } from '@playwright/test'
 
 // ===================================================================
-// Hall of Fame (/fama)
-// ===================================================================
-test.describe('Hall of Fame', () => {
-  test('loads the page with header', async ({ page }) => {
-    await page.goto('/fama')
-
-    await expect(page.locator('h1:has-text("Muro de la Fama")')).toBeVisible()
-    await expect(page.locator('text=Los personajes que derrotaron al Derinator')).toBeVisible()
-  })
-
-  test('shows empty state when no defeats recorded', async ({ page }) => {
-    await page.goto('/fama')
-
-    // Should show empty state (or existing data — both are valid)
-    const emptyState = page.locator('text=Nadie ha derrotado al Derinator')
-    const hallCards = page.locator('.hall-card')
-
-    // One of these should be true
-    const isEmpty = await emptyState.isVisible().catch(() => false)
-    const hasCards = await hallCards.count() > 0
-    expect(isEmpty || hasCards).toBe(true)
-  })
-
-  test('back button navigates to home', async ({ page }) => {
-    await page.goto('/fama')
-
-    await page.click('text=← Volver')
-    await page.waitForURL('/')
-
-    await expect(page.locator('h1:has-text("Derinator")')).toBeVisible()
-  })
-
-  test('Jugar ahora button navigates to game (empty state)', async ({ page }) => {
-    await page.goto('/fama')
-
-    const playBtn = page.locator('text=Jugar ahora')
-    if (await playBtn.isVisible().catch(() => false)) {
-      await playBtn.click()
-      await page.waitForURL('/jugar')
-      await expect(page.locator('text=¿En qué estás pensando?')).toBeVisible()
-    }
-  })
-})
-
-// ===================================================================
 // Daily Character (/del-dia)
 // ===================================================================
 test.describe('Daily Character', () => {
@@ -154,14 +109,6 @@ test.describe('Full Game — Win Flow', () => {
 test.describe('Navigation', () => {
   test('footer navigation between pages', async ({ page }) => {
     await page.goto('/')
-
-    // Navigate to Hall of Fame
-    const famaLink = page.locator('.footer-label:has-text("Fama")')
-    if (await famaLink.isVisible().catch(() => false)) {
-      await famaLink.click()
-      await page.waitForURL('/fama')
-      await expect(page.locator('h1:has-text("Muro de la Fama")')).toBeVisible()
-    }
 
     // Navigate to Daily Character
     const dailyLink = page.locator('.footer-label:has-text("Diario")')

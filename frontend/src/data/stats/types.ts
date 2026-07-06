@@ -20,12 +20,6 @@ export interface GameStats {
   characterGuessCounts: Record<string, number>
 }
 
-export interface HallOfFameEntry {
-  name: string
-  description: string
-  date: string
-  questionsCount: number
-}
 
 export interface Achievement {
   id: string
@@ -36,6 +30,11 @@ export interface Achievement {
   unlockedAt?: string
   progress: number
   maxProgress: number
+}
+
+export interface HallOfFameEntry {
+  name: string
+  questionsCount: number
 }
 
 export interface DailyCharacter {
