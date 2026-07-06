@@ -1,8 +1,5 @@
-import { Database } from 'sqlite'
-import sqlite3 from 'sqlite3'
+import { Pool } from 'pg'
 import { LearnedCharacter, LearnCharacterInput, CharacterRepository } from '../../domain'
-
-type DB = Database<sqlite3.Database, sqlite3.Statement>
 
 interface LearnedCharacterRow {
   id: string
@@ -12,50 +9,65 @@ interface LearnedCharacterRow {
   subcategory: string
   answers: string
   fingerprint: string | null
-  created_at: string
+  confirmer_question: string | null
+  created_at: Date
 }
 
-export class SqliteCharacterRepository implements CharacterRepository {
-  constructor(private db: DB) {}
+export class PgCharacterRepository implements CharacterRepository {
+  constructor(private db: Pool) {}
 
   async findAll(limit = 1000): Promise<LearnedCharacter[]> {
-    const rows = await this.db.all<LearnedCharacterRow[]>(
-      'SELECT * FROM learned_characters ORDER BY created_at DESC LIMIT ?',
+    const result = await this.db.query<LearnedCharacterRow>(
+      'SELECT * FROM learned_characters ORDER BY created_at DESC LIMIT $1',
       [limit]
     )
-    return rows.map(this.toDomain)
+    return result.rows.map(this.toDomain)
   }
 
   async findByFingerprint(fingerprint: string): Promise<LearnedCharacter[]> {
-    const rows = await this.db.all<LearnedCharacterRow[]>(
-      'SELECT * FROM learned_characters WHERE fingerprint = ? ORDER BY created_at DESC',
+    const result = await this.db.query<LearnedCharacterRow>(
+      'SELECT * FROM learned_characters WHERE fingerprint = $1 ORDER BY created_at DESC',
       [fingerprint]
     )
-    return rows.map(this.toDomain)
+    return result.rows.map(this.toDomain)
   }
 
   async findDuplicate(name: string, fingerprint?: string): Promise<boolean> {
-    let existing
-    if (fingerprint) {
-      existing = await this.db.get(
-        'SELECT name FROM learned_characters WHERE lower(name) = lower(?) AND fingerprint = ?',
-        [name, fingerprint]
-      )
-    } else {
-      existing = await this.db.get(
-        'SELECT name FROM learned_characters WHERE lower(name) = lower(?) AND fingerprint IS NULL',
-        [name]
-      )
-    }
-    return !!existing
+    const result = fingerprint
+      ? await this.db.query(
+          'SELECT 1 FROM learned_characters WHERE lower(name) = lower($1) AND fingerprint = $2 LIMIT 1',
+          [name, fingerprint]
+        )
+      : await this.db.query(
+          'SELECT 1 FROM learned_characters WHERE lower(name) = lower($1) AND fingerprint IS NULL LIMIT 1',
+          [name]
+        )
+    return result.rows.length > 0
   }
 
   async create(input: LearnCharacterInput): Promise<void> {
-    await this.db.run(
-      `INSERT INTO learned_characters (name, description, category, subcategory, answers, fingerprint)
-       VALUES (?, ?, ?, ?, ?, ?)`,
-      [input.name, input.description || input.name, input.category, input.subcategory, JSON.stringify(input.answers), input.fingerprint || null]
+    await this.db.query(
+      `INSERT INTO learned_characters (name, description, category, subcategory, answers, fingerprint, confirmer_question)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+      [input.name, input.description || input.name, input.category, input.subcategory, JSON.stringify(input.answers), input.fingerprint || null, input.confirmerQuestion || null]
     )
+  }
+
+  async deleteByName(name: string): Promise<boolean> {
+    const result = await this.db.query(
+      'DELETE FROM learned_characters WHERE lower(name) = lower($1)',
+      [name]
+    )
+    return (result.rowCount ?? 0) > 0
+  }
+
+  async countRecentByFingerprint(fingerprint: string, windowMinutes: number): Promise<number> {
+    const result = await this.db.query<{ count: string }>(
+      `SELECT COUNT(*) AS count FROM learned_characters
+       WHERE fingerprint = $1 AND created_at > NOW() - ($2 || ' minutes')::INTERVAL`,
+      [fingerprint, windowMinutes]
+    )
+    return parseInt(result.rows[0].count, 10)
   }
 
   private toDomain(row: LearnedCharacterRow): LearnedCharacter {
@@ -67,7 +79,8 @@ export class SqliteCharacterRepository implements CharacterRepository {
       subcategory: row.subcategory,
       answers: row.answers,
       fingerprint: row.fingerprint,
-      createdAt: row.created_at,
+      confirmerQuestion: row.confirmer_question ?? undefined,
+      createdAt: row.created_at instanceof Date ? row.created_at.toISOString() : row.created_at,
     }
   }
 }

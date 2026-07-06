@@ -1,30 +1,25 @@
-import { beforeAll, afterAll } from 'vitest'
-import { getDb } from './db'
-import * as fs from 'fs'
-import * as path from 'path'
+import { beforeAll } from 'vitest'
+import { newDb, DataType } from 'pg-mem'
+import { Pool } from 'pg'
+import { randomUUID } from 'crypto'
+import { _setPoolForTests, initDb, getDb } from './infrastructure/db'
 
-const TEST_DB_PATH = './derinator-test.db'
+const mem = newDb()
 
-// Set test DB path before any imports that use getDb
-process.env.DATABASE_PATH = TEST_DB_PATH
-
-beforeAll(async () => {
-  const db = await getDb()
-  // Clean all tables
-  await db.run('DELETE FROM game_history')
-  await db.run('DELETE FROM player_stats')
-  await db.run('DELETE FROM learned_characters')
+mem.public.registerFunction({
+  name: 'gen_random_uuid',
+  returns: DataType.uuid,
+  impure: true,
+  implementation: () => randomUUID(),
 })
 
-afterAll(async () => {
-  const db = await getDb()
-  await db.close()
-  // Remove test DB file
-  const dbFile = path.resolve(TEST_DB_PATH)
-  if (fs.existsSync(dbFile)) {
-    fs.unlinkSync(dbFile)
-  }
-  // Also remove WAL and SHM files
-  if (fs.existsSync(dbFile + '-wal')) fs.unlinkSync(dbFile + '-wal')
-  if (fs.existsSync(dbFile + '-shm')) fs.unlinkSync(dbFile + '-shm')
+const { Pool: TestPool } = mem.adapters.createPg()
+_setPoolForTests(new TestPool() as unknown as Pool)
+
+beforeAll(async () => {
+  await initDb()
+  const db = getDb()
+  await db.query('DELETE FROM game_history')
+  await db.query('DELETE FROM player_stats')
+  await db.query('DELETE FROM learned_characters')
 })

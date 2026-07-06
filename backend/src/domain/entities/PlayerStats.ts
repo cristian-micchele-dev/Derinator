@@ -1,6 +1,7 @@
 export interface PlayerStats {
   id: string
   fingerprint: string
+  playerToken: string | null
   derinatorWins: number
   userWins: number
   currentStreak: number
@@ -8,7 +9,7 @@ export interface PlayerStats {
   totalGames: number
   achievements: string  // JSON string in DB
   hallOfFame: string    // JSON string in DB
-  dailyGuessed: number  // 0/1 in SQLite
+  dailyGuessed: boolean
   dailyGuesses: number
   createdAt: string
   updatedAt: string

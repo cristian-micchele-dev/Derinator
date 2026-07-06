@@ -11,4 +11,8 @@ export interface CharacterRepository {
   findByFingerprint(fingerprint: string): Promise<LearnedCharacter[]>
   findDuplicate(name: string, fingerprint?: string): Promise<boolean>
   create(input: LearnCharacterInput): Promise<void>
+  /** Count characters created by fingerprint within the last windowMinutes minutes */
+  countRecentByFingerprint(fingerprint: string, windowMinutes: number): Promise<number>
+  /** Delete a character by name (case-insensitive). Returns true if deleted. */
+  deleteByName(name: string): Promise<boolean>
 }

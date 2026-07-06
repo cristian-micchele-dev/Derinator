@@ -1,30 +1,36 @@
-import { Request, Response, NextFunction } from 'express'
+import rateLimit from 'express-rate-limit'
+import { createRateLimitStore } from '../infrastructure/stores/rateLimitStore'
 
-interface RateLimitEntry {
-  count: number
-  resetTime: number
-}
+// Store is created once at startup.
+// Swap out in infrastructure/stores/rateLimitStore.ts (e.g. Redis) without touching this file.
+const store = createRateLimitStore()
 
-const requests = new Map<string, RateLimitEntry>()
-const WINDOW_MS = 60 * 1000 // 1 minute
-const MAX_REQUESTS = 10 // 10 requests per minute
+/** Strict: 10 req/min — for character learning */
+export const rateLimitLearn = rateLimit({
+  windowMs: 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests, please try again later' },
+  ...(store ? { store } : {}),
+})
 
-export function rateLimit(req: Request, res: Response, next: NextFunction): void {
-  const key = req.ip || 'unknown'
-  const now = Date.now()
+/** Relaxed: 30 req/min — for stats sync/game */
+export const rateLimitStats = rateLimit({
+  windowMs: 60 * 1000,
+  max: 30,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests, please try again later' },
+  ...(store ? { store } : {}),
+})
 
-  const entry = requests.get(key)
-  if (!entry || now > entry.resetTime) {
-    requests.set(key, { count: 1, resetTime: now + WINDOW_MS })
-    next()
-    return
-  }
-
-  if (entry.count >= MAX_REQUESTS) {
-    res.status(429).json({ error: 'Too many requests, please try again later' })
-    return
-  }
-
-  entry.count++
-  next()
-}
+/** Public: 60 req/min — for unauthenticated GET endpoints (characters list) */
+export const rateLimitPublic = rateLimit({
+  windowMs: 60 * 1000,
+  max: 60,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests, please try again later' },
+  ...(store ? { store } : {}),
+})

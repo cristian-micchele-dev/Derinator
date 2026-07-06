@@ -8,12 +8,15 @@ import { GameHistory } from '../entities/GameHistory'
  */
 export interface GameHistoryRepository {
   findByFingerprint(fingerprint: string): Promise<GameHistory[]>
-  findPlayerId(fingerprint: string): Promise<string | null>
+  /**
+   * Creates a game history entry for the player identified by fingerprint.
+   * Returns false if no player with that fingerprint exists.
+   */
   create(
-    playerId: string,
+    fingerprint: string,
     characterName: string,
     result: string,
     questionsCount: number,
     category: string,
-  ): Promise<void>
+  ): Promise<boolean>
 }

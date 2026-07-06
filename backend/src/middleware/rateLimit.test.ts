@@ -1,79 +1,56 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { rateLimit } from './rateLimit'
-import { Request, Response, NextFunction } from 'express'
+import { describe, it, expect } from 'vitest'
+import request from 'supertest'
+import express from 'express'
+import { rateLimitLearn, rateLimitStats } from './rateLimit'
 
-// Mock request/response helpers
-function createReq(ip = '127.0.0.1'): Request {
-  return { ip } as Request
+function makeApp(middleware: express.RequestHandler) {
+  const app = express()
+  app.set('trust proxy', 1)
+  app.get('/test', middleware, (_req, res) => res.status(200).json({ ok: true }))
+  return app
 }
 
-function createRes(): Response {
-  const res = {
-    status: vi.fn().mockReturnThis(),
-    json: vi.fn().mockReturnThis(),
-  } as unknown as Response
-  return res
-}
-
-function createNext(): NextFunction {
-  return vi.fn() as unknown as NextFunction
-}
-
-describe('rateLimit', () => {
-  beforeEach(() => {
-    // Reset the internal Map by importing fresh — but since it's module-level,
-    // we just test that it works within a single test
+describe('rateLimitLearn (10 req/min)', () => {
+  it('allows requests within the limit', async () => {
+    const app = makeApp(rateLimitLearn)
+    const res = await request(app).get('/test')
+    expect(res.status).toBe(200)
+    expect(res.body).toEqual({ ok: true })
   })
 
-  it('allows first request', () => {
-    const req = createReq('test-ip-1')
-    const res = createRes()
-    const next = createNext()
-
-    rateLimit(req, res, next)
-    expect(next).toHaveBeenCalled()
+  it('returns RateLimit-* standard headers', async () => {
+    const app = makeApp(rateLimitLearn)
+    const res = await request(app).get('/test')
+    expect(res.headers).toHaveProperty('ratelimit-limit')
+    expect(res.headers).toHaveProperty('ratelimit-remaining')
   })
 
-  it('allows requests within limit', () => {
-    const ip = 'test-ip-within-limit'
-    for (let i = 0; i < 9; i++) {
-      const req = createReq(ip)
-      const res = createRes()
-      const next = createNext()
-      rateLimit(req, res, next)
-      expect(next).toHaveBeenCalled()
-    }
-  })
-
-  it('blocks request over limit', () => {
-    const ip = 'test-ip-over-limit'
-    // Send 10 requests (the limit)
+  it('blocks after exceeding the limit', async () => {
+    const app = makeApp(rateLimitLearn)
+    // Exhaust all 10 slots
     for (let i = 0; i < 10; i++) {
-      const req = createReq(ip)
-      const res = createRes()
-      const next = createNext()
-      rateLimit(req, res, next)
+      await request(app).get('/test').set('X-Forwarded-For', '10.0.0.1')
     }
+    const res = await request(app).get('/test').set('X-Forwarded-For', '10.0.0.1')
+    expect(res.status).toBe(429)
+    expect(res.body).toMatchObject({ error: expect.stringContaining('Too many') })
+  })
+})
 
-    // 11th request should be blocked
-    const req = createReq(ip)
-    const res = createRes()
-    const next = createNext()
-    rateLimit(req, res, next)
-
-    expect(res.status).toHaveBeenCalledWith(429)
-    expect(res.json).toHaveBeenCalledWith(
-      expect.objectContaining({ error: expect.stringContaining('Too many') })
-    )
-    expect(next).not.toHaveBeenCalled()
+describe('rateLimitStats (30 req/min)', () => {
+  it('allows requests within the limit', async () => {
+    const app = makeApp(rateLimitStats)
+    const res = await request(app).get('/test')
+    expect(res.status).toBe(200)
   })
 
-  it('uses default IP when req.ip is undefined', () => {
-    const req = { ip: undefined } as unknown as Request
-    const res = createRes()
-    const next = createNext()
-
-    rateLimit(req, res, next)
-    expect(next).toHaveBeenCalled()
+  it('blocks after exceeding the limit', async () => {
+    const app = makeApp(rateLimitStats)
+    for (let i = 0; i < 30; i++) {
+      await request(app).get('/test').set('X-Forwarded-For', '10.0.0.2')
+    }
+    const res = await request(app).get('/test').set('X-Forwarded-For', '10.0.0.2')
+    expect(res.status).toBe(429)
+    expect(res.body).toMatchObject({ error: expect.stringContaining('Too many') })
   })
 })

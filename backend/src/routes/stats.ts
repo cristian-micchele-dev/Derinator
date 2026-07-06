@@ -1,5 +1,59 @@
 import { Router, Request, Response } from 'express'
 import { PlayerStatsRepository, GameHistoryRepository, SyncStatsInput, PlayerStats } from '../domain'
+import { sanitizeInput } from '../application/characterValidation'
+import { rateLimitStats } from '../middleware/rateLimit'
+
+const VALID_RESULTS = ['derinator_win', 'user_win'] as const
+const VALID_GAME_CATEGORIES = ['all', 'personajes', 'animales', 'famosos', ''] as const
+const MAX_CHARACTER_NAME_LENGTH = 100
+const MAX_QUESTIONS_COUNT = 500
+const FINGERPRINT_REGEX = /^[a-zA-Z0-9_-]{8,64}$/
+
+function isValidFingerprint(fp: unknown): fp is string {
+  return typeof fp === 'string' && FINGERPRINT_REGEX.test(fp)
+}
+
+const MAX_TOKEN_LENGTH = 500
+
+function extractBearerToken(req: Request): string | null {
+  const auth = req.headers.authorization
+  if (!auth || !auth.startsWith('Bearer ')) return null
+  const token = auth.slice(7).trim()
+  // Reject oversized tokens before they reach the DB.
+  if (!token || token.length > MAX_TOKEN_LENGTH) return null
+  return token
+}
+
+function isNonNegativeInt(v: unknown): v is number {
+  return typeof v === 'number' && Number.isInteger(v) && v >= 0
+}
+
+const MAX_ACHIEVEMENTS = 50
+const MAX_HALL_OF_FAME = 100
+const MAX_STAT_VALUE = 1_000_000
+
+function validateSyncBody(body: Record<string, unknown>): string | null {
+  const numericFields = ['derinatorWins', 'userWins', 'totalGames', 'currentStreak', 'bestStreak', 'dailyGuesses'] as const
+  for (const field of numericFields) {
+    if (body[field] !== undefined && (!isNonNegativeInt(body[field]) || (body[field] as number) > MAX_STAT_VALUE)) {
+      return `${field} must be a non-negative integer (max ${MAX_STAT_VALUE})`
+    }
+  }
+
+  if (body.achievements !== undefined) {
+    if (!Array.isArray(body.achievements) || body.achievements.length > MAX_ACHIEVEMENTS) {
+      return `achievements must be an array (max ${MAX_ACHIEVEMENTS} items)`
+    }
+  }
+
+  if (body.hallOfFame !== undefined) {
+    if (!Array.isArray(body.hallOfFame) || body.hallOfFame.length > MAX_HALL_OF_FAME) {
+      return `hallOfFame must be an array (max ${MAX_HALL_OF_FAME} items)`
+    }
+  }
+
+  return null
+}
 
 /** Convert domain entity → API response format (snake_case, matching DB columns) */
 function toApiStats(s: PlayerStats) {
@@ -25,31 +79,51 @@ export function createStatsRouter(
 ): Router {
   const router = Router()
 
-  // POST /api/stats/sync — Save or update player stats
-  router.post('/sync', async (req: Request, res: Response) => {
+  // PUT /api/v1/stats/:fingerprint — Create or update player stats
+  router.put('/:fingerprint', rateLimitStats, async (req: Request, res: Response) => {
     try {
-      const body = req.body as SyncStatsInput
-      const { fingerprint } = body
+      const { fingerprint } = req.params
 
-      if (!fingerprint || fingerprint.length < 8) {
+      if (!isValidFingerprint(fingerprint)) {
         res.status(400).json({ error: 'Invalid fingerprint' })
         return
       }
 
-      const result = await statsRepo.upsert(body)
-      res.json({ success: true, data: toApiStats(result) })
+      const validationError = validateSyncBody(req.body)
+      if (validationError) {
+        res.status(400).json({ error: validationError })
+        return
+      }
+
+      const body = { ...req.body, fingerprint } as SyncStatsInput
+      const existing = await statsRepo.findByFingerprint(fingerprint)
+
+      if (existing) {
+        // Player exists — require a valid token to update
+        const token = extractBearerToken(req)
+        if (!token || existing.playerToken !== token) {
+          res.status(401).json({ error: 'Invalid or missing player token' })
+          return
+        }
+        const result = await statsRepo.upsert(body)
+        res.json({ success: true, data: toApiStats(result) })
+      } else {
+        // New player — create and return the generated token
+        const result = await statsRepo.upsert(body)
+        res.status(201).json({ success: true, data: toApiStats(result), player_token: result.playerToken })
+      }
     } catch (err) {
       console.error('Error syncing stats:', err)
       res.status(500).json({ error: 'Failed to sync stats' })
     }
   })
 
-  // GET /api/stats/:fingerprint — Retrieve player stats
-  router.get('/:fingerprint', async (req: Request, res: Response) => {
+  // GET /api/v1/stats/:fingerprint — Retrieve player stats
+  router.get('/:fingerprint', rateLimitStats, async (req: Request, res: Response) => {
     try {
       const { fingerprint } = req.params
 
-      if (!fingerprint || fingerprint.length < 8) {
+      if (!isValidFingerprint(fingerprint)) {
         res.status(400).json({ error: 'Invalid fingerprint' })
         return
       }
@@ -57,6 +131,7 @@ export function createStatsRouter(
       const stats = await statsRepo.findByFingerprint(fingerprint)
 
       if (!stats) {
+        res.set('Cache-Control', 'private, no-store')
         res.json({
           success: true,
           data: {
@@ -68,7 +143,7 @@ export function createStatsRouter(
             total_games: 0,
             achievements: '[]',
             hall_of_fame: '[]',
-            daily_guessed: 0,
+            daily_guessed: false,
             daily_guesses: 0,
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
@@ -77,6 +152,7 @@ export function createStatsRouter(
         return
       }
 
+      res.set('Cache-Control', 'private, no-store')
       res.json({ success: true, data: toApiStats(stats) })
     } catch (err) {
       console.error('Error fetching stats:', err)
@@ -85,23 +161,60 @@ export function createStatsRouter(
   })
 
   // POST /api/stats/game — Record a single game result
-  router.post('/game', async (req: Request, res: Response) => {
+  router.post('/game', rateLimitStats, async (req: Request, res: Response) => {
     try {
-      const { fingerprint, characterName, result, questionsCount, category } = req.body
+      const { fingerprint, result, questionsCount, category } = req.body
+      const rawName = req.body.characterName
 
-      if (!fingerprint || !characterName || !result) {
+      if (!isValidFingerprint(fingerprint) || !rawName || !result) {
         res.status(400).json({ error: 'Missing required fields' })
         return
       }
 
-      const playerId = await historyRepo.findPlayerId(fingerprint)
-
-      if (!playerId) {
-        res.status(404).json({ error: 'Player not found' })
+      if (typeof rawName !== 'string') {
+        res.status(400).json({ error: 'characterName must be a string' })
         return
       }
 
-      await historyRepo.create(playerId, characterName, result, questionsCount || 0, category || '')
+      const characterName = sanitizeInput(rawName, MAX_CHARACTER_NAME_LENGTH)
+      if (characterName.length < 1) {
+        res.status(400).json({ error: 'characterName is empty after sanitization' })
+        return
+      }
+
+      if (!VALID_RESULTS.includes(result)) {
+        res.status(400).json({ error: `Invalid result. Allowed values: ${VALID_RESULTS.join(', ')}` })
+        return
+      }
+
+      const sanitizedCategory = typeof category === 'string' ? category.trim() : ''
+      if (!VALID_GAME_CATEGORIES.includes(sanitizedCategory as typeof VALID_GAME_CATEGORIES[number])) {
+        res.status(400).json({ error: `Invalid category` })
+        return
+      }
+
+      const parsedCount = Number.isInteger(questionsCount) && questionsCount >= 0
+        ? Math.min(questionsCount, MAX_QUESTIONS_COUNT)
+        : 0
+
+      const token = extractBearerToken(req)
+      if (!token) {
+        res.status(401).json({ error: 'Missing player token' })
+        return
+      }
+
+      const tokenOwner = await statsRepo.findByToken(token)
+      if (!tokenOwner || tokenOwner.fingerprint !== fingerprint) {
+        res.status(401).json({ error: 'Invalid player token' })
+        return
+      }
+
+      const created = await historyRepo.create(fingerprint, characterName, result, parsedCount, sanitizedCategory)
+
+      if (!created) {
+        res.status(404).json({ error: 'Player not found' })
+        return
+      }
       res.json({ success: true })
     } catch (err) {
       console.error('Error recording game:', err)

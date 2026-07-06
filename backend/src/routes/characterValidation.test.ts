@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { sanitizeInput, validateCharacterInput } from './characterValidation'
+import { sanitizeInput, validateCharacterInput } from '../application/characterValidation'
 
 // ===================================================================
 // sanitizeInput (backend version)
@@ -31,7 +31,7 @@ describe('validateCharacterInput (backend)', () => {
     description: 'Un Pokemon electrico',
     category: 'animal',
     subcategory: 'videojuego',
-    answers: { 1: 'yes', 2: 'yes', 4: 'yes' },
+    answers: { 1: 'yes', 2: 'yes', 4: 'yes', 5: 'no', 6: 'probably' },
   }
 
   it('returns isValid=true for valid input', () => {
@@ -93,7 +93,7 @@ describe('validateCharacterInput (backend)', () => {
     for (const ans of validAnswers) {
       const result = validateCharacterInput({
         ...validInput,
-        answers: { 1: ans },
+        answers: { 1: ans, 2: 'yes', 3: 'no', 4: 'yes', 5: 'no', 6: 'probably' },
       })
       expect(result.isValid).toBe(true)
     }
