@@ -20,11 +20,13 @@ scripts/        — Data enrichment scripts (Node ESM)
 
 From the root (runs both workspaces):
 ```bash
-npm run dev           # concurrently: frontend (port 3001) + backend (port 4000)
-npm run build         # tsc + vite build (both)
-npm run test          # vitest run (both)
-npm run lint          # eslint (both)
-npm run format        # prettier on all files
+npm run dev               # concurrently: frontend (port 3001) + backend (port 4000)
+npm run build             # tsc + vite build (both)
+npm run test              # vitest run (both)
+npm run test:frontend     # vitest run (frontend only)
+npm run test:backend      # vitest run (backend only)
+npm run lint              # eslint (both)
+npm run format            # prettier on all files
 ```
 
 From `frontend/`:
@@ -60,7 +62,8 @@ node scripts/enrich-franchises.mjs   # add franchise data to personajes.json
 - `logics.ts` — Shannon entropy scoring, implication forward-chaining (5 passes), contradiction exclusions, confidence metrics.
 - `scoring.ts` — weighted similarity scoring per character.
 - `questionSelection.ts` — question picker based on candidate pool size and phase.
-- `questionFlow.ts` — hierarchical `FlowNode` decision tree (imports `flows/animals.ts`, `flows/real-people.ts`, `flows/fictional.ts`).
+- `questionFlow.ts` — hierarchical `FlowNode` decision tree (imports `flows/animals.ts`, `flows/realPeople.ts`, `flows/fictional.ts`).
+- `questionGroups.ts` — named question-ID sets: `CATEGORY_QUESTIONS`, `BROAD_UNIVERSE_QUESTIONS`, `SPECIFIC_UNIVERSE_QUESTIONS`.
 - `rules/implications.ts`, `rules/contradictions.ts` — 100+ implications, 300+ contradiction rules.
 - `validation.ts` — character answer validation.
 - `gameConstants.ts` — `GameCategory`, `EXCLUDED_BY_CATEGORY`, `CATEGORY_SEED_ANSWERS`, `filterByCategory`.
@@ -71,11 +74,23 @@ node scripts/enrich-franchises.mjs   # add franchise data to personajes.json
 
 **Characters** (`src/data/characters/`): split into three JSON files — `animales.json`, `famosos.json`, `personajes.json`. Loaded via `index.ts` with a module-level cache (`builtInCache`) so JSON parsing only runs once.
 
+**Learned characters** (`src/data/learnedStorage.ts`): localStorage cache + server sync for user-taught characters. Handles offline-first saves, server deduplication (409), and merge strategy (server authoritative, local-only additions preserved). IDs are generated via a stable hash of the name (10000+ range to avoid collisions with built-in characters).
+
+**Stats layer** (`src/data/stats/`):
+- `persistence.ts` — localStorage only: fingerprint, player token, game state, onboarding flag.
+- `gameStats.ts` — win/loss counters, hall of fame, top guessed characters.
+- `achievements.ts` — unlock/increment achievements, check triggers.
+- `daily.ts` — daily character index, guessed state, reset.
+- `serverSync.ts` — `syncToServer`, `ensureRegistered`, `loadFromServer` (network layer, separate from persistence).
+- `index.ts` — barrel export for all of the above.
+
 **LearnMode** (`src/components/game/`): teach new character flow, split across:
 - `LearnMode.tsx` + `useLearnMode.ts` — component and state hook.
 - `learnModeConfig.ts` — subcategory seeds, question lists per subcategory (`LEARN_QUESTIONS`), exclusive groups (`EXCLUSIVE_GROUPS`), min question threshold.
 - `learnModeLogic.ts` — question sequencing logic.
 - `learnModeValidation.ts` — input validation.
+
+**Questions** (`src/data/questions.ts`): defines the `QuestionId` branded type and the full question bank. All answer maps use `QuestionId` as key.
 
 **Component pattern** — container/presentational:
 - `components/game/Game.tsx` — renders game UI, delegates all logic to `useGame`.
@@ -93,9 +108,10 @@ node scripts/enrich-franchises.mjs   # add franchise data to personajes.json
 - `domain/` — entities + ports (interfaces). No framework dependencies. Domain never imports from infrastructure.
 - `infrastructure/repositories/` — PostgreSQL implementations of domain ports.
 - `infrastructure/stores/rateLimitStore.ts` — creates the rate limit store. Returns a `RedisStore` (ioredis) when `REDIS_URL` is set; otherwise falls back to MemoryStore.
+- `application/LearnCharacterService.ts` — orchestrates character creation: soft Bearer token auth, DB-based rate limit (5/60min per fingerprint), duplicate check, then delegates to `CharacterRepository`.
+- `application/characterValidation.ts` — strips HTML, caps lengths. Valid categories: `animal | personaje`.
 - `routes/` — Express routers (`stats.ts`, `characters.ts`).
 - `middleware/rateLimit.ts` — three limiters: `rateLimitLearn` (10/min), `rateLimitStats` (30/min), `rateLimitPublic` (60/min). Store is injected from `infrastructure/stores/`.
-- `application/characterValidation.ts` — strips HTML, caps lengths. Valid categories: `animal | personaje`.
 
 **DB** (`src/infrastructure/db.ts`): PostgreSQL via `pg` (Pool). Schema in `src/schema.sql`, loaded at startup. Requires `DATABASE_URL` env var. Pool size and timeouts are configurable via `DB_POOL_MAX`, `DB_IDLE_TIMEOUT`, `DB_CONNECTION_TIMEOUT` env vars.
 - Tests use `pg-mem` (in-memory PostgreSQL mock) — set up in `src/test-setup.ts`. Production DB is **never** touched by tests.
@@ -108,7 +124,7 @@ node scripts/enrich-franchises.mjs   # add franchise data to personajes.json
 | `GET` | `/api/v1/stats/:fingerprint` | Returns default zeros if not found (never 404) |
 | `POST` | `/api/v1/stats/game` | Records game history; player must exist |
 | `GET` | `/api/v1/characters` | Optional `?fingerprint=` filter |
-| `POST` | `/api/v1/characters` | Rate-limited; validates input |
+| `POST` | `/api/v1/characters` | Rate-limited; validates input; delegates to `LearnCharacterService` |
 
 ## Testing
 
@@ -128,6 +144,8 @@ node scripts/enrich-franchises.mjs   # add franchise data to personajes.json
 - Bearer tokens are validated for max length (500 chars) before hitting the DB.
 - Data enrichment scripts use `setIfAbsent` semantics — they never overwrite existing answers in the JSON files.
 - `learnModeConfig.ts` `EXCLUSIVE_GROUPS` must stay consistent with `rules/contradictions.ts` — if you add a new exclusive pair in one, add it to the other.
+- `learnedStorage.ts` generates IDs in the 10000–9010000 range via hash — never use sequential IDs for learned characters.
+- `LearnCharacterService` applies a DB-level rate limit (5 chars / 60 min per fingerprint) separate from the Express middleware rate limit — both must pass for a character to be saved.
 
 ## Deploy
 
