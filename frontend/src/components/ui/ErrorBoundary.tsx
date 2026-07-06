@@ -8,13 +8,12 @@ interface Props {
 interface State {
   hasError: boolean
   error: Error | null
-  componentStack?: string
 }
 
 export class ErrorBoundary extends Component<Props, State> {
   constructor(props: Props) {
     super(props)
-    this.state = { hasError: false, error: null, componentStack: '' }
+    this.state = { hasError: false, error: null }
   }
 
   static getDerivedStateFromError(error: Error): State {
@@ -23,7 +22,6 @@ export class ErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     console.error('[ErrorBoundary]', error, errorInfo)
-    this.setState({ componentStack: errorInfo.componentStack ?? '' })
   }
 
   render() {
@@ -46,14 +44,9 @@ export class ErrorBoundary extends Component<Props, State> {
           <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>
             Algo salió mal
           </h2>
-          <p style={{ color: '#666', marginBottom: '0.5rem' }}>
+          <p style={{ color: '#666', marginBottom: '1.5rem' }}>
             {this.state.error?.message || 'Error inesperado'}
           </p>
-          {this.state.componentStack && (
-            <pre style={{ color: '#999', fontSize: '0.65rem', textAlign: 'left', maxWidth: '100%', overflow: 'auto', marginBottom: '1.5rem', whiteSpace: 'pre-wrap' }}>
-              {this.state.componentStack.trim().split('\n').slice(0, 8).join('\n')}
-            </pre>
-          )}
           <button
             onClick={() => {
               this.setState({ hasError: false, error: null })
