@@ -500,6 +500,41 @@ export const FICTIONAL_FLOWS: FlowNode[] = [
     weight: 3.5,
   },
 
+  // ---- Videojuego-specific questions (require videojuego confirmed) ----
+  { id: 556, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 60, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // RPG
+  { id: 557, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 60, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // shooter
+  { id: 558, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 60, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // terror/survival horror
+  { id: 559, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 60, answers: ['yes'] }], next: { default: null }, weight: 3.5 }, // The Last of Us
+  { id: 560, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 60, answers: ['yes'] }], next: { default: null }, weight: 3.5 }, // Resident Evil
+  { id: 561, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 60, answers: ['yes'] }], next: { default: null }, weight: 3.0 }, // Dark Souls/Elden Ring
+  { id: 562, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 60, answers: ['yes'] }], next: { default: null }, weight: 3.0 }, // GTA
+  { id: 563, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 60, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // magia/habilidades
+  { id: 564, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 60, answers: ['yes'] }], next: { default: null }, weight: 2.5 }, // jefe final/antagonista
+  { id: 565, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 60, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // aparece en más de un juego
+
+  // ---- Anime shonen-specific questions (require anime confirmed) ----
+  { id: 539, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 59, answers: ['yes'] }], next: { default: null }, weight: 3.0 }, // Fairy Tail
+  { id: 540, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 59, answers: ['yes'] }], next: { default: null }, weight: 2.5 }, // ki/chakra/haki
+  { id: 541, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 59, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // equipo de combate
+  { id: 542, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 59, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // rival icónico
+
+  // ---- Anime seinen-specific questions (require anime confirmed) ----
+  { id: 543, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 59, answers: ['yes'] }], next: { default: null }, weight: 3.5 }, // Berserk
+  { id: 544, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 59, answers: ['yes'] }], next: { default: null }, weight: 3.0 }, // Chainsaw Man
+  { id: 545, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 59, answers: ['yes'] }], next: { default: null }, weight: 3.0 }, // Vinland Saga
+  { id: 546, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 59, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // tono oscuro/trágico
+  { id: 547, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 59, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // soldado/combatiente
+  { id: 548, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 59, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // motivaciones ambiguas
+
+  // ---- Anime magical-girl-specific questions (require anime confirmed) ----
+  { id: 549, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 59, answers: ['yes'] }], next: { default: null }, weight: 3.5 }, // Sailor Moon
+  { id: 550, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 59, answers: ['yes'] }], next: { default: null }, weight: 3.0 }, // Cardcaptor Sakura
+  { id: 551, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 59, answers: ['yes'] }], next: { default: null }, weight: 3.0 }, // Madoka Magica
+  { id: 552, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 59, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // grita nombre del ataque
+  { id: 553, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 59, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // varita/cetro mágico
+  { id: 554, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 59, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // alter ego/nombre heroína
+  { id: 555, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 59, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // mascota/companion mágico
+
   // ---- Superhero-specific questions (require superhero confirmed) ----
   { id: 534, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 56, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // identidad secreta
   { id: 535, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 56, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // pertenece a equipo

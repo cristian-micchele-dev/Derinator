@@ -412,6 +412,7 @@ export const REAL_PEOPLE_FLOWS: FlowNode[] = [
   { id: 523, prerequisites: [{ questionId: 19, answers: ['yes'] }], next: { default: null }, weight: 2.5 }, // Emmy
   { id: 524, prerequisites: [{ questionId: 19, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // saga/franquicia
   { id: 525, prerequisites: [{ questionId: 19, answers: ['yes'] }], next: { default: null }, weight: 1.5 }, // director/productor
+  { id: 538, prerequisites: [{ questionId: 19, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // series de acción
 
   {
     id: 19, // ¿Es actor/actriz?

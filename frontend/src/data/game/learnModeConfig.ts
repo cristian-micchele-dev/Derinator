@@ -64,6 +64,113 @@ const REAL_PERSON_BASE: QuestionId[] = [
 // Subcategory-specific question lists for LearnMode
 // These ensure the character gets a COMPLETE profile
 export const LEARN_QUESTIONS: Record<string, QuestionId[]> = {
+  videojuego: [
+    52 as QuestionId,  // ¿Es mujer?
+    121 as QuestionId, // ¿Es el protagonista principal?
+    72 as QuestionId,  // ¿Es un villano?
+    128 as QuestionId, // ¿Es un anti-héroe?
+    89 as QuestionId,  // ¿Es un robot o cyborg?
+    74 as QuestionId,  // ¿Tiene superpoderes?
+    563 as QuestionId, // ¿Puede usar magia o habilidades especiales?
+    62 as QuestionId,  // ¿Usa arma?
+    127 as QuestionId, // ¿Usa tecnología o gadgets avanzados?
+    88 as QuestionId,  // ¿Usa ropa/uniforme característico?
+    92 as QuestionId,  // ¿Tiene pelo de color inusual?
+    129 as QuestionId, // ¿Tiene compañero, mascota o sidekick?
+    91 as QuestionId,  // ¿Es de un juego de pelea?
+    564 as QuestionId, // ¿Es el jefe final o antagonista principal?
+    565 as QuestionId, // ¿Aparece en más de un juego de la misma saga?
+    556 as QuestionId, // ¿Es de un RPG?
+    557 as QuestionId, // ¿Es de un juego de disparos (shooter)?
+    558 as QuestionId, // ¿Es de un juego de terror / survival horror?
+    58 as QuestionId,  // ¿Es de Nintendo?
+    100 as QuestionId, // ¿Es de The Legend of Zelda?
+    101 as QuestionId, // ¿Es de Final Fantasy?
+    103 as QuestionId, // ¿Es de God of War?
+    107 as QuestionId, // ¿Es de Kingdom Hearts?
+    109 as QuestionId, // ¿Es de The Witcher?
+    110 as QuestionId, // ¿Es de Metal Gear?
+    559 as QuestionId, // ¿Es de The Last of Us?
+    560 as QuestionId, // ¿Es de Resident Evil?
+    561 as QuestionId, // ¿Es de Dark Souls / Elden Ring?
+    562 as QuestionId, // ¿Es de Grand Theft Auto?
+    99 as QuestionId,  // ¿Es de League of Legends?
+    102 as QuestionId, // ¿Es de Street Fighter?
+    106 as QuestionId, // ¿Es de Mortal Kombat?
+  ],
+  'anime-shonen': [
+    52 as QuestionId,  // ¿Es mujer?
+    121 as QuestionId, // ¿Es el protagonista principal?
+    72 as QuestionId,  // ¿Es un villano?
+    128 as QuestionId, // ¿Es un anti-héroe?
+    74 as QuestionId,  // ¿Tiene superpoderes?
+    87 as QuestionId,  // ¿Tiene más de una transformación?
+    62 as QuestionId,  // ¿Usa arma?
+    92 as QuestionId,  // ¿Tiene pelo de color inusual?
+    90 as QuestionId,  // ¿Es conocido/a por frase o grito?
+    120 as QuestionId, // ¿Es un demonio o ser sobrenatural?
+    118 as QuestionId, // ¿Es un samurái?
+    124 as QuestionId, // ¿Es muy inteligente o estratega?
+    129 as QuestionId, // ¿Tiene compañero, mascota o sidekick?
+    233 as QuestionId, // ¿Es humano puro sin poderes especiales?
+    84 as QuestionId,  // ¿Es de Dragon Ball?
+    93 as QuestionId,  // ¿Es de Naruto?
+    94 as QuestionId,  // ¿Es de One Piece?
+    115 as QuestionId, // ¿Es de Bleach?
+    116 as QuestionId, // ¿Es de Hunter x Hunter?
+    131 as QuestionId, // ¿Es de My Hero Academia?
+    132 as QuestionId, // ¿Es de Demon Slayer?
+    133 as QuestionId, // ¿Es de Jujutsu Kaisen?
+    117 as QuestionId, // ¿Es de One Punch Man?
+    539 as QuestionId, // ¿Es de Fairy Tail?
+    540 as QuestionId, // ¿Usa poder basado en ki, chakra o haki?
+    541 as QuestionId, // ¿Es parte de un equipo o grupo de combate?
+    542 as QuestionId, // ¿Tiene un rival icónico?
+  ],
+  'anime-seinen': [
+    52 as QuestionId,  // ¿Es mujer?
+    121 as QuestionId, // ¿Es el protagonista principal?
+    72 as QuestionId,  // ¿Es un villano?
+    128 as QuestionId, // ¿Es un anti-héroe?
+    74 as QuestionId,  // ¿Tiene superpoderes?
+    61 as QuestionId,  // ¿Tiene poderes mágicos?
+    62 as QuestionId,  // ¿Usa arma?
+    92 as QuestionId,  // ¿Tiene pelo de color inusual?
+    120 as QuestionId, // ¿Es un demonio o ser sobrenatural?
+    118 as QuestionId, // ¿Es un samurái?
+    119 as QuestionId, // ¿Es un detective o investigador?
+    124 as QuestionId, // ¿Es muy inteligente o estratega?
+    233 as QuestionId, // ¿Es humano puro sin poderes especiales?
+    111 as QuestionId, // ¿Es de Attack on Titan?
+    112 as QuestionId, // ¿Es de Death Note?
+    113 as QuestionId, // ¿Es de Evangelion?
+    114 as QuestionId, // ¿Es de Fullmetal Alchemist?
+    116 as QuestionId, // ¿Es de Hunter x Hunter?
+    543 as QuestionId, // ¿Es de Berserk?
+    544 as QuestionId, // ¿Es de Chainsaw Man?
+    545 as QuestionId, // ¿Es de Vinland Saga?
+    546 as QuestionId, // ¿La historia tiene un tono oscuro o trágico?
+    547 as QuestionId, // ¿Es soldado o combatiente en una guerra?
+    548 as QuestionId, // ¿Tiene motivaciones moralmente ambiguas?
+  ],
+  'anime-magical-girl': [
+    52 as QuestionId,  // ¿Es mujer?
+    121 as QuestionId, // ¿Es el protagonista principal?
+    72 as QuestionId,  // ¿Es un villano?
+    61 as QuestionId,  // ¿Tiene poderes mágicos?
+    87 as QuestionId,  // ¿Tiene más de una transformación?
+    92 as QuestionId,  // ¿Tiene pelo de color inusual?
+    90 as QuestionId,  // ¿Es conocido/a por frase o grito?
+    86 as QuestionId,  // ¿Puede volar sin alas?
+    129 as QuestionId, // ¿Tiene compañero, mascota o sidekick?
+    549 as QuestionId, // ¿Es de Sailor Moon?
+    550 as QuestionId, // ¿Es de Cardcaptor Sakura?
+    551 as QuestionId, // ¿Es de Madoka Magica?
+    552 as QuestionId, // ¿Grita el nombre de su ataque al usarlo?
+    553 as QuestionId, // ¿Usa varita o cetro mágico?
+    554 as QuestionId, // ¿Tiene un alter ego o nombre de heroína?
+    555 as QuestionId, // ¿Tiene mascota o companion mágico?
+  ],
   musico: [
     ...REAL_PERSON_BASE,
     154 as QuestionId, // ¿Es de pop?
@@ -117,6 +224,7 @@ export const LEARN_QUESTIONS: Record<string, QuestionId[]> = {
     523 as QuestionId, // ¿Ganó un Emmy?
     524 as QuestionId, // ¿Protagonizó una saga o franquicia importante?
     525 as QuestionId, // ¿Es también director/a o productor/a?
+    538 as QuestionId, // ¿Es conocido/a por series de acción?
   ],
   deportista: [
     ...REAL_PERSON_BASE,

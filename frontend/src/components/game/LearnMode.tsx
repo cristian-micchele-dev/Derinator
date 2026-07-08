@@ -123,6 +123,8 @@ export default function LearnMode(props: LearnModeProps) {
                   >
                     <option value="">Sin subcategoría</option>
                     <option value="anime-shonen">Anime Shonen</option>
+                    <option value="anime-seinen">Anime Seinen</option>
+                    <option value="anime-magical-girl">Anime Magical Girl</option>
                     <option value="videojuego">Videojuego</option>
                     <option value="superheroe">Superhéroe</option>
                     <option value="disney">Disney</option>

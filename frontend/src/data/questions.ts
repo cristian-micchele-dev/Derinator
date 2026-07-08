@@ -615,6 +615,42 @@ export const questions = [
   { id: 523, text: '¿Ganó un Emmy?' },
   { id: 524, text: '¿Protagonizó una saga o franquicia importante?' },
   { id: 525, text: '¿Es también director/a o productor/a?' },
+  { id: 538, text: '¿Es conocido/a por series de acción?' },
+
+  // Anime shonen-specific questions
+  { id: 539, text: '¿Es de Fairy Tail?' },
+  { id: 540, text: '¿Usa un poder basado en ki, chakra o haki?' },
+  { id: 541, text: '¿Es parte de un equipo o grupo de combate?' },
+  { id: 542, text: '¿Tiene un rival icónico?' },
+
+  // Anime seinen-specific questions
+  { id: 543, text: '¿Es de Berserk?' },
+  { id: 544, text: '¿Es de Chainsaw Man?' },
+  { id: 545, text: '¿Es de Vinland Saga?' },
+  { id: 546, text: '¿La historia tiene un tono oscuro o trágico?' },
+  { id: 547, text: '¿Es soldado o combatiente en una guerra?' },
+  { id: 548, text: '¿Tiene motivaciones moralmente ambiguas?' },
+
+  // Anime magical-girl-specific questions
+  { id: 549, text: '¿Es de Sailor Moon?' },
+  { id: 550, text: '¿Es de Cardcaptor Sakura?' },
+  { id: 551, text: '¿Es de Madoka Magica?' },
+  { id: 552, text: '¿Grita el nombre de su ataque al usarlo?' },
+  { id: 553, text: '¿Usa varita o cetro mágico?' },
+  { id: 554, text: '¿Tiene un alter ego o nombre de heroína?' },
+  { id: 555, text: '¿Tiene mascota o companion mágico?' },
+
+  // Videojuego-specific questions
+  { id: 556, text: '¿Es de un RPG?' },
+  { id: 557, text: '¿Es de un juego de disparos (shooter)?' },
+  { id: 558, text: '¿Es de un juego de terror / survival horror?' },
+  { id: 559, text: '¿Es de The Last of Us?' },
+  { id: 560, text: '¿Es de Resident Evil?' },
+  { id: 561, text: '¿Es de Dark Souls / Elden Ring?' },
+  { id: 562, text: '¿Es de Grand Theft Auto?' },
+  { id: 563, text: '¿Puede usar magia o habilidades especiales?' },
+  { id: 564, text: '¿Es el jefe final o antagonista principal?' },
+  { id: 565, text: '¿Aparece en más de un juego de la misma saga?' },
 ] as const
 
 export type QuestionId = typeof questions[number]['id']
