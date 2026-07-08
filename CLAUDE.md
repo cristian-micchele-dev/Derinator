@@ -84,11 +84,9 @@ node scripts/enrich-franchises.mjs   # add franchise data to personajes.json
 - `serverSync.ts` — `syncToServer`, `ensureRegistered`, `loadFromServer` (network layer, separate from persistence).
 - `index.ts` — barrel export for all of the above.
 
-**LearnMode** (`src/components/game/`): teach new character flow, split across:
-- `LearnMode.tsx` + `useLearnMode.ts` — component and state hook.
-- `learnModeConfig.ts` — subcategory seeds, question lists per subcategory (`LEARN_QUESTIONS`), exclusive groups (`EXCLUSIVE_GROUPS`), min question threshold.
-- `learnModeLogic.ts` — question sequencing logic.
-- `learnModeValidation.ts` — input validation.
+**LearnMode**: teach new character flow, split across two locations:
+- `src/components/game/`: `LearnMode.tsx`, `useLearnMode.ts` (orchestrator), `useLearnQuestions.ts` (question sequencing hook), `useLearnValidation.ts` (validation hook).
+- `src/data/game/`: `learnModeConfig.ts` — subcategory seeds, `LEARN_QUESTIONS`, `EXCLUSIVE_GROUPS`, min question threshold; `learnModeLogic.ts` — pure sequencing logic; `learnModeValidation.ts` — input validation.
 
 **Questions** (`src/data/questions.ts`): defines the `QuestionId` branded type and the full question bank. All answer maps use `QuestionId` as key.
 
@@ -96,7 +94,8 @@ node scripts/enrich-franchises.mjs   # add franchise data to personajes.json
 - `components/game/Game.tsx` — renders game UI, delegates all logic to `useGame`.
 - `components/layout/NetworkIndicator.tsx` + `useOnlineStatus.ts` — online/offline detection and indicator.
 
-**State machine** (`types.ts`): `GameState = 'start' | 'playing' | 'guess' | 'win' | 'lose' | 'learn_name' | 'learn_questions'`
+**State machine** (`types.ts`): `GameState = 'start' | 'playing' | 'firma' | 'guess' | 'win' | 'lose' | 'learn_name' | 'learn_questions'`
+- `firma` — signature questions phase: asked after high confidence but before the final guess, uses `signatureQuestions` from the character definition.
 
 **API client** (`src/data/api/`): thin fetch wrappers. API contract uses **snake_case** (`derinator_wins`, `daily_guessed`) — do not camelCase.
 

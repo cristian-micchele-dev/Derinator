@@ -70,6 +70,16 @@ export const LEARN_QUESTIONS: Record<string, QuestionId[]> = {
     155 as QuestionId, // ¿Es de rock?
     156 as QuestionId, // ¿Es de rap / hip-hop?
     157 as QuestionId, // ¿Es de reggaeton?
+    // Pop sub-genres (shown only if Q154=yes via prerequisites)
+    514 as QuestionId, // ¿Es dance-pop?
+    515 as QuestionId, // ¿Es electropop?
+    516 as QuestionId, // ¿Es K-pop?
+    // Rap sub-genres (shown only if Q156=yes via prerequisites)
+    517 as QuestionId, // ¿Es trap?
+    518 as QuestionId, // ¿Es rap consciente / lírico?
+    519 as QuestionId, // ¿Tiene un beef famoso con otro artista?
+    // Reggaeton sub-genres (shown only if Q157=yes via prerequisites)
+    520 as QuestionId, // ¿Es de la vieja escuela del reggaetón (años 90s/2000s)?
     // Rock/metal sub-genres (shown only if Q155=yes via prerequisites)
     237 as QuestionId, // ¿Es de heavy metal?
     238 as QuestionId, // ¿Es de power metal?
@@ -88,9 +98,9 @@ export const LEARN_QUESTIONS: Record<string, QuestionId[]> = {
     160 as QuestionId, // ¿Es conocido/a por bailar?
     142 as QuestionId, // ¿Ganó un premio importante?
     126 as QuestionId, // ¿Tiene barba?
-    46 as QuestionId,  // ¿Es japonés?
-    47 as QuestionId,  // ¿Es brasileño?
-    185 as QuestionId, // ¿Es de Italia?
+    511 as QuestionId, // ¿Compone sus propias canciones?
+    512 as QuestionId, // ¿Es parte de una banda o grupo musical?
+    513 as QuestionId, // ¿Tiene más de 20 años de carrera artística?
   ],
   actor: [
     ...REAL_PERSON_BASE,
@@ -102,9 +112,11 @@ export const LEARN_QUESTIONS: Record<string, QuestionId[]> = {
     126 as QuestionId, // ¿Tiene barba?
     130 as QuestionId, // ¿Es de una serie live-action?
     122 as QuestionId, // ¿Es de una película?
-    46 as QuestionId,  // ¿Es japonés?
-    47 as QuestionId,  // ¿Es brasileño?
-    185 as QuestionId, // ¿Es de Italia?
+    521 as QuestionId, // ¿Es conocido/a por películas de terror?
+    522 as QuestionId, // ¿Es conocido/a por el thriller / suspenso?
+    523 as QuestionId, // ¿Ganó un Emmy?
+    524 as QuestionId, // ¿Protagonizó una saga o franquicia importante?
+    525 as QuestionId, // ¿Es también director/a o productor/a?
   ],
   deportista: [
     ...REAL_PERSON_BASE,
@@ -124,9 +136,9 @@ export const LEARN_QUESTIONS: Record<string, QuestionId[]> = {
     147 as QuestionId, // ¿Es arquero / portero?
     149 as QuestionId, // ¿Jugó en más de un país?
     126 as QuestionId, // ¿Tiene barba?
-    46 as QuestionId,  // ¿Es japonés?
-    47 as QuestionId,  // ¿Es brasileño?
-    185 as QuestionId, // ¿Es de Italia?
+    526 as QuestionId, // ¿Compite en deportes individuales?
+    527 as QuestionId, // ¿Ganó una medalla olímpica?
+    528 as QuestionId, // ¿Sigue activo/a actualmente?
   ],
   'youtuber-streamer': [
     ...REAL_PERSON_BASE,
@@ -134,9 +146,11 @@ export const LEARN_QUESTIONS: Record<string, QuestionId[]> = {
     126 as QuestionId, // ¿Tiene barba?
     191 as QuestionId, // ¿Es comediante?
     160 as QuestionId, // ¿Es conocido/a por bailar?
-    46 as QuestionId,  // ¿Es japonés?
-    47 as QuestionId,  // ¿Es brasileño?
-    185 as QuestionId, // ¿Es de Italia?
+    529 as QuestionId, // ¿Es principalmente gamer?
+    530 as QuestionId, // ¿Hace streams en vivo regularmente?
+    531 as QuestionId, // ¿Tiene más de 10 millones de suscriptores?
+    532 as QuestionId, // ¿Es conocido/a por un personaje o alter ego?
+    533 as QuestionId, // ¿Colabora frecuentemente con otros creadores?
   ],
   'historico-real': [
     ...REAL_PERSON_BASE,
@@ -150,6 +164,29 @@ export const LEARN_QUESTIONS: Record<string, QuestionId[]> = {
     46 as QuestionId,  // ¿Es japonés?
     47 as QuestionId,  // ¿Es brasileño?
     185 as QuestionId, // ¿Es de Italia?
+  ],
+  superheroe: [
+    52 as QuestionId,  // ¿Es mujer?
+    71 as QuestionId,  // ¿Es de Marvel?
+    81 as QuestionId,  // ¿Es de DC Comics?
+    72 as QuestionId,  // ¿Es un villano?
+    86 as QuestionId,  // ¿Puede volar sin alas?
+    54 as QuestionId,  // ¿Usa capa?
+    55 as QuestionId,  // ¿Usa máscara?
+    62 as QuestionId,  // ¿Usa arma?
+    89 as QuestionId,  // ¿Es un robot o cyborg?
+    87 as QuestionId,  // ¿Tiene más de una transformación?
+    61 as QuestionId,  // ¿Tiene poderes mágicos?
+    88 as QuestionId,  // ¿Usa ropa/uniforme característico?
+    82 as QuestionId,  // ¿Tiene forma humana?
+    128 as QuestionId, // ¿Es un anti-héroe?
+    121 as QuestionId, // ¿Es el protagonista principal?
+    90 as QuestionId,  // ¿Es conocido por frase o grito?
+    127 as QuestionId, // ¿Usa tecnología avanzada / gadgets?
+    534 as QuestionId, // ¿Tiene una identidad secreta?
+    535 as QuestionId, // ¿Pertenece a un equipo de superhéroes?
+    536 as QuestionId, // ¿Es mutante?
+    537 as QuestionId, // ¿Sus poderes son de origen tecnológico?
   ],
 }
 
@@ -199,6 +236,8 @@ export const EXCLUSIVE_GROUPS: QuestionId[][] = [
   [154, 155, 156, 157].map(n => n as QuestionId),
   // Metal sub-genres
   [237, 238, 239, 240, 241, 242, 243, 244].map(n => n as QuestionId),
+  // Rap sub-genres (trap vs consciente are mutually exclusive)
+  [517, 518].map(n => n as QuestionId),
   // Sports
   [76, 187, 188, 189, 190].map(n => n as QuestionId),
   // Comic franchises

@@ -377,6 +377,41 @@ export const REAL_PEOPLE_FLOWS: FlowNode[] = [
   { id: 245, prerequisites: [{ questionId: 18, answers: ['yes'] }], next: { default: null }, weight: 1.5 }, // solista
   { id: 246, prerequisites: [{ questionId: 18, answers: ['yes'] }], next: { default: null }, weight: 1.5 }, // vocalista principal
   { id: 247, prerequisites: [{ questionId: 18, answers: ['yes'] }], next: { default: null }, weight: 1.5 }, // canta en español
+  { id: 511, prerequisites: [{ questionId: 18, answers: ['yes'] }], next: { default: null }, weight: 1.5 }, // compone sus propias canciones
+  { id: 512, prerequisites: [{ questionId: 18, answers: ['yes'] }], next: { default: null }, weight: 1.5 }, // es de una banda
+  { id: 513, prerequisites: [{ questionId: 18, answers: ['yes'] }], next: { default: null }, weight: 1.5 }, // más de 20 años de carrera
+
+  // ---- Pop sub-genre questions (require pop confirmed) ----
+  { id: 514, prerequisites: [{ questionId: 18, answers: ['yes'] }, { questionId: 154, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // dance-pop
+  { id: 515, prerequisites: [{ questionId: 18, answers: ['yes'] }, { questionId: 154, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // electropop
+  { id: 516, prerequisites: [{ questionId: 18, answers: ['yes'] }, { questionId: 154, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // K-pop
+
+  // ---- Rap sub-genre questions (require rap confirmed) ----
+  { id: 517, prerequisites: [{ questionId: 18, answers: ['yes'] }, { questionId: 156, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // trap
+  { id: 518, prerequisites: [{ questionId: 18, answers: ['yes'] }, { questionId: 156, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // rap consciente
+  { id: 519, prerequisites: [{ questionId: 18, answers: ['yes'] }, { questionId: 156, answers: ['yes'] }], next: { default: null }, weight: 1.5 }, // beef famoso
+
+  // ---- Reggaeton sub-genre questions (require reggaeton confirmed) ----
+  { id: 520, prerequisites: [{ questionId: 18, answers: ['yes'] }, { questionId: 157, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // vieja escuela
+
+  // ---- Youtuber/streamer-specific questions (require Q77=yes) ----
+  { id: 529, prerequisites: [{ questionId: 77, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // gamer
+  { id: 530, prerequisites: [{ questionId: 77, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // streams en vivo
+  { id: 531, prerequisites: [{ questionId: 77, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // +10M suscriptores
+  { id: 532, prerequisites: [{ questionId: 77, answers: ['yes'] }], next: { default: null }, weight: 1.5 }, // personaje/alter ego
+  { id: 533, prerequisites: [{ questionId: 77, answers: ['yes'] }], next: { default: null }, weight: 1.5 }, // colaboraciones
+
+  // ---- Deportista-specific questions (require atleta confirmed) ----
+  { id: 526, prerequisites: [{ questionId: 17, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // deporte individual
+  { id: 527, prerequisites: [{ questionId: 17, answers: ['yes'] }], next: { default: null }, weight: 2.5 }, // medalla olímpica
+  { id: 528, prerequisites: [{ questionId: 17, answers: ['yes'] }], next: { default: null }, weight: 1.5 }, // sigue activo
+
+  // ---- Actor-specific questions (require actor confirmed) ----
+  { id: 521, prerequisites: [{ questionId: 19, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // terror
+  { id: 522, prerequisites: [{ questionId: 19, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // thriller/suspenso
+  { id: 523, prerequisites: [{ questionId: 19, answers: ['yes'] }], next: { default: null }, weight: 2.5 }, // Emmy
+  { id: 524, prerequisites: [{ questionId: 19, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // saga/franquicia
+  { id: 525, prerequisites: [{ questionId: 19, answers: ['yes'] }], next: { default: null }, weight: 1.5 }, // director/productor
 
   {
     id: 19, // ¿Es actor/actriz?

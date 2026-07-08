@@ -500,6 +500,12 @@ export const FICTIONAL_FLOWS: FlowNode[] = [
     weight: 3.5,
   },
 
+  // ---- Superhero-specific questions (require superhero confirmed) ----
+  { id: 534, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 56, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // identidad secreta
+  { id: 535, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 56, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // pertenece a equipo
+  { id: 536, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 56, answers: ['yes'] }], next: { default: null }, weight: 2.5 }, // mutante
+  { id: 537, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 56, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // poderes tecnológicos
+
   // ---- Hair color (fiction only) ----
   { id: 220, prerequisites: [{ questionId: 4, answers: ['yes'] }], next: { default: null }, weight: 1.0 }, // pelo azul
   { id: 221, prerequisites: [{ questionId: 4, answers: ['yes'] }], next: { default: null }, weight: 1.0 }, // pelo verde

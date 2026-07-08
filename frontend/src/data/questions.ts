@@ -572,6 +572,49 @@ export const questions = [
   { id: 508, text: '¿Es conocido como el "Príncipe de las Tinieblas" y fue vocalista fundador de Black Sabbath?' },
   { id: 509, text: '¿Es el rapero con tatuajes en la cara conocido por "Rockstar" y "Sunflower"?' },
   { id: 510, text: '¿Es el cantante mexicano de corridos tumbados conocido por "La Bebe" y "Ella Baila Sola"?' },
+
+  // Musician profile questions
+  { id: 511, text: '¿Compone sus propias canciones?' },
+  { id: 512, text: '¿Es parte de una banda o grupo musical?' },
+  { id: 513, text: '¿Tiene más de 20 años de carrera artística?' },
+
+  // Pop sub-genres (require Q154=yes)
+  { id: 514, text: '¿Es dance-pop?' },
+  { id: 515, text: '¿Es electropop?' },
+  { id: 516, text: '¿Es K-pop?' },
+
+  // Rap sub-genres (require Q156=yes)
+  { id: 517, text: '¿Es trap?' },
+  { id: 518, text: '¿Es rap consciente / lírico?' },
+  { id: 519, text: '¿Tiene un beef famoso con otro artista?' },
+
+  // Reggaeton sub-genres (require Q157=yes)
+  { id: 520, text: '¿Es de la vieja escuela del reggaetón (años 90s/2000s)?' },
+
+  // Superhero profile questions (require Q56=yes)
+  { id: 534, text: '¿Tiene una identidad secreta?' },
+  { id: 535, text: '¿Pertenece a un equipo de superhéroes?' },
+  { id: 536, text: '¿Es mutante?' },
+  { id: 537, text: '¿Sus poderes son de origen tecnológico?' },
+
+  // Deportista profile questions (require Q17=yes)
+  { id: 526, text: '¿Compite en deportes individuales (no de equipo)?' },
+  { id: 527, text: '¿Ganó una medalla olímpica?' },
+  { id: 528, text: '¿Sigue activo/a actualmente como deportista?' },
+
+  // Youtuber/streamer profile questions (require Q77=yes)
+  { id: 529, text: '¿Es principalmente gamer?' },
+  { id: 530, text: '¿Hace streams en vivo regularmente?' },
+  { id: 531, text: '¿Tiene más de 10 millones de suscriptores?' },
+  { id: 532, text: '¿Es conocido/a por un personaje o alter ego?' },
+  { id: 533, text: '¿Colabora frecuentemente con otros creadores?' },
+
+  // Actor profile questions (require Q19=yes)
+  { id: 521, text: '¿Es conocido/a por películas de terror?' },
+  { id: 522, text: '¿Es conocido/a por el thriller / suspenso?' },
+  { id: 523, text: '¿Ganó un Emmy?' },
+  { id: 524, text: '¿Protagonizó una saga o franquicia importante?' },
+  { id: 525, text: '¿Es también director/a o productor/a?' },
 ] as const
 
 export type QuestionId = typeof questions[number]['id']
