@@ -651,6 +651,25 @@ export const questions = [
   { id: 563, text: '¿Puede usar magia o habilidades especiales?' },
   { id: 564, text: '¿Es el jefe final o antagonista principal?' },
   { id: 565, text: '¿Aparece en más de un juego de la misma saga?' },
+
+  // Disney-specific questions
+  { id: 566, text: '¿Es de Pixar?' },
+  { id: 567, text: '¿Es una princesa Disney?' },
+  { id: 568, text: '¿Es de un clásico animado (antes del año 2000)?' },
+  { id: 569, text: '¿Tiene una canción icónica?' },
+  { id: 570, text: '¿Es un animal o criatura no humana?' },
+  { id: 571, text: '¿Es el villano principal de su película?' },
+  { id: 572, text: '¿Tiene poderes o habilidades mágicas?' },
+
+  // Nintendo-specific questions
+  { id: 573, text: '¿Es de Mario?' },
+  { id: 574, text: '¿Es de la franquicia Pokémon?' },
+  { id: 575, text: '¿Es de Kirby?' },
+  { id: 576, text: '¿Es de Metroid?' },
+  { id: 577, text: '¿Es de Fire Emblem?' },
+  { id: 578, text: '¿Aparece en Super Smash Bros?' },
+  { id: 579, text: '¿Puede copiar habilidades de otros personajes?' },
+  { id: 580, text: '¿Es el personaje principal de su franquicia?' },
 ] as const
 
 export type QuestionId = typeof questions[number]['id']

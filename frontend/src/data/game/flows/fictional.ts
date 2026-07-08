@@ -500,6 +500,25 @@ export const FICTIONAL_FLOWS: FlowNode[] = [
     weight: 3.5,
   },
 
+  // ---- Disney-specific questions (require Disney confirmed) ----
+  { id: 566, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 57, answers: ['yes'] }], next: { default: null }, weight: 3.0 }, // Pixar
+  { id: 567, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 57, answers: ['yes'] }], next: { default: null }, weight: 3.0 }, // princesa Disney
+  { id: 568, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 57, answers: ['yes'] }], next: { default: null }, weight: 2.5 }, // clásico antes 2000
+  { id: 569, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 57, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // canción icónica
+  { id: 570, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 57, answers: ['yes'] }], next: { default: null }, weight: 2.5 }, // animal/criatura no humana
+  { id: 571, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 57, answers: ['yes'] }], next: { default: null }, weight: 2.5 }, // villano principal de su película
+  { id: 572, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 57, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // poderes/habilidades mágicas
+
+  // ---- Nintendo-specific questions (require Nintendo confirmed) ----
+  { id: 573, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 58, answers: ['yes'] }], next: { default: null }, weight: 3.5 }, // Mario
+  { id: 574, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 58, answers: ['yes'] }], next: { default: null }, weight: 3.5 }, // franquicia Pokémon
+  { id: 575, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 58, answers: ['yes'] }], next: { default: null }, weight: 3.0 }, // Kirby
+  { id: 576, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 58, answers: ['yes'] }], next: { default: null }, weight: 3.0 }, // Metroid
+  { id: 577, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 58, answers: ['yes'] }], next: { default: null }, weight: 3.0 }, // Fire Emblem
+  { id: 578, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 58, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // Super Smash Bros
+  { id: 579, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 58, answers: ['yes'] }], next: { default: null }, weight: 2.5 }, // copiar habilidades
+  { id: 580, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 58, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // personaje principal de su franquicia
+
   // ---- Videojuego-specific questions (require videojuego confirmed) ----
   { id: 556, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 60, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // RPG
   { id: 557, prerequisites: [{ questionId: 4, answers: ['yes'] }, { questionId: 60, answers: ['yes'] }], next: { default: null }, weight: 2.0 }, // shooter

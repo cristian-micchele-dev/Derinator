@@ -64,6 +64,48 @@ const REAL_PERSON_BASE: QuestionId[] = [
 // Subcategory-specific question lists for LearnMode
 // These ensure the character gets a COMPLETE profile
 export const LEARN_QUESTIONS: Record<string, QuestionId[]> = {
+  disney: [
+    52 as QuestionId,  // ¿Es mujer?
+    82 as QuestionId,  // ¿Tiene forma humana?
+    570 as QuestionId, // ¿Es un animal o criatura no humana?
+    121 as QuestionId, // ¿Es el protagonista principal?
+    72 as QuestionId,  // ¿Es un villano?
+    571 as QuestionId, // ¿Es el villano principal de su película?
+    567 as QuestionId, // ¿Es una princesa Disney?
+    566 as QuestionId, // ¿Es de Pixar?
+    568 as QuestionId, // ¿Es de un clásico animado (antes del año 2000)?
+    569 as QuestionId, // ¿Tiene una canción icónica?
+    572 as QuestionId, // ¿Tiene poderes o habilidades mágicas?
+    61 as QuestionId,  // ¿Tiene poderes mágicos?
+    86 as QuestionId,  // ¿Puede volar sin alas?
+    62 as QuestionId,  // ¿Usa arma?
+    88 as QuestionId,  // ¿Usa ropa/uniforme característico?
+    92 as QuestionId,  // ¿Tiene pelo de color inusual?
+    129 as QuestionId, // ¿Tiene compañero, mascota o sidekick?
+    89 as QuestionId,  // ¿Es un robot o cyborg?
+    56 as QuestionId,  // ¿Es un superhéroe?
+  ],
+  nintendo: [
+    52 as QuestionId,  // ¿Es mujer?
+    82 as QuestionId,  // ¿Tiene forma humana?
+    121 as QuestionId, // ¿Es el protagonista principal?
+    72 as QuestionId,  // ¿Es un villano?
+    580 as QuestionId, // ¿Es el personaje principal de su franquicia?
+    74 as QuestionId,  // ¿Tiene superpoderes?
+    62 as QuestionId,  // ¿Usa arma?
+    88 as QuestionId,  // ¿Usa ropa/uniforme característico?
+    89 as QuestionId,  // ¿Es un robot o cyborg?
+    129 as QuestionId, // ¿Tiene compañero, mascota o sidekick?
+    578 as QuestionId, // ¿Aparece en Super Smash Bros?
+    579 as QuestionId, // ¿Puede copiar habilidades de otros personajes?
+    85 as QuestionId,  // ¿Es un Pokémon?
+    573 as QuestionId, // ¿Es de Mario?
+    574 as QuestionId, // ¿Es de la franquicia Pokémon?
+    100 as QuestionId, // ¿Es de The Legend of Zelda?
+    575 as QuestionId, // ¿Es de Kirby?
+    576 as QuestionId, // ¿Es de Metroid?
+    577 as QuestionId, // ¿Es de Fire Emblem?
+  ],
   videojuego: [
     52 as QuestionId,  // ¿Es mujer?
     121 as QuestionId, // ¿Es el protagonista principal?
